@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../hooks/useLanguage';
 import { PageContainer } from '../components/layout/PageContainer';
@@ -39,7 +39,7 @@ export const DashboardPage = () => {
         />
         <SummaryCard 
           title={t('dashboard.summaryAverageMargin')} 
-          value={formatPercent(avgMargin, 'id-ID')} 
+          value={formatPercent(avgMargin, 'id')} 
           icon={TrendingUp} 
           tone={avgMargin >= 25 ? 'good' : 'loss'} 
         />
@@ -80,12 +80,12 @@ export const DashboardPage = () => {
               <div>
                 <div className="font-semibold text-text-primary">{item.productName}</div>
                 <div className="text-sm text-text-secondary mt-1">
-                  Harga: {formatCurrency(item.sellingPrice, 'IDR', 'id-ID')}
+                  Harga: {formatCurrency(item.sellingPrice, 'id', 'IDR')}
                 </div>
               </div>
               <div className="flex flex-col items-end gap-2">
                 <Badge variant={item.statusKey}>{t(`result.status.${item.statusKey}`)}</Badge>
-                <div className="text-sm font-semibold">{formatPercent(item.marginPercent, 'id-ID')}</div>
+                <div className="text-sm font-semibold">{formatPercent(item.marginPercent, 'id')}</div>
               </div>
             </Card>
           ))
@@ -102,3 +102,4 @@ export const DashboardPage = () => {
     </PageContainer>
   );
 };
+

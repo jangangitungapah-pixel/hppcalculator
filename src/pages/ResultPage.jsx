@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { useLanguage } from '../hooks/useLanguage';
 import { PageContainer } from '../components/layout/PageContainer';
@@ -42,7 +42,7 @@ export const ResultPage = () => {
           <div className="mb-6">
             <div className="text-sm font-semibold opacity-80 mb-1">{t('result.hppPerUnit')}</div>
             <div className="text-4xl font-bold text-text-primary">
-              {formatCurrency(result.hppPerUnit, 'IDR', 'id-ID')}
+              {formatCurrency(result.hppPerUnit, 'id', 'IDR')}
             </div>
           </div>
 
@@ -50,13 +50,13 @@ export const ResultPage = () => {
             <div>
               <div className="text-sm font-semibold opacity-80">{t('result.profitPerUnit')}</div>
               <div className={`text-2xl font-bold ${isLoss ? 'text-status-loss' : 'text-status-good'}`}>
-                {formatCurrency(result.profitPerUnit, 'IDR', 'id-ID')}
+                {formatCurrency(result.profitPerUnit, 'id', 'IDR')}
               </div>
             </div>
             <div>
               <div className="text-sm font-semibold opacity-80">{t('result.margin')}</div>
               <div className={`text-2xl font-bold ${isLoss ? 'text-status-loss' : 'text-status-good'}`}>
-                {formatPercent(result.marginPercent, 'id-ID')}
+                {formatPercent(result.marginPercent, 'id')}
               </div>
             </div>
           </div>
@@ -79,7 +79,7 @@ export const ResultPage = () => {
             {result.warnings.map((warn, i) => (
               <div key={i} className="flex items-start gap-2 text-sm text-status-low bg-status-lowBg p-3 rounded-md">
                 <AlertTriangle className="w-5 h-5 shrink-0" />
-                <p>{warn.message}</p>
+                <p>{warn.messageId || warn.messageEn || warn.message || warn}</p>
               </div>
             ))}
           </div>
@@ -89,20 +89,20 @@ export const ResultPage = () => {
         <div className="grid grid-cols-2 gap-4">
           <ResultCard 
             label={t('result.totalProductionCost')}
-            value={formatCurrency(result.totalProductionCost, 'IDR', 'id-ID')}
+            value={formatCurrency(result.totalProductionCost, 'id', 'IDR')}
           />
           <ResultCard 
             label={t('result.grossRevenue')}
-            value={formatCurrency(result.grossRevenue, 'IDR', 'id-ID')}
+            value={formatCurrency(result.grossRevenue, 'id', 'IDR')}
           />
           <ResultCard 
             label={t('result.totalProfit')}
-            value={formatCurrency(result.totalProfit, 'IDR', 'id-ID')}
+            value={formatCurrency(result.totalProfit, 'id', 'IDR')}
             tone={result.totalProfit > 0 ? 'good' : result.totalProfit < 0 ? 'loss' : 'neutral'}
           />
           <ResultCard 
             label={t('result.markup')}
-            value={formatPercent(result.markupPercent, 'id-ID')}
+            value={formatPercent(result.markupPercent, 'id')}
           />
         </div>
 
@@ -112,15 +112,15 @@ export const ResultPage = () => {
           <div className="flex flex-col gap-3">
             <div className="flex justify-between items-center p-3 rounded-md bg-surface-muted">
               <span className="font-medium text-text-secondary">{t('result.safePrice')}</span>
-              <span className="font-bold">{formatCurrency(result.suggestedPricing.safePrice, 'IDR', 'id-ID')}</span>
+              <span className="font-bold">{formatCurrency((result.suggestedPrices?.safe?.price ?? 0), 'id', 'IDR')}</span>
             </div>
             <div className="flex justify-between items-center p-3 rounded-md bg-status-okayBg text-status-okay">
               <span className="font-medium">{t('result.idealPrice')}</span>
-              <span className="font-bold">{formatCurrency(result.suggestedPricing.idealPrice, 'IDR', 'id-ID')}</span>
+              <span className="font-bold">{formatCurrency((result.suggestedPrices?.ideal?.price ?? 0), 'id', 'IDR')}</span>
             </div>
             <div className="flex justify-between items-center p-3 rounded-md bg-status-goodBg text-status-good">
               <span className="font-medium">{t('result.premiumPrice')}</span>
-              <span className="font-bold">{formatCurrency(result.suggestedPricing.premiumPrice, 'IDR', 'id-ID')}</span>
+              <span className="font-bold">{formatCurrency((result.suggestedPrices?.premium?.price ?? 0), 'id', 'IDR')}</span>
             </div>
           </div>
         </Card>
@@ -139,3 +139,5 @@ export const ResultPage = () => {
     </PageContainer>
   );
 };
+
+

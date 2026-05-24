@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../hooks/useLanguage';
 import { PageContainer } from '../components/layout/PageContainer';
@@ -38,20 +38,20 @@ export const HistoryDetailPage = () => {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <ResultCard 
           label={t('result.hppPerUnit')} 
-          value={formatCurrency(item.hppPerUnit, 'IDR', 'id-ID')}
+          value={formatCurrency(item.hppPerUnit, 'id', 'IDR')}
         />
         <ResultCard 
           label={t('result.profitPerUnit')} 
-          value={formatCurrency(item.profitPerUnit, 'IDR', 'id-ID')}
+          value={formatCurrency(item.profitPerUnit, 'id', 'IDR')}
           tone={item.profitPerUnit > 0 ? 'good' : item.profitPerUnit < 0 ? 'loss' : 'neutral'}
         />
         <ResultCard 
           label={t('result.margin')} 
-          value={formatPercent(item.marginPercent, 'id-ID')}
+          value={formatPercent(item.marginPercent, 'id')}
         />
         <ResultCard 
           label={t('result.markup')} 
-          value={formatPercent(item.markupPercent, 'id-ID')}
+          value={formatPercent(item.markupPercent, 'id')}
         />
       </div>
 
@@ -67,14 +67,14 @@ export const HistoryDetailPage = () => {
                     <div className="text-sm text-text-secondary">{cost.category}</div>
                   </div>
                   <div className="font-medium">
-                    {formatCurrency(cost.amount, 'IDR', 'id-ID')}
+                    {formatCurrency(cost.amount, 'id', 'IDR')}
                   </div>
                 </div>
               ))}
             </div>
             <div className="p-4 bg-surface-muted border-t border-border flex justify-between items-center font-bold">
               <span>{t('result.totalProductionCost')}</span>
-              <span>{formatCurrency(item.totalProductionCost, 'IDR', 'id-ID')}</span>
+              <span>{formatCurrency(item.totalProductionCost, 'id', 'IDR')}</span>
             </div>
           </Card>
         </div>
@@ -108,3 +108,4 @@ export const HistoryDetailPage = () => {
     </PageContainer>
   );
 };
+

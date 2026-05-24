@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../hooks/useLanguage';
 import { useMediaQuery } from '../hooks/useMediaQuery';
@@ -121,7 +121,7 @@ export const CalculatorPage = () => {
     
     try {
       // Hardcoded rounding step to 500 for MVP since settings aren't persisted
-      const calcResult = calculateQuickHpp(payload, 500);
+      const calcResult = calculateQuickHpp({ ...payload, language: 'id', currency: 'IDR', roundingStep: 500 });
       setResult(calcResult);
       setHasCalculatedOnce(true);
 
@@ -288,31 +288,31 @@ export const CalculatorPage = () => {
                 <div className="mb-6 bg-brand-soft p-4 rounded-xl text-center">
                   <div className="text-sm font-semibold opacity-80 mb-1">{t('result.hppPerUnit')}</div>
                   <div className="text-4xl font-bold text-brand-primary">
-                    {formatCurrency(result.hppPerUnit, 'IDR', 'id-ID')}
+                    {formatCurrency(result.hppPerUnit, 'id', 'IDR')}
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <ResultCard 
                     label={t('result.profitPerUnit')} 
-                    value={formatCurrency(result.profitPerUnit, 'IDR', 'id-ID')}
+                    value={formatCurrency(result.profitPerUnit, 'id', 'IDR')}
                     tone={result.profitPerUnit > 0 ? 'good' : result.profitPerUnit < 0 ? 'loss' : 'neutral'}
                   />
                   <ResultCard 
                     label={t('result.margin')} 
-                    value={formatPercent(result.marginPercent, 'id-ID')}
+                    value={formatPercent(result.marginPercent, 'id')}
                   />
                 </div>
 
                 <div className="space-y-4 mb-6">
                   <div className="flex justify-between text-sm">
                     <span className="text-text-secondary">{t('result.totalProductionCost')}</span>
-                    <span className="font-semibold">{formatCurrency(result.totalProductionCost, 'IDR', 'id-ID')}</span>
+                    <span className="font-semibold">{formatCurrency(result.totalProductionCost, 'id', 'IDR')}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-text-secondary">{t('result.totalProfit')}</span>
                     <span className={`font-semibold ${result.totalProfit < 0 ? 'text-status-loss' : 'text-status-good'}`}>
-                      {formatCurrency(result.totalProfit, 'IDR', 'id-ID')}
+                      {formatCurrency(result.totalProfit, 'id', 'IDR')}
                     </span>
                   </div>
                 </div>
@@ -344,3 +344,5 @@ export const CalculatorPage = () => {
     </PageContainer>
   );
 };
+
+

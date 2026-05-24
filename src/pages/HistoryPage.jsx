@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../hooks/useLanguage';
 import { PageContainer } from '../components/layout/PageContainer';
@@ -31,10 +31,10 @@ export const HistoryPage = () => {
                   <Badge variant={item.statusKey}>{t(`result.status.${item.statusKey}`)}</Badge>
                 </div>
                 <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm text-text-secondary mt-2 max-w-sm">
-                  <span>HPP: {formatCurrency(item.hppPerUnit, 'IDR', 'id-ID')}</span>
-                  <span>Jual: {formatCurrency(item.sellingPrice, 'IDR', 'id-ID')}</span>
-                  <span>Untung: {formatCurrency(item.profitPerUnit, 'IDR', 'id-ID')}</span>
-                  <span>Margin: {formatPercent(item.marginPercent, 'id-ID')}</span>
+                  <span>HPP: {formatCurrency(item.hppPerUnit, 'id', 'IDR')}</span>
+                  <span>Jual: {formatCurrency(item.sellingPrice, 'id', 'IDR')}</span>
+                  <span>Untung: {formatCurrency(item.profitPerUnit, 'id', 'IDR')}</span>
+                  <span>Margin: {formatPercent(item.marginPercent, 'id')}</span>
                 </div>
               </div>
               
@@ -65,3 +65,4 @@ export const HistoryPage = () => {
     </PageContainer>
   );
 };
+
