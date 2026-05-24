@@ -1,0 +1,51 @@
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import { useLanguage } from '../../hooks/useLanguage';
+import { LayoutDashboard, Calculator, History, Settings, Sparkles } from 'lucide-react';
+
+export const SidebarNav = () => {
+  const { t } = useLanguage();
+
+  const navItems = [
+    { to: '/dashboard', icon: <LayoutDashboard className="w-5 h-5" />, label: t('nav.dashboard') },
+    { to: '/calculator', icon: <Calculator className="w-5 h-5" />, label: t('nav.calculate') },
+    { to: '/history', icon: <History className="w-5 h-5" />, label: t('nav.history') },
+    { to: '/settings', icon: <Settings className="w-5 h-5" />, label: t('nav.settings') },
+  ];
+
+  return (
+    <aside className="fixed left-0 top-0 bottom-0 w-64 bg-surface border-r border-border hidden lg:flex flex-col z-nav">
+      <div className="h-16 flex items-center px-6 border-b border-border">
+        <div className="flex items-center gap-2 text-brand-primary">
+          <Sparkles className="w-6 h-6" />
+          <span className="font-bold text-xl">{t('app.name')}</span>
+        </div>
+      </div>
+      
+      <nav className="flex-1 py-6 px-4 flex flex-col gap-2">
+        {navItems.map((item) => (
+          <NavLink
+            key={item.to}
+            to={item.to}
+            className={({ isActive }) => `
+              flex items-center gap-3 px-4 py-3 rounded-md font-medium transition-colors
+              ${isActive 
+                ? 'bg-brand-soft text-brand-primary' 
+                : 'text-text-secondary hover:bg-surface-muted hover:text-text-primary'}
+            `}
+          >
+            {item.icon}
+            {item.label}
+          </NavLink>
+        ))}
+      </nav>
+
+      <div className="p-4 border-t border-border">
+        <div className="p-4 bg-brand-soft rounded-lg text-sm">
+          <p className="font-semibold text-brand-primary mb-1">Modalin MVP</p>
+          <p className="text-text-secondary text-xs">{t('app.shortDescription')}</p>
+        </div>
+      </div>
+    </aside>
+  );
+};

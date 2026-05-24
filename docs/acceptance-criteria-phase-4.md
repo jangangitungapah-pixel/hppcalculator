@@ -1,0 +1,26 @@
+# Acceptance Criteria: Phase 4
+
+- [x] **Brand visual direction documented:** Tone, mood, and keywords defined in `brand-visual-direction.md`.
+- [x] **Design principles documented:** Rules established in `phase-4-ui-design-system.md`.
+- [x] **Color tokens defined:** Semantic and brand colors mapped.
+- [x] **Typography tokens defined:** Type scale and font family selected.
+- [x] **Spacing tokens defined:** 4px base scale mapped.
+- [x] **Radius tokens defined:** Rounded aesthetic formalized.
+- [x] **Shadow tokens defined:** Soft elevation tokens created.
+- [x] **Status colors defined:** 5-tier profit health colors mapped.
+- [x] **Profit status visual mapping defined:** Connected to component guidelines.
+- [x] **Button guidelines defined:** Primary, secondary, ghost, destructive.
+- [x] **Card guidelines defined:** Default, elevated, highlighted.
+- [x] **Form guidelines defined:** Label, input, helper text rules.
+- [x] **Navigation visual guidelines defined:** Bottom nav and sidebar treatments.
+- [x] **Responsive rules defined:** Breakpoints and layout shifts mapped in `responsive-layout-system.md`.
+- [x] **Accessibility guidelines defined:** Contrast, touch targets, and ARIA notes.
+- [x] **Tailwind implementation plan created:** `tailwind-implementation-plan.md` ready for Phase 5.
+- [x] **Dark mode token placeholders prepared:** Mentioned in token docs.
+- [x] **MVP dashboard avoids charts:** Guidelines specify summary cards only.
+- [x] **No full React pages built:** Strictly documentation and tokens.
+- [x] **No routing implemented:** Core App.jsx untouched.
+- [x] **No localStorage implemented:** Data layer ignored in this phase.
+- [x] **No backend/auth implemented:** Out of scope.
+- [x] **Calculation engine unchanged:** Logic preserved.
+- [x] **CSS Tokens created:** `src/styles/design-tokens.css` initialized.

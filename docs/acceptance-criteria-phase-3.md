@@ -1,0 +1,22 @@
+# Acceptance Criteria: Phase 3
+
+- [x] **UX goals documented:** Documented in `phase-3-ux-wireframe.md`.
+- [x] **MVP screens defined:** 7 primary MVP screens identified and scoped.
+- [x] **Navigation architecture defined:** Established in `app-navigation.md`.
+- [x] **Mobile bottom nav documented:** Yes, 4 main routes.
+- [x] **Desktop sidebar documented:** Yes, aligned with mobile roots.
+- [x] **Welcome flow documented:** Mapped in Mermaid flow and wireframes.
+- [x] **Quick Calculator flow documented:** Diagram and section-by-section UX defined.
+- [x] **Result behavior documented for mobile and desktop:** Separate screen for mobile, side panel for desktop.
+- [x] **Saved Calculations detail flow documented:** Wireframed and specified.
+- [x] **Settings screen documented:** Wireframed with Language and Reset controls.
+- [x] **Empty states documented:** Handled in `empty-error-loading-states.md`.
+- [x] **Error states documented:** Handled alongside validation UX logic.
+- [x] **Loading states documented:** Micro-interactions scoped.
+- [x] **Bilingual UI copy documented:** `bilingual-ui-copy.md` contains translation tables for all UI text.
+- [x] **ASCII wireframes created:** Detailed in `screen-wireframes.md`.
+- [x] **Mermaid flows created:** Added for user journeys, calculator logic, and save events.
+- [x] **Future screens clearly separated from MVP:** Marked clearly in navigation docs.
+- [x] **No React implementation done:** Only UX planning markdown generated.
+- [x] **No styling implementation done:** Kept strictly at the UX/wireframe conceptual level.
+- [x] **No new dependencies installed:** Package intact.

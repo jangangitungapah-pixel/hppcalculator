@@ -1,0 +1,23 @@
+# Acceptance Criteria: Phase 5
+
+- [x] Tailwind installed and configured
+- [x] React Router installed and configured
+- [x] Lucide React installed and used
+- [x] Design tokens implemented (`design-tokens.css` & `tailwind.config.js`)
+- [x] App shell implemented (`AppShell`, `PageContainer`)
+- [x] Mobile bottom nav implemented (`BottomNav`)
+- [x] Desktop sidebar implemented (`SidebarNav`)
+- [x] Welcome screen implemented
+- [x] Dashboard screen implemented (with mock data)
+- [x] Quick Calculator implemented (`CalculatorPage`)
+- [x] Calculation engine integrated (no calculation logic mutated)
+- [x] Result panel/screen implemented (responsive desktop/mobile behavior)
+- [x] History screen implemented with mock data
+- [x] History detail implemented with mock data
+- [x] Settings screen implemented (with language toggle)
+- [x] Bilingual UI switch implemented (`useLanguage`, `dictionary.js`)
+- [x] PWA manifest created (`manifest.webmanifest`)
+- [x] Basic test added (`calculatorIntegration.test.jsx`)
+- [x] No localStorage implemented (deferred to Phase 6)
+- [x] No backend/auth implemented
+- [x] No advanced features implemented (deferred to future phases)
