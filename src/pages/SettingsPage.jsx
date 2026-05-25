@@ -11,6 +11,8 @@ import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Database } from 'lucide-react';
+import { StaggerContainer } from '../components/motion/StaggerContainer';
+import { FadeIn } from '../components/motion/FadeIn';
 
 export const SettingsPage = () => {
   const { t, lang } = useLanguage();
@@ -43,68 +45,76 @@ export const SettingsPage = () => {
         <h1 className="page-title">{t('settings.title')}</h1>
       </div>
 
-      <div className="content-stack">
-        <Card className="p-6">
-          <h2 className="text-lg font-bold mb-4 text-text-primary">{t('settings.language')}</h2>
-          <LanguageSwitch />
-        </Card>
+      <StaggerContainer className="content-stack">
+        <FadeIn>
+          <Card className="p-6 transition-premium hover:shadow-floating border-brand-soft/50">
+            <h2 className="text-lg font-bold mb-4 text-text-primary">{t('settings.language')}</h2>
+            <LanguageSwitch />
+          </Card>
+        </FadeIn>
 
-        <Card className="p-6">
-          <h2 className="text-lg font-bold mb-4 text-text-primary">{lang === 'en' ? 'Calculator Settings' : 'Pengaturan Kalkulator'}</h2>
-          
-          <div className="flex flex-col gap-4">
-            <Select 
-              label={t('settings.currency')}
-              options={[
-                { value: 'IDR', label: 'Rupiah (Rp)' },
-              ]}
-              value={settings.currency || 'IDR'}
-              disabled
-              helperText="Currency lain akan ditambahkan nanti"
-            />
+        <FadeIn>
+          <Card className="p-6 transition-premium hover:shadow-floating border-brand-soft/50">
+            <h2 className="text-lg font-bold mb-4 text-text-primary">{lang === 'en' ? 'Calculator Settings' : 'Pengaturan Kalkulator'}</h2>
             
-            <Select 
-              label={t('settings.roundingStep')}
-              options={[
-                { value: '500', label: t('settings.rounding500') },
-                { value: '1000', label: t('settings.rounding1000') },
-                { value: '5000', label: t('settings.rounding5000') },
-              ]}
-              value={String(settings.roundingStep || 500)}
-              onChange={handleRoundingChange}
-            />
-          </div>
-        </Card>
-
-        <Card className="p-6">
-          <h2 className="text-lg font-bold mb-4 text-text-primary">{lang === 'en' ? 'Data Management' : 'Kelola Data'}</h2>
-          <div className="flex flex-col gap-4">
-            <Button 
-              variant="secondary" 
-              disabled={!calculatorDraft}
-              onClick={() => setShowClearDraftConfirm(true)}
-            >
-              {t('settings.clearDraft')}
-            </Button>
-            
-            <div className="border-t pt-4 mt-2">
-              <Button 
-                variant="outline" 
-                className="w-full flex items-center justify-center gap-2"
-                onClick={() => navigate('/data-backup')}
-              >
-                <Database size={18} />
-                {t('settings.manageDataBackup', 'Kelola Data & Backup')}
-              </Button>
+            <div className="flex flex-col gap-4">
+              <Select 
+                label={t('settings.currency')}
+                options={[
+                  { value: 'IDR', label: 'Rupiah (Rp)' },
+                ]}
+                value={settings.currency || 'IDR'}
+                disabled
+                helperText="Currency lain akan ditambahkan nanti"
+              />
+              
+              <Select 
+                label={t('settings.roundingStep')}
+                options={[
+                  { value: '500', label: t('settings.rounding500') },
+                  { value: '1000', label: t('settings.rounding1000') },
+                  { value: '5000', label: t('settings.rounding5000') },
+                ]}
+                value={String(settings.roundingStep || 500)}
+                onChange={handleRoundingChange}
+              />
             </div>
-          </div>
-        </Card>
+          </Card>
+        </FadeIn>
 
-        <Alert type="info">
-          {t('settings.localStorageNote')}
-        </Alert>
+        <FadeIn>
+          <Card className="p-6 transition-premium hover:shadow-floating border-brand-soft/50">
+            <h2 className="text-lg font-bold mb-4 text-text-primary">{lang === 'en' ? 'Data Management' : 'Kelola Data'}</h2>
+            <div className="flex flex-col gap-4">
+              <Button 
+                variant="secondary" 
+                disabled={!calculatorDraft}
+                onClick={() => setShowClearDraftConfirm(true)}
+              >
+                {t('settings.clearDraft')}
+              </Button>
+              
+              <div className="border-t pt-4 mt-2">
+                <Button 
+                  variant="outline" 
+                  className="w-full flex items-center justify-center gap-2"
+                  onClick={() => navigate('/data-backup')}
+                >
+                  <Database size={18} />
+                  {t('settings.manageDataBackup', 'Kelola Data & Backup')}
+                </Button>
+              </div>
+            </div>
+          </Card>
+        </FadeIn>
 
-      </div>
+        <FadeIn>
+          <Alert type="info">
+            {t('settings.localStorageNote')}
+          </Alert>
+        </FadeIn>
+
+      </StaggerContainer>
 
       <ConfirmDialog 
         open={showClearDraftConfirm}

@@ -12,6 +12,9 @@ import { EmptyState } from '../components/ui/EmptyState';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { formatCurrency, formatPercent } from '../lib/calculations';
 import { ArrowLeft, History as HistoryIcon, Trash2 } from 'lucide-react';
+import { StaggerContainer } from '../components/motion/StaggerContainer';
+import { FadeIn } from '../components/motion/FadeIn';
+import { AnimatedNumber } from '../components/motion/AnimatedNumber';
 
 export const HistoryDetailPage = () => {
   const { id } = useParams();
@@ -60,103 +63,117 @@ export const HistoryDetailPage = () => {
 
   return (
     <PageContainer>
-      <div className="mb-6 flex items-center gap-3">
-        <button onClick={() => navigate('/history')} className="p-2 -ml-2 rounded-full hover:bg-surface-muted text-text-secondary">
-          <ArrowLeft className="w-6 h-6" />
-        </button>
-        <h1 className="text-2xl font-bold text-text-primary">{savedCalculation.productName}</h1>
-        <Badge variant={result.profitStatus.key} className="ml-auto">{t(`result.status.${result.profitStatus.key}`)}</Badge>
-      </div>
+      <StaggerContainer>
+        <FadeIn>
+          <div className="mb-6 flex items-center gap-3">
+            <button onClick={() => navigate('/history')} className="p-2 -ml-2 rounded-full hover:bg-surface-muted text-text-secondary transition-colors">
+              <ArrowLeft className="w-6 h-6" />
+            </button>
+            <h1 className="text-2xl font-bold text-text-primary tracking-tight">{savedCalculation.productName}</h1>
+            <Badge variant={result.profitStatus.key} className="ml-auto">{t(`result.status.${result.profitStatus.key}`)}</Badge>
+          </div>
+        </FadeIn>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <ResultCard 
-          label={t('result.hppPerUnit')} 
-          value={formatCurrency(result.hppPerUnit, lang, settings.currency)}
-        />
-        <ResultCard 
-          label={t('result.profitPerUnit')} 
-          value={formatCurrency(result.profitPerUnit, lang, settings.currency)}
-          tone={result.profitPerUnit > 0 ? 'good' : result.profitPerUnit < 0 ? 'loss' : 'neutral'}
-        />
-        <ResultCard 
-          label={t('result.margin')} 
-          value={formatPercent(result.marginPercent, lang)}
-        />
-        <ResultCard 
-          label={t('result.markup')} 
-          value={formatPercent(result.markupPercent, lang)}
-        />
-      </div>
+        <FadeIn>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <ResultCard 
+              label={t('result.hppPerUnit')} 
+              value={<AnimatedNumber value={result.hppPerUnit} isCurrency={true} />}
+            />
+            <ResultCard 
+              label={t('result.profitPerUnit')} 
+              value={<AnimatedNumber value={result.profitPerUnit} isCurrency={true} />}
+              tone={result.profitPerUnit > 0 ? 'good' : result.profitPerUnit < 0 ? 'loss' : 'neutral'}
+            />
+            <ResultCard 
+              label={t('result.margin')} 
+              value={<AnimatedNumber value={result.marginPercent} suffix="%" />}
+            />
+            <ResultCard 
+              label={t('result.markup')} 
+              value={<AnimatedNumber value={result.markupPercent} suffix="%" />}
+            />
+          </div>
+        </FadeIn>
 
-      <div className="grid lg:grid-cols-2 gap-8">
-        <div>
-          <h2 className="text-lg font-semibold mb-3">Rincian Biaya</h2>
-          <Card className="p-0 overflow-hidden border-border">
-            <div className="divide-y divide-border">
-              {input.costItems.map(cost => (
-                <div key={cost.id} className="flex justify-between items-center p-4 bg-surface">
-                  <div>
-                    <div className="font-medium">{cost.name}</div>
-                    <div className="text-sm text-text-secondary">{cost.category}</div>
+        <div className="grid lg:grid-cols-2 gap-8">
+          <FadeIn>
+            <div>
+              <h2 className="text-lg font-semibold mb-3 tracking-tight">Rincian Biaya</h2>
+              <Card className="p-0 overflow-hidden border-border shadow-sm">
+                <div className="divide-y divide-border">
+                  {input.costItems.map(cost => (
+                    <div key={cost.id} className="flex justify-between items-center p-4 bg-surface">
+                      <div>
+                        <div className="font-medium">{cost.name}</div>
+                        <div className="text-sm text-text-secondary">{cost.category}</div>
+                      </div>
+                      <div className="font-medium">
+                        {formatCurrency(cost.amount, lang, settings.currency)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="p-4 bg-surface-muted border-t border-border flex justify-between items-center font-bold">
+                  <span>{t('result.totalProductionCost')}</span>
+                  <AnimatedNumber value={result.totalProductionCost} isCurrency={true} />
+                </div>
+              </Card>
+            </div>
+          </FadeIn>
+
+          <StaggerContainer>
+            <FadeIn>
+              <h2 className="text-lg font-semibold mb-3 tracking-tight">Hasil Produksi</h2>
+              <Card className="p-0 overflow-hidden border-border mb-6 shadow-sm">
+                <div className="divide-y divide-border">
+                  <div className="flex justify-between p-4 bg-surface">
+                    <span className="text-text-secondary">{t('calculator.outputQuantity')}</span>
+                    <span className="font-medium">{input.outputQuantity} {input.sellingUnit}</span>
                   </div>
-                  <div className="font-medium">
-                    {formatCurrency(cost.amount, lang, settings.currency)}
+                  <div className="flex justify-between p-4 bg-surface">
+                    <span className="text-text-secondary">{t('calculator.failedQuantity')}</span>
+                    <span className="font-medium">{input.failedQuantity} {input.sellingUnit}</span>
                   </div>
                 </div>
-              ))}
-            </div>
-            <div className="p-4 bg-surface-muted border-t border-border flex justify-between items-center font-bold">
-              <span>{t('result.totalProductionCost')}</span>
-              <span>{formatCurrency(result.totalProductionCost, lang, settings.currency)}</span>
-            </div>
-          </Card>
+              </Card>
+            </FadeIn>
+
+            <FadeIn>
+              <h2 className="text-lg font-semibold mb-3 tracking-tight">{t('result.suggestedPrices')}</h2>
+              <Card className="p-0 overflow-hidden border-border mb-6 shadow-sm">
+                <div className="divide-y divide-border">
+                  <div className="flex justify-between p-4 bg-surface-muted transition-colors hover:bg-brand-soft/20">
+                    <span className="text-text-secondary">{t('result.safePrice')} (15%)</span>
+                    <AnimatedNumber value={result.suggestedPrices?.safe?.price || 0} isCurrency={true} className="font-bold" />
+                  </div>
+                  <div className="flex justify-between p-4 bg-status-okayBg text-status-okay transition-colors hover:bg-status-okayBg/80">
+                    <span className="font-medium">{t('result.idealPrice')} (30%)</span>
+                    <AnimatedNumber value={result.suggestedPrices?.ideal?.price || 0} isCurrency={true} className="font-bold" />
+                  </div>
+                  <div className="flex justify-between p-4 bg-status-goodBg text-status-good transition-colors hover:bg-status-goodBg/80">
+                    <span className="font-medium">{t('result.premiumPrice')} (50%)</span>
+                    <AnimatedNumber value={result.suggestedPrices?.premium?.price || 0} isCurrency={true} className="font-bold" />
+                  </div>
+                </div>
+              </Card>
+            </FadeIn>
+
+            <FadeIn>
+              <h2 className="text-lg font-semibold mb-3 tracking-tight">Aksi</h2>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button variant="secondary" className="flex-1 border-border hover:border-brand-primary/50" onClick={handleUseAgain}>
+                  {t('history.useAgain')}
+                </Button>
+                <Button variant="destructive" className="flex-1" onClick={() => setShowDeleteConfirm(true)}>
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  {t('common.delete')}
+                </Button>
+              </div>
+            </FadeIn>
+          </StaggerContainer>
         </div>
-
-        <div>
-          <h2 className="text-lg font-semibold mb-3">Hasil Produksi</h2>
-          <Card className="p-0 overflow-hidden border-border mb-6">
-            <div className="divide-y divide-border">
-              <div className="flex justify-between p-4 bg-surface">
-                <span className="text-text-secondary">{t('calculator.outputQuantity')}</span>
-                <span className="font-medium">{input.outputQuantity} {input.sellingUnit}</span>
-              </div>
-              <div className="flex justify-between p-4 bg-surface">
-                <span className="text-text-secondary">{t('calculator.failedQuantity')}</span>
-                <span className="font-medium">{input.failedQuantity} {input.sellingUnit}</span>
-              </div>
-            </div>
-          </Card>
-
-          <h2 className="text-lg font-semibold mb-3">{t('result.suggestedPrices')}</h2>
-          <Card className="p-0 overflow-hidden border-border mb-6">
-            <div className="divide-y divide-border">
-              <div className="flex justify-between p-4 bg-surface-muted">
-                <span className="text-text-secondary">{t('result.safePrice')} (15%)</span>
-                <span className="font-bold">{formatCurrency(result.suggestedPrices?.safe?.price || 0, lang, settings.currency)}</span>
-              </div>
-              <div className="flex justify-between p-4 bg-status-okayBg text-status-okay">
-                <span className="font-medium">{t('result.idealPrice')} (30%)</span>
-                <span className="font-bold">{formatCurrency(result.suggestedPrices?.ideal?.price || 0, lang, settings.currency)}</span>
-              </div>
-              <div className="flex justify-between p-4 bg-status-goodBg text-status-good">
-                <span className="font-medium">{t('result.premiumPrice')} (50%)</span>
-                <span className="font-bold">{formatCurrency(result.suggestedPrices?.premium?.price || 0, lang, settings.currency)}</span>
-              </div>
-            </div>
-          </Card>
-
-          <h2 className="text-lg font-semibold mb-3">Aksi</h2>
-          <div className="flex flex-col sm:flex-row gap-3">
-            <Button variant="secondary" className="flex-1" onClick={handleUseAgain}>
-              {t('history.useAgain')}
-            </Button>
-            <Button variant="destructive" className="flex-1" onClick={() => setShowDeleteConfirm(true)}>
-              <Trash2 className="w-4 h-4 mr-2" />
-              {t('common.delete')}
-            </Button>
-          </div>
-        </div>
-      </div>
+      </StaggerContainer>
 
       <ConfirmDialog 
         open={showDeleteConfirm}

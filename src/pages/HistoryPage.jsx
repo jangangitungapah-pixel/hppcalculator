@@ -11,6 +11,8 @@ import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { formatCurrency, formatPercent } from '../lib/calculations';
 import { History as HistoryIcon, Trash2 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
+import { StaggerContainer } from '../components/motion/StaggerContainer';
+import { FadeIn } from '../components/motion/FadeIn';
 
 export const HistoryPage = () => {
   const { t, lang } = useLanguage();
@@ -49,45 +51,47 @@ export const HistoryPage = () => {
       </div>
 
       {calculations.length > 0 ? (
-        <div className="data-list">
+        <StaggerContainer className="data-list">
           {calculations.map((item) => (
-            <Card key={item.id} className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="flex-1 cursor-pointer" onClick={() => navigate(`/history/${item.id}`)}>
-                <div className="flex items-center gap-2 mb-1">
-                  <h3 className="font-bold text-lg text-text-primary hover:text-brand-primary transition-colors">{item.productName}</h3>
-                  <Badge variant={item.result.profitStatus.key}>{t(`result.status.${item.result.profitStatus.key}`)}</Badge>
-                  {item.source === 'demo' && (
-                    <Badge variant="neutral" className="ml-2 text-[10px] py-0 px-1.5">{t('history.sourceDemo')}</Badge>
-                  )}
+            <FadeIn key={item.id}>
+              <Card className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-premium hover:border-brand-primary/40 hover:shadow-floating cursor-default">
+                <div className="flex-1 cursor-pointer" onClick={() => navigate(`/history/${item.id}`)}>
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="font-bold text-lg text-text-primary hover:text-brand-primary transition-colors">{item.productName}</h3>
+                    <Badge variant={item.result.profitStatus.key}>{t(`result.status.${item.result.profitStatus.key}`)}</Badge>
+                    {item.source === 'demo' && (
+                      <Badge variant="neutral" className="ml-2 text-[10px] py-0 px-1.5">{t('history.sourceDemo')}</Badge>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm text-text-secondary mt-2 max-w-sm">
+                    <span>HPP: <span className="font-medium text-text-primary">{formatCurrency(item.result.hppPerUnit, lang, settings.currency)}</span></span>
+                    <span>Jual: <span className="font-medium text-text-primary">{formatCurrency(item.result.sellingPrice, lang, settings.currency)}</span></span>
+                    <span>Untung: <span className="font-medium text-text-primary">{formatCurrency(item.result.profitPerUnit, lang, settings.currency)}</span></span>
+                    <span>Margin: <span className="font-medium text-text-primary">{formatPercent(item.result.marginPercent, lang)}</span></span>
+                  </div>
                 </div>
-                <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm text-text-secondary mt-2 max-w-sm">
-                  <span>HPP: {formatCurrency(item.result.hppPerUnit, lang, settings.currency)}</span>
-                  <span>Jual: {formatCurrency(item.result.sellingPrice, lang, settings.currency)}</span>
-                  <span>Untung: {formatCurrency(item.result.profitPerUnit, lang, settings.currency)}</span>
-                  <span>Margin: {formatPercent(item.result.marginPercent, lang)}</span>
+                
+                <div className="flex sm:flex-col gap-2 w-full sm:w-auto">
+                  <Button 
+                    variant="secondary" 
+                    className="flex-1 sm:flex-none border-border hover:border-brand-primary/50"
+                    onClick={() => navigate(`/history/${item.id}`)}
+                  >
+                    {t('history.viewDetail')}
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    className="flex-1 sm:flex-none text-status-loss hover:bg-status-lossBg border border-transparent hover:border-status-loss/20"
+                    onClick={() => setDeleteId(item.id)}
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    {t('history.delete')}
+                  </Button>
                 </div>
-              </div>
-              
-              <div className="flex sm:flex-col gap-2 w-full sm:w-auto">
-                <Button 
-                  variant="secondary" 
-                  className="flex-1 sm:flex-none"
-                  onClick={() => navigate(`/history/${item.id}`)}
-                >
-                  {t('history.viewDetail')}
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  className="flex-1 sm:flex-none text-status-loss hover:bg-status-lossBg border border-transparent hover:border-status-loss/20"
-                  onClick={() => setDeleteId(item.id)}
-                >
-                  <Trash2 className="w-4 h-4 mr-2" />
-                  {t('history.delete')}
-                </Button>
-              </div>
-            </Card>
+              </Card>
+            </FadeIn>
           ))}
-        </div>
+        </StaggerContainer>
       ) : (
         <EmptyState 
           icon={<HistoryIcon className="w-8 h-8" />}

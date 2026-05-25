@@ -14,6 +14,9 @@ import { Badge } from '../components/ui/Badge';
 import { EmptyState } from '../components/ui/EmptyState';
 import { formatCurrency, formatPercent } from '../lib/calculations';
 import { Box, TrendingUp, CheckCircle, Database, Calculator, Store, Users, ShoppingBag, BarChart3, ChevronRight, AlertTriangle } from 'lucide-react';
+import { AnimatedNumber } from '../components/motion/AnimatedNumber';
+import { StaggerContainer } from '../components/motion/StaggerContainer';
+import { FadeIn } from '../components/motion/FadeIn';
 
 export const DashboardPage = () => {
   const { t, lang } = useLanguage();
@@ -47,54 +50,67 @@ export const DashboardPage = () => {
         />
       )}
 
-      <div className="page-header">
-        <h1 className="page-title">{t('dashboard.greeting')}</h1>
-        <p className="page-subtitle">Ringkasan bisnis F&B kamu hari ini.</p>
+      <div className="page-header mb-8">
+        <h1 className="text-3xl font-extrabold text-text-primary tracking-tight mb-2">
+          {t('dashboard.greeting')}
+        </h1>
+        <p className="text-text-secondary text-lg">
+          Ringkasan bisnis F&B kamu hari ini.
+        </p>
       </div>
 
       {hasAnyData && (
-        <div className="page-grid md:grid-cols-4 mb-8">
-          <SummaryCard 
-            title={t('dashboard.summaryProducts')} 
-            value={summary.dataCoverage.calculations} 
-            icon={Box} 
-            tone="neutral" 
-          />
-          <SummaryCard 
-            title={t('dashboard.summaryAverageMargin')} 
-            value={formatPercent(summary.averageMargin, lang)} 
-            icon={TrendingUp} 
-            tone={summary.averageMargin >= 25 ? 'good' : 'loss'} 
-          />
-          <SummaryCard 
-            title={t('dashboard.summaryHealthyMenus')} 
-            value={summary.healthyCount} 
-            icon={CheckCircle} 
-            tone="good" 
-          />
-          <Card 
-            className="p-4 flex flex-col justify-between cursor-pointer hover:border-brand-primary transition-colors bg-brand-soft/30 border-brand-primary/20"
-            onClick={() => navigate('/reports')}
-          >
-            <div className="flex justify-between items-start mb-2">
-              <h3 className="text-xs font-semibold text-brand-primary">{t('nav.reports')}</h3>
-              <BarChart3 className="w-5 h-5 text-brand-primary" />
-            </div>
-            <div>
-              <div className="text-xl font-bold mb-1 text-text-primary flex items-center justify-between">
-                Buka Laporan
-                <ChevronRight className="w-5 h-5 text-brand-primary" />
+        <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <FadeIn>
+            <SummaryCard 
+              title={t('dashboard.summaryProducts')} 
+              value={<AnimatedNumber value={summary.dataCoverage.calculations} />} 
+              icon={Box} 
+              tone="neutral" 
+            />
+          </FadeIn>
+          <FadeIn>
+            <SummaryCard 
+              title={t('dashboard.summaryAverageMargin')} 
+              value={<AnimatedNumber value={summary.averageMargin} suffix="%" />} 
+              icon={TrendingUp} 
+              tone={summary.averageMargin >= 25 ? 'good' : 'loss'} 
+            />
+          </FadeIn>
+          <FadeIn>
+            <SummaryCard 
+              title={t('dashboard.summaryHealthyMenus')} 
+              value={<AnimatedNumber value={summary.healthyCount} />} 
+              icon={CheckCircle} 
+              tone="good" 
+            />
+          </FadeIn>
+          <FadeIn>
+            <Card 
+              variant="clickable"
+              className="p-5 h-full flex flex-col justify-between bg-gradient-to-br from-brand-soft/50 to-surface border-brand-primary/20"
+              onClick={() => navigate('/reports')}
+            >
+              <div className="flex justify-between items-start mb-2">
+                <h3 className="text-xs font-bold tracking-wider uppercase text-brand-primary/80">{t('nav.reports')}</h3>
+                <BarChart3 className="w-5 h-5 text-brand-primary opacity-80" />
               </div>
-              <div className="text-[10px] text-text-secondary">
-                {summary.lossCount > 0 ? (
-                  <span className="text-status-loss flex items-center gap-1 font-medium"><AlertTriangle className="w-3 h-3"/> {summary.lossCount} Item Rugi</span>
-                ) : (
-                  <span>Lihat insight bisnismu</span>
-                )}
+              <div>
+                <div className="text-lg font-bold mb-1 text-text-primary flex items-center justify-between">
+                  Buka Laporan
+                  <ChevronRight className="w-5 h-5 text-brand-primary" />
+                </div>
+                <div className="text-xs text-text-secondary font-medium">
+                  {summary.lossCount > 0 ? (
+                    <span className="text-status-loss flex items-center gap-1"><AlertTriangle className="w-3.5 h-3.5"/> {summary.lossCount} Item Rugi</span>
+                  ) : (
+                    <span>Lihat insight bisnismu</span>
+                  )}
+                </div>
               </div>
-            </div>
-          </Card>
-        </div>
+            </Card>
+          </FadeIn>
+        </StaggerContainer>
       )}
 
       {!hasAnyData ? (
@@ -116,14 +132,19 @@ export const DashboardPage = () => {
         />
       ) : (
         <>
-          <Card className="p-6 mb-8 bg-brand-primary text-white border-transparent">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <Card className="p-6 md:p-8 mb-10 bg-gradient-to-r from-brand-primary to-accent-coral text-white border-none shadow-floating relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-8 opacity-10 transform translate-x-4 -translate-y-4">
+              <Calculator className="w-32 h-32" />
+            </div>
+            <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-6">
               <div>
-                <h2 className="text-lg font-bold mb-1">Punya produk baru?</h2>
-                <p className="opacity-90">Hitung HPP dan temukan harga jual yang tepat.</p>
+                <h2 className="text-2xl font-bold mb-2">Punya produk baru?</h2>
+                <p className="text-white/90 text-sm md:text-base max-w-md leading-relaxed">Hitung HPP dan temukan harga jual yang tepat agar bisnismu tetap untung.</p>
               </div>
               <Button 
-                className="bg-white text-brand-primary hover:bg-brand-soft"
+                variant="secondary"
+                size="lg"
+                className="bg-white text-brand-primary border-none hover:bg-surface-muted shadow-sm whitespace-nowrap w-full sm:w-auto"
                 onClick={() => navigate('/calculator')}
               >
                 {t('dashboard.mainCta')}
@@ -131,30 +152,44 @@ export const DashboardPage = () => {
             </div>
           </Card>
 
-          <div className="mb-4 flex justify-between items-end">
-            <h2 className="text-lg font-bold text-text-primary">{t('dashboard.recentCalculations')}</h2>
-            <Button variant="ghost" size="sm" onClick={() => navigate('/history')}>
+          <div className="mb-5 flex justify-between items-end">
+            <div>
+              <h2 className="text-xl font-bold text-text-primary tracking-tight">{t('dashboard.recentCalculations')}</h2>
+              <p className="text-sm text-text-secondary mt-1">Perhitungan terakhir yang kamu simpan</p>
+            </div>
+            <Button variant="ghost" size="sm" onClick={() => navigate('/history')} className="hidden sm:inline-flex">
               {t('dashboard.viewAll')}
             </Button>
           </div>
 
-          <div className="data-list">
-            {stats.recentCalculations.map((item) => (
-              <Card key={item.id} className="p-4 flex justify-between items-center cursor-pointer hover:border-brand-primary transition-colors" onClick={() => navigate(`/history/${item.id}`)}>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <div className="font-semibold text-text-primary">{item.productName}</div>
-                    {item.source === 'demo' && (
-                      <Badge variant="neutral" className="text-[10px] py-0 px-1.5">{t('common.demo')}</Badge>
-                    )}
-                  </div>
-                  <div className="text-sm text-text-secondary mt-1">
-                    Harga: {formatCurrency(item.result.sellingPrice, lang, settings.currency)}
-                  </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
+            {stats.recentCalculations.slice(0, 3).map((item) => (
+              <Card 
+                key={item.id} 
+                variant="clickable"
+                className="p-5 flex flex-col justify-between" 
+                onClick={() => navigate(`/history/${item.id}`)}
+              >
+                <div className="flex justify-between items-start mb-4">
+                  <div className="font-bold text-text-primary truncate pr-2 text-lg">{item.productName}</div>
+                  <Badge variant={item.result.profitStatus.key} className="shrink-0">
+                    {t(`result.status.${item.result.profitStatus.key}`)}
+                  </Badge>
                 </div>
-                <div className="flex flex-col items-end gap-2">
-                  <Badge variant={item.result.profitStatus.key}>{t(`result.status.${item.result.profitStatus.key}`)}</Badge>
-                  <div className="text-sm font-semibold">{formatPercent(item.result.marginPercent, lang)}</div>
+                
+                <div className="flex justify-between items-end mt-auto pt-4 border-t border-border/50">
+                  <div>
+                    <div className="text-[10px] font-bold text-text-tertiary uppercase tracking-wider mb-1">Harga Jual</div>
+                    <div className="font-semibold text-text-primary">
+                      {formatCurrency(item.result.sellingPrice, lang, settings.currency)}
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-[10px] font-bold text-text-tertiary uppercase tracking-wider mb-1">Margin</div>
+                    <div className="font-bold text-brand-primary">
+                      {formatPercent(item.result.marginPercent, lang)}
+                    </div>
+                  </div>
                 </div>
               </Card>
             ))}

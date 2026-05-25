@@ -1,9 +1,11 @@
 import React from 'react';
+import { PageTransition } from '../motion/PageTransition';
+import { cn } from '../../lib/ui/cn';
 
-export const PageContainer = ({ children, className = '' }) => {
+export const PageContainer = ({ children, className, maxWidth = "max-w-page", ...props }) => {
   return (
-    <div className={`page-container ${className}`}>
+    <PageTransition className={cn("w-full mx-auto px-4 sm:px-6 py-6 pb-24 lg:pb-8", maxWidth, className)} {...props}>
       {children}
-    </div>
+    </PageTransition>
   );
 };

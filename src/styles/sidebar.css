@@ -1,0 +1,109 @@
+/* Sidebar and Bottom Nav Styles */
+
+/* Sidebar Layout */
+.app-sidebar {
+  @apply fixed left-0 top-0 bottom-0 w-[280px] flex flex-col z-[40] transition-all duration-300 ease-[var(--ease-premium)];
+  background: linear-gradient(170deg, var(--color-sidebar) 0%, var(--color-sidebar-dark) 100%);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-sidebar);
+}
+
+.app-sidebar-header {
+  @apply h-[72px] flex items-center px-6 border-b border-white/5 relative overflow-hidden;
+}
+
+/* Add a subtle brand glow to the header */
+.app-sidebar-header::after {
+  content: '';
+  @apply absolute -top-10 -left-10 w-32 h-32 rounded-full;
+  background: radial-gradient(circle, var(--color-primary-glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.sidebar-logo-container {
+  @apply flex items-center justify-center w-8 h-8 rounded-lg mr-3 shadow-md;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent-coral) 100%);
+  color: white;
+}
+
+.sidebar-brand-title {
+  @apply font-bold text-xl tracking-tight;
+}
+
+.sidebar-nav-container {
+  @apply flex-1 py-6 px-4 flex flex-col gap-1 overflow-y-auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.sidebar-nav-container::-webkit-scrollbar {
+  display: none;
+}
+
+.sidebar-group-label {
+  @apply text-[10px] font-bold tracking-widest uppercase mb-2 px-3 opacity-50 mt-4 first:mt-0;
+}
+
+/* Nav Item */
+.nav-link {
+  @apply flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm transition-all duration-300 ease-[var(--ease-premium)] text-white/70 relative overflow-hidden;
+}
+
+.nav-link:hover {
+  @apply text-white bg-white/5;
+}
+
+/* Active Nav Item */
+.nav-link-active {
+  @apply text-white bg-white/10 shadow-sm font-semibold;
+  color: var(--color-primary-soft);
+}
+
+.nav-link-active::before {
+  content: '';
+  @apply absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r-full bg-[var(--color-primary)];
+  background: linear-gradient(to bottom, var(--color-primary), var(--color-accent-gold));
+  box-shadow: var(--shadow-glow-primary);
+}
+
+/* Mobile Bottom Nav */
+.app-bottom-nav {
+  @apply lg:hidden fixed bottom-4 left-4 right-4 bg-surface/85 backdrop-blur-md border border-border/50 rounded-[28px] z-[40] flex justify-around items-center px-2 py-1.5;
+  box-shadow: var(--shadow-floating);
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.app-bottom-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.bottom-nav-item {
+  @apply flex flex-col items-center justify-center min-h-[56px] w-16 gap-1 relative rounded-2xl transition-all duration-300 ease-[var(--ease-premium)] text-text-muted;
+}
+
+.bottom-nav-item:hover {
+  @apply text-text-secondary bg-surface-muted/50;
+}
+
+.bottom-nav-item-active {
+  @apply font-semibold text-[var(--color-primary)];
+  /* background: var(--color-primary-softer); */
+}
+
+/* Active state blob */
+.bottom-nav-item-active::before {
+  content: '';
+  @apply absolute inset-1 bg-[var(--color-primary-softer)] rounded-[20px] -z-10;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.bottom-nav-icon {
+  @apply transition-transform duration-300 ease-[var(--ease-bounce-soft)];
+}
+
+.bottom-nav-item-active .bottom-nav-icon {
+  @apply transform scale-110 text-[var(--color-primary)];
+}
+
+.bottom-nav-label {
+  @apply text-[10px] tracking-wide;
+}

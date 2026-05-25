@@ -1,4 +1,5 @@
 import React from 'react';
+import { cn } from '../../lib/ui/cn';
 
 export const Input = React.forwardRef(({
   label,
@@ -7,8 +8,8 @@ export const Input = React.forwardRef(({
   prefix,
   suffix,
   id,
-  className = '',
-  containerClassName = '',
+  className,
+  containerClassName,
   type = 'text',
   ...props
 }, ref) => {
@@ -17,16 +18,16 @@ export const Input = React.forwardRef(({
   const helperId = `${inputId}-helper`;
 
   return (
-    <div className={`form-field ${containerClassName}`}>
+    <div className={cn("flex flex-col gap-1.5", containerClassName)}>
       {label && (
-        <label htmlFor={inputId} className="form-label">
+        <label htmlFor={inputId} className="text-sm font-bold text-text-primary">
           {label}
         </label>
       )}
       
-      <div className="input-shell">
+      <div className="relative flex items-center group">
         {prefix && (
-          <span className="form-prefix">
+          <span className="absolute left-3 text-text-muted group-focus-within:text-primary transition-colors">
             {prefix}
           </span>
         )}
@@ -35,25 +36,34 @@ export const Input = React.forwardRef(({
           ref={ref}
           id={inputId}
           type={type}
-          className={`form-input ${prefix ? 'input-with-prefix' : ''} ${suffix ? 'input-with-suffix' : ''} ${className}`}
+          className={cn(
+            "w-full h-[48px] bg-surface border border-border rounded-xl px-4 text-base text-text-primary transition-all duration-300 ease-[var(--ease-out)]",
+            "focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10",
+            "disabled:bg-surface-muted disabled:text-text-muted disabled:cursor-not-allowed",
+            "placeholder:text-text-soft",
+            prefix && "pl-10",
+            suffix && "pr-10",
+            error && "border-danger focus:border-danger focus:ring-danger/10",
+            className
+          )}
           aria-invalid={!!error}
           aria-describedby={`${error ? errorId : ''} ${helperText && !error ? helperId : ''}`.trim() || undefined}
           {...props}
         />
         
         {suffix && (
-          <span className="form-suffix">
+          <span className="absolute right-3 text-text-muted">
             {suffix}
           </span>
         )}
       </div>
 
       {error ? (
-        <span id={errorId} className="form-error">
+        <span id={errorId} className="text-xs text-danger font-medium mt-0.5">
           {error}
         </span>
       ) : helperText ? (
-        <span id={helperId} className="form-helper">
+        <span id={helperId} className="text-xs text-text-secondary mt-0.5">
           {helperText}
         </span>
       ) : null}
