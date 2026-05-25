@@ -1,14 +1,13 @@
 import { STORAGE_KEYS } from './storageKeys';
-import { safeParseJSON, safeStringifyJSON } from '../../utils/safeParse';
+import { getScopedJson, setScopedJson } from './localStorageClient';
 import { createPricingSimulation } from '../channelPricing/priceSimulation';
 
 export const getPricingSimulations = () => {
-  const data = localStorage.getItem(STORAGE_KEYS.PRICING_SIMULATIONS);
-  return safeParseJSON(data, []);
+  return getScopedJson(STORAGE_KEYS.PRICING_SIMULATIONS, []);
 };
 
 export const savePricingSimulations = (simulations) => {
-  localStorage.setItem(STORAGE_KEYS.PRICING_SIMULATIONS, safeStringifyJSON(simulations));
+  setScopedJson(STORAGE_KEYS.PRICING_SIMULATIONS, simulations);
 };
 
 export const getPricingSimulationById = (id) => {

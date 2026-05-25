@@ -68,3 +68,28 @@ export const getStorageErrorMessage = (error) => {
   }
   return "Terjadi kesalahan saat menyimpan data.";
 };
+
+// --- Scoped Storage API ---
+import { getScopedStorageKey } from './storageScope';
+
+export const getScopedKey = (baseKey) => {
+  const scoped = getScopedStorageKey(baseKey);
+  if (import.meta.env.DEV) {
+    // Enable this for deep debugging if needed
+    // console.debug(`[LocalStorageClient] Mapping ${baseKey} -> ${scoped}`);
+  }
+  return scoped;
+};
+
+export const getScopedJson = (baseKey, fallback = null) => {
+  return getJson(getScopedKey(baseKey), fallback);
+};
+
+export const setScopedJson = (baseKey, value) => {
+  return setJson(getScopedKey(baseKey), value);
+};
+
+export const removeScopedItem = (baseKey) => {
+  return removeItem(getScopedKey(baseKey));
+};
+

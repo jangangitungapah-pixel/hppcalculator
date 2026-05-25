@@ -1,5 +1,6 @@
 import { SYNC_RECORD_TYPES_TO_MODULE, SYNC_RECORD_TYPES } from './syncTypes';
 import { mapSyncRecordToLocal } from './syncMapper';
+import { getScopedJson, setScopedJson } from '../storage/localStorageClient';
 
 export const mergeModuleRecords = (localRecords, incomingRecords) => {
   const localMap = new Map(localRecords.map(r => [r.id, r]));
@@ -37,18 +38,17 @@ export const applyCloudRecordsToLocalStorage = (resolvedToLocalRecords) => {
     if (recordType === SYNC_RECORD_TYPES.SETTINGS) {
       const settingsRecord = records[0]; // should only be one
       if (settingsRecord && !settingsRecord.deletedAt) {
-        localStorage.setItem('modalin:v1:settings', JSON.stringify(settingsRecord.payload));
+        setScopedJson('modalin:v1:settings', settingsRecord.payload);
         hasChanges = true;
       }
     } else {
       const moduleName = SYNC_RECORD_TYPES_TO_MODULE[recordType];
       if (moduleName) {
         const storageKey = `modalin:v1:${moduleName}`;
-        const existingRaw = localStorage.getItem(storageKey);
-        const existing = existingRaw ? JSON.parse(existingRaw) : [];
+        const existing = getScopedJson(storageKey, []);
         
         const merged = mergeModuleRecords(existing, records);
-        localStorage.setItem(storageKey, JSON.stringify(merged));
+        setScopedJson(storageKey, merged);
         hasChanges = true;
       }
     }

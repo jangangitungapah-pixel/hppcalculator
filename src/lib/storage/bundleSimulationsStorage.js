@@ -1,13 +1,12 @@
 import { STORAGE_KEYS } from './storageKeys';
-import { safeParseJSON, safeStringifyJSON } from '../../utils/safeParse';
+import { getScopedJson, setScopedJson } from './localStorageClient';
 
 export const getBundleSimulations = () => {
-  const data = localStorage.getItem(STORAGE_KEYS.BUNDLE_SIMULATIONS);
-  return safeParseJSON(data, []);
+  return getScopedJson(STORAGE_KEYS.BUNDLE_SIMULATIONS, []);
 };
 
 export const saveBundleSimulations = (simulations) => {
-  localStorage.setItem(STORAGE_KEYS.BUNDLE_SIMULATIONS, safeStringifyJSON(simulations));
+  setScopedJson(STORAGE_KEYS.BUNDLE_SIMULATIONS, simulations);
 };
 
 export const getBundleSimulationById = (id) => {

@@ -1,8 +1,8 @@
-import { getJson, setJson, removeItem } from './localStorageClient';
+import { getScopedJson, setScopedJson, removeScopedItem } from './localStorageClient';
 import { STORAGE_KEYS, STORAGE_VERSION } from './storageKeys';
 
 export const getSavedCalculations = () => {
-  return getJson(STORAGE_KEYS.calculations, []);
+  return getScopedJson(STORAGE_KEYS.calculations, []);
 };
 
 export const getSavedCalculationById = (id) => {
@@ -32,7 +32,7 @@ export const saveCalculation = (input, result, options = {}) => {
   };
 
   const updatedCalculations = [newCalculation, ...calculations];
-  const success = setJson(STORAGE_KEYS.calculations, updatedCalculations);
+  const success = setScopedJson(STORAGE_KEYS.calculations, updatedCalculations);
   
   if (!success) {
     throw new Error('Failed to save calculation due to storage error');
@@ -44,7 +44,7 @@ export const saveCalculation = (input, result, options = {}) => {
 export const deleteCalculation = (id) => {
   const calculations = getSavedCalculations();
   const updatedCalculations = calculations.filter(calc => calc.id !== id);
-  return setJson(STORAGE_KEYS.calculations, updatedCalculations);
+  return setScopedJson(STORAGE_KEYS.calculations, updatedCalculations);
 };
 
 export const deleteAllCalculations = () => {
@@ -111,7 +111,7 @@ export const loadDemoCalculations = (mockCalculations) => {
   // Sort by date descending
   updatedCalculations.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   
-  return setJson(STORAGE_KEYS.calculations, updatedCalculations);
+  return setScopedJson(STORAGE_KEYS.calculations, updatedCalculations);
 };
 
 export const getCalculationStats = () => {

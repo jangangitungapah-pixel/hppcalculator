@@ -1,14 +1,13 @@
 import { STORAGE_KEYS } from './storageKeys';
-import { safeParseJSON, safeStringifyJSON } from '../../utils/safeParse';
+import { getScopedJson, setScopedJson } from './localStorageClient';
 import { defaultChannelProfiles } from '../channelPricing/channelPresets';
 
 export const getChannelProfiles = () => {
-  const data = localStorage.getItem(STORAGE_KEYS.CHANNEL_PROFILES);
-  return safeParseJSON(data, []);
+  return getScopedJson(STORAGE_KEYS.CHANNEL_PROFILES, []);
 };
 
 export const saveChannelProfiles = (profiles) => {
-  localStorage.setItem(STORAGE_KEYS.CHANNEL_PROFILES, safeStringifyJSON(profiles));
+  setScopedJson(STORAGE_KEYS.CHANNEL_PROFILES, profiles);
 };
 
 export const getChannelProfileById = (id) => {

@@ -282,13 +282,14 @@ export const RecipeDetailPage = () => {
       </div>
 
       <ConfirmDialog
-        isOpen={showDeleteConfirm}
-        onClose={() => setShowDeleteConfirm(false)}
+        open={showDeleteConfirm}
+        onCancel={() => setShowDeleteConfirm(false)}
         onConfirm={handleDelete}
         title={t('recipes.deleteConfirmTitle')}
-        message={t('recipes.deleteConfirmBody')}
-        confirmText={t('common.delete')}
-        cancelText={t('common.cancel')}
+        description={t('recipes.deleteConfirmBody')}
+        confirmLabel={t('common.delete')}
+        cancelLabel={t('common.cancel')}
+        variant="danger"
       />
 
       {/* Scale Modal */}

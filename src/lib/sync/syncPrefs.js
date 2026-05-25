@@ -1,4 +1,6 @@
-const SYNC_PREFS_KEY = 'modalin:v1:syncPrefs';
+import { getScopedStorageKey } from '../storage/storageScope';
+
+const BASE_SYNC_PREFS_KEY = 'modalin:v1:syncPrefs';
 
 const defaultPrefs = {
   version: 1,
@@ -11,7 +13,8 @@ const defaultPrefs = {
 
 export function getSyncPrefs() {
   try {
-    const raw = localStorage.getItem(SYNC_PREFS_KEY);
+    const key = getScopedStorageKey(BASE_SYNC_PREFS_KEY);
+    const raw = localStorage.getItem(key);
     if (!raw) return { ...defaultPrefs };
     return { ...defaultPrefs, ...JSON.parse(raw) };
   } catch (error) {
@@ -24,7 +27,8 @@ export function updateSyncPrefs(partial) {
   try {
     const current = getSyncPrefs();
     const updated = { ...current, ...partial };
-    localStorage.setItem(SYNC_PREFS_KEY, JSON.stringify(updated));
+    const key = getScopedStorageKey(BASE_SYNC_PREFS_KEY);
+    localStorage.setItem(key, JSON.stringify(updated));
     return updated;
   } catch (error) {
     console.warn('Failed to update sync prefs:', error);

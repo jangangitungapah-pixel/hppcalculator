@@ -1,4 +1,4 @@
-import { getJson, setJson } from './localStorageClient';
+import { getScopedJson, setScopedJson } from './localStorageClient';
 import { STORAGE_KEYS, STORAGE_VERSION } from './storageKeys';
 
 export const DEFAULT_SETTINGS = {
@@ -10,7 +10,7 @@ export const DEFAULT_SETTINGS = {
 };
 
 export const getSettings = () => {
-  const stored = getJson(STORAGE_KEYS.settings);
+  const stored = getScopedJson(STORAGE_KEYS.settings);
   if (!stored) return DEFAULT_SETTINGS;
   return { ...DEFAULT_SETTINGS, ...stored };
 };
@@ -21,7 +21,7 @@ export const saveSettings = (settings) => {
     version: STORAGE_VERSION,
     updatedAt: new Date().toISOString()
   };
-  setJson(STORAGE_KEYS.settings, newSettings);
+  setScopedJson(STORAGE_KEYS.settings, newSettings);
   return newSettings;
 };
 

@@ -1,8 +1,8 @@
 import { STORAGE_KEYS } from './storageKeys';
-import { getJson, setJson } from './localStorageClient';
+import { getScopedJson, setScopedJson } from './localStorageClient';
 
 export const getProducts = () => {
-  return getJson(STORAGE_KEYS.PRODUCTS, []);
+  return getScopedJson(STORAGE_KEYS.PRODUCTS, []);
 };
 
 export const getProductById = (id) => {
@@ -23,7 +23,7 @@ export const saveProduct = (productInput) => {
   };
 
   const updatedProducts = [newProduct, ...products];
-  setJson(STORAGE_KEYS.PRODUCTS, updatedProducts);
+  setScopedJson(STORAGE_KEYS.PRODUCTS, updatedProducts);
   
   return newProduct;
 };
@@ -42,7 +42,7 @@ export const updateProduct = (id, updates) => {
   };
 
   products[index] = updatedProduct;
-  setJson(STORAGE_KEYS.PRODUCTS, products);
+  setScopedJson(STORAGE_KEYS.PRODUCTS, products);
   
   return updatedProduct;
 };
@@ -50,11 +50,11 @@ export const updateProduct = (id, updates) => {
 export const deleteProduct = (id) => {
   const products = getProducts();
   const updatedProducts = products.filter(p => p.id !== id);
-  setJson(STORAGE_KEYS.PRODUCTS, updatedProducts);
+  setScopedJson(STORAGE_KEYS.PRODUCTS, updatedProducts);
 };
 
 export const deleteAllProducts = () => {
-  setJson(STORAGE_KEYS.PRODUCTS, []);
+  setScopedJson(STORAGE_KEYS.PRODUCTS, []);
 };
 
 export const loadDemoProducts = (demoProducts) => {
@@ -63,7 +63,7 @@ export const loadDemoProducts = (demoProducts) => {
   const userProducts = current.filter(p => p.source !== 'demo');
   const updated = [...demoProducts, ...userProducts];
   
-  setJson(STORAGE_KEYS.PRODUCTS, updated);
+  setScopedJson(STORAGE_KEYS.PRODUCTS, updated);
   return updated;
 };
 

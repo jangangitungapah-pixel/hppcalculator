@@ -1,8 +1,8 @@
 import { STORAGE_KEYS } from './storageKeys';
-import { getJson, setJson } from './localStorageClient';
+import { getScopedJson, setScopedJson } from './localStorageClient';
 
 export const getIngredients = () => {
-  return getJson(STORAGE_KEYS.INGREDIENTS, []);
+  return getScopedJson(STORAGE_KEYS.INGREDIENTS, []);
 };
 
 export const getIngredientById = (id) => {
@@ -23,7 +23,7 @@ export const saveIngredient = (ingredientInput) => {
   };
 
   const updatedIngredients = [newIngredient, ...ingredients];
-  setJson(STORAGE_KEYS.INGREDIENTS, updatedIngredients);
+  setScopedJson(STORAGE_KEYS.INGREDIENTS, updatedIngredients);
   
   return newIngredient;
 };
@@ -42,7 +42,7 @@ export const updateIngredient = (id, updates) => {
   };
 
   ingredients[index] = updatedIngredient;
-  setJson(STORAGE_KEYS.INGREDIENTS, ingredients);
+  setScopedJson(STORAGE_KEYS.INGREDIENTS, ingredients);
   
   return updatedIngredient;
 };
@@ -50,11 +50,11 @@ export const updateIngredient = (id, updates) => {
 export const deleteIngredient = (id) => {
   const ingredients = getIngredients();
   const updatedIngredients = ingredients.filter(ing => ing.id !== id);
-  setJson(STORAGE_KEYS.INGREDIENTS, updatedIngredients);
+  setScopedJson(STORAGE_KEYS.INGREDIENTS, updatedIngredients);
 };
 
 export const deleteAllIngredients = () => {
-  setJson(STORAGE_KEYS.INGREDIENTS, []);
+  setScopedJson(STORAGE_KEYS.INGREDIENTS, []);
 };
 
 export const loadDemoIngredients = (demoIngredients) => {
@@ -63,7 +63,7 @@ export const loadDemoIngredients = (demoIngredients) => {
   const userIngredients = current.filter(ing => ing.source !== 'demo');
   const updated = [...demoIngredients, ...userIngredients];
   
-  setJson(STORAGE_KEYS.INGREDIENTS, updated);
+  setScopedJson(STORAGE_KEYS.INGREDIENTS, updated);
   return updated;
 };
 

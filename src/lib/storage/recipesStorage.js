@@ -1,8 +1,8 @@
 import { STORAGE_KEYS } from './storageKeys';
-import { getJson, setJson } from './localStorageClient';
+import { getScopedJson, setScopedJson } from './localStorageClient';
 
 export const getRecipes = () => {
-  return getJson(STORAGE_KEYS.RECIPES, []);
+  return getScopedJson(STORAGE_KEYS.RECIPES, []);
 };
 
 export const getRecipeById = (id) => {
@@ -24,7 +24,7 @@ export const saveRecipe = (recipeInput, result) => {
   };
 
   const updatedRecipes = [newRecipe, ...recipes];
-  setJson(STORAGE_KEYS.RECIPES, updatedRecipes);
+  setScopedJson(STORAGE_KEYS.RECIPES, updatedRecipes);
   
   return newRecipe;
 };
@@ -43,7 +43,7 @@ export const updateRecipe = (id, updates) => {
   };
 
   recipes[index] = updatedRecipe;
-  setJson(STORAGE_KEYS.RECIPES, recipes);
+  setScopedJson(STORAGE_KEYS.RECIPES, recipes);
   
   return updatedRecipe;
 };
@@ -51,11 +51,11 @@ export const updateRecipe = (id, updates) => {
 export const deleteRecipe = (id) => {
   const recipes = getRecipes();
   const updatedRecipes = recipes.filter(r => r.id !== id);
-  setJson(STORAGE_KEYS.RECIPES, updatedRecipes);
+  setScopedJson(STORAGE_KEYS.RECIPES, updatedRecipes);
 };
 
 export const deleteAllRecipes = () => {
-  setJson(STORAGE_KEYS.RECIPES, []);
+  setScopedJson(STORAGE_KEYS.RECIPES, []);
 };
 
 export const loadDemoRecipes = (demoRecipes, ingredients = []) => {
@@ -64,7 +64,7 @@ export const loadDemoRecipes = (demoRecipes, ingredients = []) => {
   const userRecipes = current.filter(r => r.source !== 'demo');
   const updated = [...demoRecipes, ...userRecipes];
   
-  setJson(STORAGE_KEYS.RECIPES, updated);
+  setScopedJson(STORAGE_KEYS.RECIPES, updated);
   return updated;
 };
 

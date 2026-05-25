@@ -5,9 +5,14 @@ import { useNetworkStatus } from '../hooks/useNetworkStatus';
 import { getSyncPrefs, updateSyncPrefs, shouldShowInitialSyncPrompt, markLocalUploadApproved, dismissInitialSyncPrompt } from '../lib/sync/syncPrefs';
 import { collectLocalSyncRecords } from '../lib/sync/syncMapper';
 import { fetchCloudRecords, upsertCloudRecords, fetchSyncState, updateSyncState } from '../lib/sync/firebaseSyncService';
+import { importGuestDataToActiveUser } from '../lib/storage/scopeMigration';
+import { getJson } from '../lib/storage/localStorageClient';
+import { getScopedStorageKey, getGuestStorageScope } from '../lib/storage/storageScope';
+import { STORAGE_KEYS } from '../lib/storage/storageKeys';
 import { resolveSyncConflicts } from '../lib/sync/conflictResolution';
 import { applyCloudRecordsToLocalStorage } from '../lib/sync/applyCloudData';
 import { useToast } from '../hooks/useToast';
+import { getActiveStorageScope } from '../lib/storage/storageScope';
 
 export const SyncContext = createContext(null);
 
@@ -27,6 +32,13 @@ export const SyncProvider = ({ children }) => {
   
   const [showInitialPrompt, setShowInitialPrompt] = useState(false);
   const initialDataCheckDone = useRef(false);
+
+  // Reset initial check when user changes
+  useEffect(() => {
+    initialDataCheckDone.current = false;
+    setShowInitialPrompt(false);
+    setSyncPrefsState(getSyncPrefs());
+  }, [user?.uid]);
 
   // Status computation
   useEffect(() => {
@@ -75,7 +87,19 @@ export const SyncProvider = ({ children }) => {
     if (user && !initialDataCheckDone.current) {
       initialDataCheckDone.current = true;
       const localRecords = collectLocalSyncRecords(appData);
-      const hasLocalData = localRecords.length > 0;
+      
+      // Check if active user has data
+      let hasLocalData = localRecords.length > 0;
+      
+      // If user has no data, check if guest has data
+      if (!hasLocalData) {
+        const guestScope = getGuestStorageScope();
+        const guestIng = getJson(getScopedStorageKey(STORAGE_KEYS.INGREDIENTS, guestScope), []);
+        const guestProd = getJson(getScopedStorageKey(STORAGE_KEYS.PRODUCTS, guestScope), []);
+        if (guestIng.length > 0 || guestProd.length > 0) {
+          hasLocalData = true;
+        }
+      }
       
       if (shouldShowInitialSyncPrompt({ isAuthenticated: true, hasLocalData })) {
         setShowInitialPrompt(true);
@@ -90,10 +114,15 @@ export const SyncProvider = ({ children }) => {
   };
 
   const handleApproveLocalUpload = async () => {
+    importGuestDataToActiveUser(); // Safely merges guest data to active user
+    refreshData(); // Refresh appData to reflect merged data
+    
     markLocalUploadApproved();
     setSyncPrefsState(getSyncPrefs());
     setShowInitialPrompt(false);
-    await syncNow({ mode: 'push' });
+    
+    // Slight delay to ensure appData is refreshed before push
+    setTimeout(() => syncNow({ mode: 'push' }), 500);
   };
 
   const setAutoSyncEnabled = (enabled) => {
@@ -176,6 +205,10 @@ export const SyncProvider = ({ children }) => {
     
     // We only trigger auto-sync if we are not already syncing
     if (isSyncing) return;
+
+    // Guard: ensure active scope matches the user
+    const scope = getActiveStorageScope();
+    if (scope.type !== 'user' || scope.uid !== user.uid) return;
 
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
     

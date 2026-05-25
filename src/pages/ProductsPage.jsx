@@ -182,13 +182,14 @@ export const ProductsPage = () => {
       )}
 
       <ConfirmDialog
-        isOpen={Boolean(deleteId)}
-        onClose={() => setDeleteId(null)}
+        open={Boolean(deleteId)}
+        onCancel={() => setDeleteId(null)}
         onConfirm={handleDelete}
         title={t('products.deleteConfirmTitle')}
-        message={t('products.deleteConfirmBody')}
-        confirmText={t('common.delete')}
-        cancelText={t('common.cancel')}
+        description={t('products.deleteConfirmBody')}
+        confirmLabel={t('common.delete')}
+        cancelLabel={t('common.cancel')}
+        variant="danger"
       />
     </PageContainer>
   );

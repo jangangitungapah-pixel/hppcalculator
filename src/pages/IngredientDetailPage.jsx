@@ -144,13 +144,14 @@ export const IngredientDetailPage = () => {
       </div>
 
       <ConfirmDialog
-        isOpen={showDeleteConfirm}
-        onClose={() => setShowDeleteConfirm(false)}
+        open={showDeleteConfirm}
+        onCancel={() => setShowDeleteConfirm(false)}
         onConfirm={handleDelete}
         title={t('ingredients.deleteConfirmTitle')}
-        message={t('ingredients.deleteConfirmBody')}
-        confirmText={t('common.delete')}
-        cancelText={t('common.cancel')}
+        description={t('ingredients.deleteConfirmBody')}
+        confirmLabel={t('common.delete')}
+        cancelLabel={t('common.cancel')}
+        variant="danger"
       />
     </PageContainer>
   );
