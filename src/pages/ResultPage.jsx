@@ -57,14 +57,14 @@ export const ResultPage = () => {
 
   return (
     <PageContainer>
-      <div className="mb-6 flex items-center gap-3">
+      <div className="page-header flex items-center gap-3 mb-6">
         <button onClick={() => navigate(-1)} className="p-2 -ml-2 rounded-full hover:bg-surface-muted text-text-secondary">
           <ArrowLeft className="w-6 h-6" />
         </button>
-        <h1 className="text-xl font-bold text-text-primary">{t('result.resultTitle')}</h1>
+        <h1 className="page-title text-xl">{t('result.resultTitle')}</h1>
       </div>
 
-      <div className="flex flex-col gap-6 pb-24">
+      <div className="content-stack pb-24">
         {/* Hero Result */}
         <Card className="p-6 flex flex-col items-center text-center border-transparent shadow-card bg-brand-primary-soft">
           <Badge variant={result.profitStatus.key} className="mb-4">
@@ -118,7 +118,7 @@ export const ResultPage = () => {
         )}
 
         {/* Detail Grid */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="page-grid grid-cols-2 gap-4">
           <ResultCard 
             label={t('result.totalProductionCost')}
             value={formatCurrency(result.totalProductionCost, lang, settings.currency)}
@@ -174,7 +174,7 @@ export const ResultPage = () => {
           <p className="text-sm text-text-secondary mb-4">
             {lang === 'en' ? 'These prices are calculated from target margins and rounded up.' : 'Harga ini dihitung dari target margin dan dibulatkan ke atas.'}
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="page-grid sm:grid-cols-3 gap-3">
             <div className="flex flex-col p-4 rounded-xl bg-surface-muted border border-border">
               <span className="font-medium text-text-secondary text-sm mb-1">{t('result.safePrice')} (15%)</span>
               <span className="font-bold text-lg">{formatCurrency(result.suggestedPrices?.safe?.price || 0, lang, settings.currency)}</span>

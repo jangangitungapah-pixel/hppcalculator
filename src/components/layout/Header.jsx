@@ -8,7 +8,7 @@ export const Header = ({ title }) => {
   const { t } = useLanguage();
 
   return (
-    <header className="sticky top-0 z-nav bg-surface border-b border-border h-14 px-4 flex items-center justify-between">
+    <header className="app-header">
       <div className="flex items-center gap-2">
         <Link to="/" className="flex items-center gap-2 text-brand-primary">
           <Sparkles className="w-6 h-6" />

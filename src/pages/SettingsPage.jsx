@@ -39,11 +39,11 @@ export const SettingsPage = () => {
 
   return (
     <PageContainer maxWidth="max-w-2xl">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-text-primary mb-1">{t('settings.title')}</h1>
+      <div className="page-header">
+        <h1 className="page-title">{t('settings.title')}</h1>
       </div>
 
-      <div className="flex flex-col gap-6">
+      <div className="content-stack">
         <Card className="p-6">
           <h2 className="text-lg font-bold mb-4 text-text-primary">{t('settings.language')}</h2>
           <LanguageSwitch />

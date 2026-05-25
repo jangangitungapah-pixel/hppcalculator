@@ -43,13 +43,13 @@ export const HistoryPage = () => {
 
   return (
     <PageContainer>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-text-primary mb-1">{t('history.title')}</h1>
-        <p className="text-text-secondary">{t('history.subtitle')}</p>
+      <div className="page-header">
+        <h1 className="page-title">{t('history.title')}</h1>
+        <p className="page-subtitle">{t('history.subtitle')}</p>
       </div>
 
       {calculations.length > 0 ? (
-        <div className="flex flex-col gap-4">
+        <div className="data-list">
           {calculations.map((item) => (
             <Card key={item.id} className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex-1 cursor-pointer" onClick={() => navigate(`/history/${item.id}`)}>

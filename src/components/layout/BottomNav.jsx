@@ -26,15 +26,14 @@ export const BottomNav = () => {
   ];
 
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-surface border-t border-border pb-safe z-nav flex overflow-x-auto hide-scrollbar">
+    <nav className="app-bottom-nav hide-scrollbar overflow-x-auto">
       {navItems.map((item) => (
         <NavLink
           key={item.to}
           to={item.to}
-          className={({ isActive }) => `
-            flex-none w-[72px] flex flex-col items-center justify-center py-2 min-h-[60px] gap-1
-            ${isActive ? 'text-brand-primary' : 'text-text-secondary'}
-          `}
+          className={({ isActive }) => 
+            `bottom-nav-item flex-none w-[72px] min-h-[60px] ${isActive ? 'bottom-nav-item-active' : ''}`
+          }
         >
           {item.icon}
           <span className="text-[10px] font-medium">{item.label}</span>

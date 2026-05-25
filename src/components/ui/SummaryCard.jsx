@@ -11,17 +11,17 @@ export const SummaryCard = ({ title, value, description, icon: Icon, tone = 'neu
   const iconStyle = toneStyles[tone] || toneStyles.neutral;
 
   return (
-    <Card className={`p-5 flex flex-col gap-2 ${className}`}>
+    <Card className={`metric-card ${className}`}>
       <div className="flex justify-between items-start">
-        <h3 className="text-sm font-semibold text-text-secondary">{title}</h3>
+        <h3 className="metric-label">{title}</h3>
         {Icon && (
-          <div className={`p-2 rounded-md ${iconStyle}`}>
+          <div className={`metric-icon ${iconStyle}`}>
             <Icon className="w-5 h-5" />
           </div>
         )}
       </div>
-      <div className="text-2xl font-bold text-text-primary">{value}</div>
-      {description && <p className="text-sm text-text-muted">{description}</p>}
+      <div className="metric-value">{value}</div>
+      {description && <p className="metric-helper">{description}</p>}
     </Card>
   );
 };

@@ -11,7 +11,7 @@ export const WelcomePage = () => {
   const { t } = useLanguage();
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="app-root flex-col welcome-hero-bg">
       <header className="p-4 flex justify-between items-center max-w-[1180px] mx-auto w-full">
         <div className="flex items-center gap-2 text-brand-primary">
           <Sparkles className="w-6 h-6" />
@@ -22,7 +22,7 @@ export const WelcomePage = () => {
 
       <PageContainer className="flex-1 flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-24">
         <div className="flex-1 max-w-lg text-center lg:text-left">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-text-primary mb-6 leading-tight tracking-tight">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-text-primary mb-6 leading-tight tracking-tight text-gradient">
             {t('welcome.headline')}
           </h1>
           <p className="text-lg md:text-xl text-text-secondary mb-10 max-w-lg mx-auto lg:mx-0">
@@ -43,7 +43,7 @@ export const WelcomePage = () => {
           {/* Decorative background element */}
           <div className="absolute inset-0 bg-gradient-to-tr from-brand-soft to-transparent rounded-3xl transform rotate-3 scale-105 -z-10 opacity-70"></div>
           
-          <div className="bg-white/95 p-6 md:p-8 rounded-3xl shadow-floating border border-brand-soft">
+          <div className="bg-surface/95 p-6 md:p-8 rounded-3xl shadow-floating border border-brand-soft">
             <div className="mb-6 pb-6 border-b border-border flex justify-between items-center">
               <div>
                 <p className="text-xs text-text-secondary font-medium uppercase tracking-wider mb-1">Total Modal</p>

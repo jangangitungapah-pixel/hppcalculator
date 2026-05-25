@@ -1,0 +1,38 @@
+/* 
+  Pages & Utilities Classes
+*/
+
+/* Utilities */
+.text-gradient {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(to right, var(--color-primary), #D97706);
+}
+
+/* Welcome Page Specifics */
+.welcome-hero-bg {
+  background: 
+    radial-gradient(circle at 100% 0%, rgba(249, 115, 22, 0.15), transparent 50%),
+    radial-gradient(circle at 0% 100%, rgba(22, 163, 74, 0.1), transparent 50%);
+}
+
+.pulse-glow {
+  animation: pulse-glow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 15px rgba(249, 115, 22, 0.2); }
+  50% { opacity: 0.8; transform: scale(1.02); box-shadow: 0 0 25px rgba(249, 115, 22, 0.4); }
+}
+
+/* Danger Zone */
+.danger-zone-bg {
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(220, 38, 38, 0.03) 0,
+    rgba(220, 38, 38, 0.03) 10px,
+    transparent 10px,
+    transparent 20px
+  );
+}

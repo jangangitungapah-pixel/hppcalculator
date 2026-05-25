@@ -13,17 +13,19 @@ export const AppShell = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col lg:flex-row">
-      <SidebarNav />
-      
-      <div className="flex-1 flex flex-col lg:ml-64 min-w-0">
-        <Header />
+    <div className="app-root">
+      <div className="app-shell">
+        <SidebarNav />
         
-        <main className="flex-1 pb-20 lg:pb-0 overflow-x-hidden">
-          <Outlet />
-        </main>
+        <div className="app-main">
+          <Header />
+          
+          <main className="flex-1 overflow-x-hidden">
+            <Outlet />
+          </main>
 
-        <BottomNav />
+          <BottomNav />
+        </div>
       </div>
     </div>
   );

@@ -31,33 +31,27 @@ export const ConfirmDialog = ({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-      <div 
-        className="fixed inset-0 bg-background/80 backdrop-blur-sm transition-opacity"
-        aria-hidden="true"
-        onClick={onCancel}
-      />
-      
+    <div className="dialog-overlay">
       <div 
         ref={dialogRef}
-        className="bg-surface rounded-xl shadow-floating w-full max-w-md p-6 relative z-10 flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-normal"
+        className="dialog-card"
         role="dialog"
         aria-modal="true"
         aria-labelledby="dialog-title"
         aria-describedby="dialog-description"
         tabIndex="-1"
       >
-        <h2 id="dialog-title" className="text-xl font-bold text-text-primary">
+        <h2 id="dialog-title" className="dialog-title">
           {title}
         </h2>
         
         {description && (
-          <p id="dialog-description" className="text-text-secondary">
+          <p id="dialog-description" className="dialog-description">
             {description}
           </p>
         )}
 
-        <div className="flex flex-col sm:flex-row gap-3 mt-4">
+        <div className="dialog-actions mt-4">
           <Button variant="secondary" className="flex-1" onClick={onCancel}>
             {cancelLabel}
           </Button>

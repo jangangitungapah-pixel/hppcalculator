@@ -174,12 +174,12 @@ export const CalculatorPage = () => {
 
   return (
     <PageContainer maxWidth="max-w-[1280px]">
-      <div className="mb-8">
+      <div className="page-header">
         <Badge variant="neutral" className="mb-3 bg-brand-soft text-brand-primary border-none">
           {lang === 'en' ? 'Quick HPP Calculator' : 'Kalkulator Cepat'}
         </Badge>
-        <h1 className="text-3xl font-extrabold text-text-primary mb-2">{t('calculator.pageTitle')}</h1>
-        <p className="text-text-secondary text-lg">{t('calculator.pageSubtitle')}</p>
+        <h1 className="page-title text-3xl md:text-4xl">{t('calculator.pageTitle')}</h1>
+        <p className="page-subtitle text-lg">{t('calculator.pageSubtitle')}</p>
         
         <div className="mt-4 p-3 bg-surface border border-border rounded-xl inline-flex items-center gap-2 text-sm text-text-secondary">
           <span className="font-medium text-text-primary">1. Isi Biaya</span> → 
@@ -189,9 +189,9 @@ export const CalculatorPage = () => {
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-8 items-start">
+      <div className="split-layout items-start">
         {/* Left Column: Form */}
-        <div className="flex-1 w-full space-y-6 lg:max-w-3xl">
+        <div className="content-stack w-full lg:max-w-3xl">
           
           {/* Validation Help Alert */}
           {validationErrors && Object.keys(validationErrors).length > 0 && !hasCalculatedOnce && (
@@ -351,7 +351,7 @@ export const CalculatorPage = () => {
 
         {/* Right Column: Desktop Result Panel */}
         {isDesktop && (
-          <div className="hidden lg:block w-[400px] shrink-0 sticky top-24">
+          <div className="sticky-panel hidden lg:block w-full">
             {result ? (
               <Card className="p-6 border-brand-primary/20 shadow-floating bg-surface">
                 <div className="flex justify-between items-start mb-6">

@@ -17,16 +17,16 @@ export const Input = React.forwardRef(({
   const helperId = `${inputId}-helper`;
 
   return (
-    <div className={`flex flex-col gap-1.5 ${containerClassName}`}>
+    <div className={`form-field ${containerClassName}`}>
       {label && (
-        <label htmlFor={inputId} className="text-base font-semibold text-text-primary">
+        <label htmlFor={inputId} className="form-label">
           {label}
         </label>
       )}
       
-      <div className="relative flex items-center">
+      <div className="input-shell">
         {prefix && (
-          <span className="absolute left-3 text-text-secondary">
+          <span className="form-prefix">
             {prefix}
           </span>
         )}
@@ -35,34 +35,25 @@ export const Input = React.forwardRef(({
           ref={ref}
           id={inputId}
           type={type}
-          className={`
-            w-full h-11 bg-surface border rounded-md text-base text-text-primary
-            focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent
-            placeholder:text-text-muted
-            transition-colors duration-normal
-            ${error ? 'border-status-loss focus:ring-status-loss' : 'border-border'}
-            ${prefix ? 'pl-10' : 'pl-3'}
-            ${suffix ? 'pr-14' : 'pr-3'}
-            ${className}
-          `}
+          className={`form-input ${prefix ? 'input-with-prefix' : ''} ${suffix ? 'input-with-suffix' : ''} ${className}`}
           aria-invalid={!!error}
           aria-describedby={`${error ? errorId : ''} ${helperText && !error ? helperId : ''}`.trim() || undefined}
           {...props}
         />
         
         {suffix && (
-          <span className="absolute right-3 text-text-secondary pointer-events-none">
+          <span className="form-suffix">
             {suffix}
           </span>
         )}
       </div>
 
       {error ? (
-        <span id={errorId} className="text-sm text-status-loss mt-0.5">
+        <span id={errorId} className="form-error">
           {error}
         </span>
       ) : helperText ? (
-        <span id={helperId} className="text-sm text-text-secondary mt-0.5">
+        <span id={helperId} className="form-helper">
           {helperText}
         </span>
       ) : null}

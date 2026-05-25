@@ -47,13 +47,13 @@ export const DashboardPage = () => {
         />
       )}
 
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-text-primary mb-1">{t('dashboard.greeting')}</h1>
-        <p className="text-text-secondary">Ringkasan bisnis F&B kamu hari ini.</p>
+      <div className="page-header">
+        <h1 className="page-title">{t('dashboard.greeting')}</h1>
+        <p className="page-subtitle">Ringkasan bisnis F&B kamu hari ini.</p>
       </div>
 
       {hasAnyData && (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div className="page-grid md:grid-cols-4 mb-8">
           <SummaryCard 
             title={t('dashboard.summaryProducts')} 
             value={summary.dataCoverage.calculations} 
@@ -138,7 +138,7 @@ export const DashboardPage = () => {
             </Button>
           </div>
 
-          <div className="flex flex-col gap-3">
+          <div className="data-list">
             {stats.recentCalculations.map((item) => (
               <Card key={item.id} className="p-4 flex justify-between items-center cursor-pointer hover:border-brand-primary transition-colors" onClick={() => navigate(`/history/${item.id}`)}>
                 <div>
