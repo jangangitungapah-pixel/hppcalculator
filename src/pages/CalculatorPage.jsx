@@ -1,7 +1,9 @@
-﻿import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useLanguage } from '../hooks/useLanguage';
 import { useMediaQuery } from '../hooks/useMediaQuery';
+import { useAppData } from '../hooks/useAppData';
+import { useToast } from '../hooks/useToast';
 import { PageContainer } from '../components/layout/PageContainer';
 import { Input } from '../components/ui/Input';
 import { Select } from '../components/ui/Select';
@@ -11,6 +13,7 @@ import { CostItemRow } from '../components/ui/CostItemRow';
 import { ResultCard } from '../components/ui/ResultCard';
 import { Badge } from '../components/ui/Badge';
 import { calculateQuickHpp, validateQuickCalculationInput, formatCurrency, formatPercent } from '../lib/calculations';
+import { createCalculationInputFromForm, createFormFromSavedCalculation } from '../lib/data/calculationMapper';
 import { AlertTriangle, Plus } from 'lucide-react';
 
 const emptyCostItem = () => ({
@@ -20,31 +23,67 @@ const emptyCostItem = () => ({
   amount: ''
 });
 
+const defaultForm = {
+  productName: '',
+  costItems: [
+    { id: '1', name: '', category: 'Bahan', amount: '' },
+    { id: '2', name: '', category: 'Kemasan', amount: '' },
+    { id: '3', name: '', category: 'Operasional', amount: '' },
+  ],
+  outputQuantity: '',
+  failedQuantity: '',
+  sellingUnit: 'pcs',
+  sellingPrice: ''
+};
+
 export const CalculatorPage = () => {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const navigate = useNavigate();
+  const location = useLocation();
   const isDesktop = useMediaQuery('(min-width: 1024px)');
+  
+  const { settings, saveCalculation, calculatorDraft, saveDraft, clearDraft } = useAppData();
+  const { addToast } = useToast();
 
-  const [form, setForm] = useState({
-    productName: '',
-    costItems: [
-      { id: '1', name: '', category: 'Bahan', amount: '' },
-      { id: '2', name: '', category: 'Kemasan', amount: '' },
-      { id: '3', name: '', category: 'Operasional', amount: '' },
-    ],
-    outputQuantity: '',
-    failedQuantity: '',
-    sellingUnit: 'pcs',
-    sellingPrice: ''
-  });
-
+  const [form, setForm] = useState(defaultForm);
   const [validationErrors, setValidationErrors] = useState(null);
   const [result, setResult] = useState(null);
   const [hasCalculatedOnce, setHasCalculatedOnce] = useState(false);
+  
+  const isInitialMount = useRef(true);
+  const debounceTimer = useRef(null);
+
+  // Initialize form from "Use Again" state or draft
+  useEffect(() => {
+    if (isInitialMount.current) {
+      if (location.state?.useAgainForm) {
+        // Hydrate from "Use Again"
+        const restoredForm = createFormFromSavedCalculation({ input: location.state.useAgainForm });
+        if (restoredForm) setForm(restoredForm);
+      } else if (calculatorDraft && calculatorDraft.form) {
+        // Hydrate from draft
+        setForm(calculatorDraft.form);
+        addToast({ type: 'info', title: t('toasts.draftRestoredTitle'), duration: 2000 });
+      }
+      isInitialMount.current = false;
+    }
+  }, [location.state, calculatorDraft, addToast, t]);
+
+  // Autosave draft on form change (debounced)
+  useEffect(() => {
+    if (isInitialMount.current) return;
+    
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    debounceTimer.current = setTimeout(() => {
+      saveDraft(form);
+    }, 1000);
+
+    return () => clearTimeout(debounceTimer.current);
+  }, [form, saveDraft]);
 
   // Auto-validate form when calculating or if has calculated once
   useEffect(() => {
-    if (hasCalculatedOnce && isDesktop) {
+    if (hasCalculatedOnce && isDesktop && !isInitialMount.current) {
       handleCalculate(true); // silent calculate for desktop live updates
     }
   }, [form, hasCalculatedOnce, isDesktop]);
@@ -72,66 +111,56 @@ export const CalculatorPage = () => {
   };
 
   const resetForm = () => {
-    setForm({
-      productName: '',
-      costItems: [
-        { id: '1', name: '', category: 'Bahan', amount: '' },
-        { id: '2', name: '', category: 'Kemasan', amount: '' },
-        { id: '3', name: '', category: 'Operasional', amount: '' },
-      ],
-      outputQuantity: '',
-      failedQuantity: '',
-      sellingUnit: 'pcs',
-      sellingPrice: ''
-    });
+    setForm(defaultForm);
     setResult(null);
     setValidationErrors(null);
     setHasCalculatedOnce(false);
+    clearDraft();
+    addToast({ type: 'info', title: t('toasts.draftClearedTitle'), duration: 2000 });
   };
 
-  const parseNumber = (val) => {
-    const parsed = parseFloat(val);
-    return isNaN(parsed) ? 0 : parsed;
+  const getCleanInputPayload = () => {
+    return createCalculationInputFromForm(form, settings);
   };
 
   const handleCalculate = (silent = false) => {
-    const payload = {
-      productName: form.productName,
-      costItems: form.costItems.map(item => ({
-        ...item,
-        amount: parseNumber(item.amount)
-      })),
-      outputQuantity: parseNumber(form.outputQuantity),
-      failedQuantity: parseNumber(form.failedQuantity),
-      sellingUnit: form.sellingUnit,
-      sellingPrice: parseNumber(form.sellingPrice)
-    };
-
+    const payload = getCleanInputPayload();
     const validation = validateQuickCalculationInput(payload);
     
     if (!validation.isValid) {
       setValidationErrors(validation.errors);
-      if (!silent) {
-        // Optionally scroll to top or show toast if not silent
-      }
       return;
     }
 
     setValidationErrors(null);
     
     try {
-      // Hardcoded rounding step to 500 for MVP since settings aren't persisted
-      const calcResult = calculateQuickHpp({ ...payload, language: 'id', currency: 'IDR', roundingStep: 500 });
+      const calcResult = calculateQuickHpp(payload, settings.roundingStep);
       setResult(calcResult);
       setHasCalculatedOnce(true);
 
       if (!isDesktop && !silent) {
-        navigate('/calculator/result', { state: calcResult });
+        navigate('/calculator/result', { state: { input: payload, result: calcResult } });
       }
     } catch (e) {
       console.error(e);
-      // Fallback error handling
+      if (!silent) {
+        addToast({ type: 'error', title: t('toasts.errorTitle'), message: e.message });
+      }
     }
+  };
+
+  const handleSaveCalculation = () => {
+    if (!result) return;
+    const payload = getCleanInputPayload();
+    saveCalculation(payload, result);
+    addToast({
+      type: 'success',
+      title: t('toasts.calculationSavedTitle'),
+      message: t('toasts.calculationSavedMessage')
+    });
+    clearDraft(); // clear draft after saving
+    navigate('/history');
   };
 
   const unitOptions = [
@@ -264,7 +293,7 @@ export const CalculatorPage = () => {
             />
           </Card>
 
-          {/* Mobile Calculate Button (Sticky Bottom or Inline) */}
+          {/* Mobile Calculate Button */}
           <div className="lg:hidden mt-8 mb-4 flex gap-3">
             <Button variant="secondary" className="flex-1" onClick={resetForm}>
               {t('calculator.resetButton')}
@@ -288,41 +317,52 @@ export const CalculatorPage = () => {
                 <div className="mb-6 bg-brand-soft p-4 rounded-xl text-center">
                   <div className="text-sm font-semibold opacity-80 mb-1">{t('result.hppPerUnit')}</div>
                   <div className="text-4xl font-bold text-brand-primary">
-                    {formatCurrency(result.hppPerUnit, 'id', 'IDR')}
+                    {formatCurrency(result.hppPerUnit, 'IDR', 'id-ID')}
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <ResultCard 
                     label={t('result.profitPerUnit')} 
-                    value={formatCurrency(result.profitPerUnit, 'id', 'IDR')}
+                    value={formatCurrency(result.profitPerUnit, 'IDR', 'id-ID')}
                     tone={result.profitPerUnit > 0 ? 'good' : result.profitPerUnit < 0 ? 'loss' : 'neutral'}
                   />
                   <ResultCard 
                     label={t('result.margin')} 
-                    value={formatPercent(result.marginPercent, 'id')}
+                    value={formatPercent(result.marginPercent, 'id-ID')}
                   />
                 </div>
+                
+                {result.warnings && result.warnings.length > 0 && (
+                  <div className="flex flex-col gap-2 mb-6">
+                    {result.warnings.map((warn, i) => (
+                      <div key={i} className="flex items-start gap-2 text-sm text-status-low bg-status-lowBg p-2 rounded-md">
+                        <AlertTriangle className="w-4 h-4 shrink-0" />
+                        <p className="text-xs">{lang === 'en' ? warn.messageEn || warn.message : warn.messageId || warn.message}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
 
                 <div className="space-y-4 mb-6">
                   <div className="flex justify-between text-sm">
                     <span className="text-text-secondary">{t('result.totalProductionCost')}</span>
-                    <span className="font-semibold">{formatCurrency(result.totalProductionCost, 'id', 'IDR')}</span>
+                    <span className="font-semibold">{formatCurrency(result.totalProductionCost, 'IDR', 'id-ID')}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-text-secondary">{t('result.totalProfit')}</span>
                     <span className={`font-semibold ${result.totalProfit < 0 ? 'text-status-loss' : 'text-status-good'}`}>
-                      {formatCurrency(result.totalProfit, 'id', 'IDR')}
+                      {formatCurrency(result.totalProfit, 'IDR', 'id-ID')}
                     </span>
                   </div>
                 </div>
 
-                <div className="flex gap-3 pt-6 border-t border-border">
-                  <Button variant="secondary" className="flex-1" onClick={resetForm}>
-                    {t('calculator.resetButton')}
-                  </Button>
-                  <Button className="flex-1">
+                <div className="flex flex-col gap-3 pt-6 border-t border-border">
+                  <Button className="w-full" onClick={handleSaveCalculation}>
                     {t('result.saveCalculation')}
+                  </Button>
+                  <Button variant="secondary" className="w-full" onClick={resetForm}>
+                    {t('calculator.resetButton')}
                   </Button>
                 </div>
               </Card>
@@ -344,5 +384,3 @@ export const CalculatorPage = () => {
     </PageContainer>
   );
 };
-
-

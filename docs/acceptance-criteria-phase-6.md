@@ -1,0 +1,22 @@
+# Acceptance Criteria: Phase 6
+
+- [x] `localStorage` keys are versioned (`modalin:v1`).
+- [x] Storage client created with safe fallback handling.
+- [x] Settings persistence implemented (Language, Rounding).
+- [x] Saved calculations persistence implemented (storing both input and result).
+- [x] Draft persistence implemented (autosaving on input).
+- [x] `AppDataContext` implemented to centralize state and sync with storage.
+- [x] Custom `ToastContext` and UI implemented.
+- [x] Custom `ConfirmDialog` implemented.
+- [x] Dashboard displays real metrics and recent data.
+- [x] History list displays real data.
+- [x] Detail view displays real data.
+- [x] Save calculation flow redirects to history and shows toast.
+- [x] Delete calculation flow works with confirmation modal.
+- [x] "Use Again" feature correctly loads past inputs into the calculator.
+- [x] Demo seed data logic implemented (clearly tagged as demo).
+- [x] Export/Import helpers prepared in `backup.js` (UI deferred).
+- [x] Recalculate helper prepared in `recalculate.js`.
+- [x] **No new dependencies installed (e.g. no Zustand, Redux, Sonner).**
+- [x] **No backend/auth/database implemented.**
+- [x] **No advanced features implemented (deferred to future phases).**

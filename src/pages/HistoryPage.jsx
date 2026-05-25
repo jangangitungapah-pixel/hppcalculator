@@ -1,18 +1,45 @@
-﻿import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../hooks/useLanguage';
+import { useAppData } from '../hooks/useAppData';
+import { useToast } from '../hooks/useToast';
 import { PageContainer } from '../components/layout/PageContainer';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
 import { EmptyState } from '../components/ui/EmptyState';
-import { mockCalculations } from '../data/mockCalculations';
+import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { formatCurrency, formatPercent } from '../lib/calculations';
-import { History as HistoryIcon } from 'lucide-react';
+import { History as HistoryIcon, Trash2 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 
 export const HistoryPage = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
+  const { calculations, loadDemoData, deleteCalculation } = useAppData();
+  const { addToast } = useToast();
+
+  const [deleteId, setDeleteId] = useState(null);
+
+  const handleLoadDemo = () => {
+    loadDemoData();
+    addToast({
+      type: 'success',
+      title: t('toasts.demoLoadedTitle'),
+      message: t('toasts.demoLoadedMessage')
+    });
+  };
+
+  const confirmDelete = () => {
+    if (deleteId) {
+      deleteCalculation(deleteId);
+      addToast({
+        type: 'success',
+        title: t('toasts.calculationDeletedTitle'),
+        message: t('toasts.calculationDeletedMessage')
+      });
+      setDeleteId(null);
+    }
+  };
 
   return (
     <PageContainer>
@@ -21,20 +48,23 @@ export const HistoryPage = () => {
         <p className="text-text-secondary">{t('history.subtitle')}</p>
       </div>
 
-      {mockCalculations.length > 0 ? (
+      {calculations.length > 0 ? (
         <div className="flex flex-col gap-4">
-          {mockCalculations.map((item) => (
+          {calculations.map((item) => (
             <Card key={item.id} className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="flex-1">
+              <div className="flex-1 cursor-pointer" onClick={() => navigate(`/history/${item.id}`)}>
                 <div className="flex items-center gap-2 mb-1">
-                  <h3 className="font-bold text-lg text-text-primary">{item.productName}</h3>
-                  <Badge variant={item.statusKey}>{t(`result.status.${item.statusKey}`)}</Badge>
+                  <h3 className="font-bold text-lg text-text-primary hover:text-brand-primary transition-colors">{item.productName}</h3>
+                  <Badge variant={item.result.profitStatus.key}>{t(`result.status.${item.result.profitStatus.key}`)}</Badge>
+                  {item.source === 'demo' && (
+                    <Badge variant="neutral" className="ml-2 text-[10px] py-0 px-1.5">{t('history.sourceDemo')}</Badge>
+                  )}
                 </div>
                 <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm text-text-secondary mt-2 max-w-sm">
-                  <span>HPP: {formatCurrency(item.hppPerUnit, 'id', 'IDR')}</span>
-                  <span>Jual: {formatCurrency(item.sellingPrice, 'id', 'IDR')}</span>
-                  <span>Untung: {formatCurrency(item.profitPerUnit, 'id', 'IDR')}</span>
-                  <span>Margin: {formatPercent(item.marginPercent, 'id')}</span>
+                  <span>HPP: {formatCurrency(item.result.hppPerUnit, 'IDR', 'id-ID')}</span>
+                  <span>Jual: {formatCurrency(item.result.sellingPrice, 'IDR', 'id-ID')}</span>
+                  <span>Untung: {formatCurrency(item.result.profitPerUnit, 'IDR', 'id-ID')}</span>
+                  <span>Margin: {formatPercent(item.result.marginPercent, 'id-ID')}</span>
                 </div>
               </div>
               
@@ -46,6 +76,14 @@ export const HistoryPage = () => {
                 >
                   {t('history.viewDetail')}
                 </Button>
+                <Button 
+                  variant="ghost" 
+                  className="flex-1 sm:flex-none text-status-loss hover:bg-status-lossBg border border-transparent hover:border-status-loss/20"
+                  onClick={() => setDeleteId(item.id)}
+                >
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  {t('history.delete')}
+                </Button>
               </div>
             </Card>
           ))}
@@ -56,13 +94,28 @@ export const HistoryPage = () => {
           title={t('history.emptyTitle')}
           description={t('history.emptyBody')}
           action={
-            <Button onClick={() => navigate('/calculator')}>
-              {t('welcome.startCalculating')}
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Button onClick={() => navigate('/calculator')}>
+                {t('welcome.startCalculating')}
+              </Button>
+              <Button variant="secondary" onClick={handleLoadDemo}>
+                {t('dashboard.loadDemoData')}
+              </Button>
+            </div>
           }
         />
       )}
+
+      <ConfirmDialog 
+        open={!!deleteId}
+        title={t('history.deleteConfirmTitle')}
+        description={t('history.deleteConfirmBody')}
+        confirmLabel={t('common.delete')}
+        cancelLabel={t('common.cancel')}
+        variant="danger"
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteId(null)}
+      />
     </PageContainer>
   );
 };
-

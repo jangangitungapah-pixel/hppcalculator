@@ -1,27 +1,61 @@
-﻿import React from 'react';
+import React from 'react';
 import { useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { useLanguage } from '../hooks/useLanguage';
+import { useAppData } from '../hooks/useAppData';
+import { useToast } from '../hooks/useToast';
 import { PageContainer } from '../components/layout/PageContainer';
 import { ResultCard } from '../components/ui/ResultCard';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
+import { EmptyState } from '../components/ui/EmptyState';
 import { formatCurrency, formatPercent } from '../lib/calculations';
 import { ArrowLeft, AlertTriangle } from 'lucide-react';
 
 export const ResultPage = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const { saveCalculation } = useAppData();
+  const { addToast } = useToast();
 
-  const result = state;
-
-  if (!result) {
+  if (!state || (!state.input && !state.result)) {
     // If accessed directly without calculating
-    return <Navigate to="/calculator" replace />;
+    return (
+      <PageContainer className="flex items-center justify-center min-h-[50vh]">
+        <EmptyState 
+          title="Tidak Ada Data"
+          description="Lakukan perhitungan terlebih dahulu."
+          action={
+            <Button onClick={() => navigate('/calculator')}>
+              {t('common.back')}
+            </Button>
+          }
+        />
+      </PageContainer>
+    );
   }
 
+  // Handle both Phase 5 route state (result only) and Phase 6 route state (input + result)
+  const result = state.result || state;
+  const input = state.input || null;
   const isLoss = result.profitStatus.key === 'loss';
+
+  const handleSave = () => {
+    if (!input) {
+      addToast({ type: 'error', title: t('toasts.errorTitle'), message: "Input data missing." });
+      return;
+    }
+    const saved = saveCalculation(input, result);
+    addToast({
+      type: 'success',
+      title: t('toasts.calculationSavedTitle'),
+      message: t('toasts.calculationSavedMessage')
+    });
+    // Redirect to detail page (saved will be void if saveCalculation doesn't return, but we modified it to return object)
+    // Actually our AppDataContext saveCalculation doesn't return. Let's just go to history.
+    navigate('/history');
+  };
 
   return (
     <PageContainer>
@@ -42,7 +76,7 @@ export const ResultPage = () => {
           <div className="mb-6">
             <div className="text-sm font-semibold opacity-80 mb-1">{t('result.hppPerUnit')}</div>
             <div className="text-4xl font-bold text-text-primary">
-              {formatCurrency(result.hppPerUnit, 'id', 'IDR')}
+              {formatCurrency(result.hppPerUnit, 'IDR', 'id-ID')}
             </div>
           </div>
 
@@ -50,13 +84,13 @@ export const ResultPage = () => {
             <div>
               <div className="text-sm font-semibold opacity-80">{t('result.profitPerUnit')}</div>
               <div className={`text-2xl font-bold ${isLoss ? 'text-status-loss' : 'text-status-good'}`}>
-                {formatCurrency(result.profitPerUnit, 'id', 'IDR')}
+                {formatCurrency(result.profitPerUnit, 'IDR', 'id-ID')}
               </div>
             </div>
             <div>
               <div className="text-sm font-semibold opacity-80">{t('result.margin')}</div>
               <div className={`text-2xl font-bold ${isLoss ? 'text-status-loss' : 'text-status-good'}`}>
-                {formatPercent(result.marginPercent, 'id')}
+                {formatPercent(result.marginPercent, 'id-ID')}
               </div>
             </div>
           </div>
@@ -79,7 +113,7 @@ export const ResultPage = () => {
             {result.warnings.map((warn, i) => (
               <div key={i} className="flex items-start gap-2 text-sm text-status-low bg-status-lowBg p-3 rounded-md">
                 <AlertTriangle className="w-5 h-5 shrink-0" />
-                <p>{warn.messageId || warn.messageEn || warn.message || warn}</p>
+                <p>{lang === 'en' ? warn.messageEn || warn.message : warn.messageId || warn.message}</p>
               </div>
             ))}
           </div>
@@ -89,20 +123,20 @@ export const ResultPage = () => {
         <div className="grid grid-cols-2 gap-4">
           <ResultCard 
             label={t('result.totalProductionCost')}
-            value={formatCurrency(result.totalProductionCost, 'id', 'IDR')}
+            value={formatCurrency(result.totalProductionCost, 'IDR', 'id-ID')}
           />
           <ResultCard 
             label={t('result.grossRevenue')}
-            value={formatCurrency(result.grossRevenue, 'id', 'IDR')}
+            value={formatCurrency(result.grossRevenue, 'IDR', 'id-ID')}
           />
           <ResultCard 
             label={t('result.totalProfit')}
-            value={formatCurrency(result.totalProfit, 'id', 'IDR')}
+            value={formatCurrency(result.totalProfit, 'IDR', 'id-ID')}
             tone={result.totalProfit > 0 ? 'good' : result.totalProfit < 0 ? 'loss' : 'neutral'}
           />
           <ResultCard 
             label={t('result.markup')}
-            value={formatPercent(result.markupPercent, 'id')}
+            value={formatPercent(result.markupPercent, 'id-ID')}
           />
         </div>
 
@@ -112,15 +146,15 @@ export const ResultPage = () => {
           <div className="flex flex-col gap-3">
             <div className="flex justify-between items-center p-3 rounded-md bg-surface-muted">
               <span className="font-medium text-text-secondary">{t('result.safePrice')}</span>
-              <span className="font-bold">{formatCurrency((result.suggestedPrices?.safe?.price ?? 0), 'id', 'IDR')}</span>
+              <span className="font-bold">{formatCurrency(result.suggestedPrices?.safe?.price || 0, 'IDR', 'id-ID')}</span>
             </div>
             <div className="flex justify-between items-center p-3 rounded-md bg-status-okayBg text-status-okay">
               <span className="font-medium">{t('result.idealPrice')}</span>
-              <span className="font-bold">{formatCurrency((result.suggestedPrices?.ideal?.price ?? 0), 'id', 'IDR')}</span>
+              <span className="font-bold">{formatCurrency(result.suggestedPrices?.ideal?.price || 0, 'IDR', 'id-ID')}</span>
             </div>
             <div className="flex justify-between items-center p-3 rounded-md bg-status-goodBg text-status-good">
               <span className="font-medium">{t('result.premiumPrice')}</span>
-              <span className="font-bold">{formatCurrency((result.suggestedPrices?.premium?.price ?? 0), 'id', 'IDR')}</span>
+              <span className="font-bold">{formatCurrency(result.suggestedPrices?.premium?.price || 0, 'IDR', 'id-ID')}</span>
             </div>
           </div>
         </Card>
@@ -132,12 +166,10 @@ export const ResultPage = () => {
         <Button variant="secondary" className="flex-1" onClick={() => navigate(-1)}>
           {t('result.editInput')}
         </Button>
-        <Button className="flex-1">
-          {t('result.saveCalculation')} (Ph. 6)
+        <Button className="flex-1" onClick={handleSave} disabled={!input}>
+          {t('result.saveCalculation')}
         </Button>
       </div>
     </PageContainer>
   );
 };
-
-

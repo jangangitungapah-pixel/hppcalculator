@@ -1,6 +1,7 @@
+// Used as optional seed data when user clicks "Load Demo Data"
 export const mockCalculations = [
   {
-    id: "1",
+    id: "demo_1",
     productName: "Donat Coklat Lumer",
     sellingUnit: "pcs",
     totalProductionCost: 200000,
@@ -21,7 +22,7 @@ export const mockCalculations = [
     failedQuantity: 0
   },
   {
-    id: "2",
+    id: "demo_2",
     productName: "Es Kopi Susu Gula Aren",
     sellingUnit: "cup",
     totalProductionCost: 150000,
@@ -42,7 +43,7 @@ export const mockCalculations = [
     failedQuantity: 0
   },
   {
-    id: "3",
+    id: "demo_3",
     productName: "Rice Bowl Ayam Mentai",
     sellingUnit: "porsi",
     totalProductionCost: 350000,
@@ -63,7 +64,7 @@ export const mockCalculations = [
     failedQuantity: 0
   },
   {
-    id: "4",
+    id: "demo_4",
     productName: "Promo Dessert Box (Rugi)",
     sellingUnit: "box",
     totalProductionCost: 400000,
