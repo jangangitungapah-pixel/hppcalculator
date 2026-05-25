@@ -42,6 +42,13 @@ export const DashboardPage = () => {
 
   const summary = reportSummary;
 
+  // Time-based greeting
+  const hour = new Date().getHours();
+  let greetingPrefix = 'Selamat Pagi';
+  if (hour >= 11 && hour < 15) greetingPrefix = 'Selamat Siang';
+  else if (hour >= 15 && hour < 18) greetingPrefix = 'Selamat Sore';
+  else if (hour >= 18) greetingPrefix = 'Selamat Malam';
+
   return (
     <PageContainer>
       {storageHealth?.backupReminder?.shouldShow && (
@@ -53,13 +60,18 @@ export const DashboardPage = () => {
       
       <InstallAppBanner />
 
-      <div className="page-header mb-8">
-        <h1 className="text-3xl font-extrabold text-text-primary tracking-tight mb-2">
-          {t('dashboard.greeting')}
-        </h1>
-        <p className="text-text-secondary text-lg">
-          Ringkasan bisnis F&B kamu hari ini.
-        </p>
+      <div className="page-header mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-extrabold text-text-primary tracking-tight mb-1">
+            {greetingPrefix}, <span className="text-brand-primary">F&B Owner!</span>
+          </h1>
+          <p className="text-text-secondary text-sm font-medium">
+            Ringkasan performa bisnismu hari ini.
+          </p>
+        </div>
+        <div className="hidden md:flex w-12 h-12 bg-surface-muted rounded-full items-center justify-center border border-border shadow-sm">
+          <Store className="w-5 h-5 text-text-secondary" />
+        </div>
       </div>
 
       {hasAnyData && (
@@ -129,11 +141,11 @@ export const DashboardPage = () => {
                 Aplikasi ini membantumu menghitung HPP, mengelola resep, dan menentukan harga jual yang aman agar bisnismu selalu untung.
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-                <Button size="lg" onClick={() => navigate('/calculator')} className="shadow-glow-primary w-full sm:w-auto px-8">
+              <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-4">
+                <Button size="lg" onClick={() => navigate('/calculator')} className="w-full sm:w-auto min-w-[200px]">
                   {t('dashboard.startCalculating')}
                 </Button>
-                <Button size="lg" variant="secondary" onClick={handleLoadDemo} className="bg-white border border-border w-full sm:w-auto px-8 hover:bg-surface-muted">
+                <Button size="lg" variant="secondary" onClick={handleLoadDemo} className="w-full sm:w-auto min-w-[200px]">
                   {t('dashboard.loadDemoData')}
                 </Button>
               </div>
@@ -141,25 +153,25 @@ export const DashboardPage = () => {
           </Card>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card variant="clickable" className="p-6 bg-white group hover:border-brand-primary/50 transition-premium shadow-sm hover:shadow-md" onClick={() => navigate('/calculator')}>
-              <div className="w-12 h-12 bg-[var(--color-primary-softer)] text-brand-primary rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+            <Card variant="clickable" className="p-6 bg-surface border-border/50 group hover:border-brand-primary/30 transition-all duration-300 shadow-sm hover:shadow-md" onClick={() => navigate('/calculator')}>
+              <div className="w-12 h-12 bg-surface-muted text-text-secondary rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-brand-soft group-hover:text-brand-primary transition-all duration-300">
                 <Calculator className="w-6 h-6" />
               </div>
-              <h3 className="font-bold text-text-primary mb-1">Hitung HPP</h3>
+              <h3 className="font-bold text-text-primary mb-1 tracking-tight">Hitung HPP</h3>
               <p className="text-sm text-text-secondary">Hitung modal dan harga jual per produk.</p>
             </Card>
-            <Card variant="clickable" className="p-6 bg-white group hover:border-brand-primary/50 transition-premium shadow-sm hover:shadow-md" onClick={() => navigate('/recipes')}>
-              <div className="w-12 h-12 bg-[var(--color-primary-softer)] text-brand-primary rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+            <Card variant="clickable" className="p-6 bg-surface border-border/50 group hover:border-brand-primary/30 transition-all duration-300 shadow-sm hover:shadow-md" onClick={() => navigate('/recipes')}>
+              <div className="w-12 h-12 bg-surface-muted text-text-secondary rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-brand-soft group-hover:text-brand-primary transition-all duration-300">
                 <BookOpen className="w-6 h-6" />
               </div>
-              <h3 className="font-bold text-text-primary mb-1">Buat Resep</h3>
+              <h3 className="font-bold text-text-primary mb-1 tracking-tight">Buat Resep</h3>
               <p className="text-sm text-text-secondary">Simpan resep rahasia bisnismu.</p>
             </Card>
-            <Card variant="clickable" className="p-6 bg-white group hover:border-brand-primary/50 transition-premium shadow-sm hover:shadow-md" onClick={() => navigate('/channel-pricing')}>
-              <div className="w-12 h-12 bg-[var(--color-primary-softer)] text-brand-primary rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+            <Card variant="clickable" className="p-6 bg-surface border-border/50 group hover:border-brand-primary/30 transition-all duration-300 shadow-sm hover:shadow-md" onClick={() => navigate('/channel-pricing')}>
+              <div className="w-12 h-12 bg-surface-muted text-text-secondary rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-brand-soft group-hover:text-brand-primary transition-all duration-300">
                 <Store className="w-6 h-6" />
               </div>
-              <h3 className="font-bold text-text-primary mb-1">Simulasi Harga</h3>
+              <h3 className="font-bold text-text-primary mb-1 tracking-tight">Simulasi Harga</h3>
               <p className="text-sm text-text-secondary">Atur harga untuk GoFood, GrabFood, dll.</p>
             </Card>
           </div>
@@ -178,7 +190,7 @@ export const DashboardPage = () => {
               <Button 
                 variant="secondary"
                 size="lg"
-                className="bg-white text-brand-primary border-none hover:bg-surface-muted shadow-sm whitespace-nowrap w-full sm:w-auto"
+                className="bg-white text-brand-primary border-none hover:bg-white/95 hover:text-brand-primary-hover hover:scale-105 shadow-md hover:shadow-lg transition-all whitespace-nowrap w-full sm:w-auto px-8 font-bold"
                 onClick={() => navigate('/calculator')}
               >
                 {t('dashboard.mainCta')}
@@ -191,8 +203,8 @@ export const DashboardPage = () => {
               <h2 className="text-xl font-bold text-text-primary tracking-tight">{t('dashboard.recentCalculations')}</h2>
               <p className="text-sm text-text-secondary mt-1">Perhitungan terakhir yang kamu simpan</p>
             </div>
-            <Button variant="ghost" size="sm" onClick={() => navigate('/history')} className="hidden sm:inline-flex">
-              {t('dashboard.viewAll')}
+            <Button variant="ghost" size="sm" onClick={() => navigate('/history')} className="hidden sm:inline-flex text-brand-primary font-bold hover:bg-brand-soft">
+              {t('dashboard.viewAll')} <ChevronRight className="w-4 h-4 ml-1" />
             </Button>
           </div>
 
@@ -201,27 +213,30 @@ export const DashboardPage = () => {
               <Card 
                 key={item.id} 
                 variant="clickable"
-                className="p-5 flex flex-col justify-between" 
+                className="p-0 flex flex-col border-border/50 bg-surface overflow-hidden group hover:shadow-md transition-all duration-300" 
                 onClick={() => navigate(`/history/${item.id}`)}
               >
-                <div className="flex justify-between items-start mb-4">
-                  <div className="font-bold text-text-primary truncate pr-2 text-lg">{item.productName}</div>
-                  <Badge variant={item.result.profitStatus.key} className="shrink-0">
-                    {t(`result.status.${item.result.profitStatus.key}`)}
-                  </Badge>
-                </div>
-                
-                <div className="flex justify-between items-end mt-auto pt-4 border-t border-border/50">
-                  <div>
-                    <div className="text-[10px] font-bold text-text-tertiary uppercase tracking-wider mb-1">Harga Jual</div>
-                    <div className="font-semibold text-text-primary">
-                      {formatCurrency(item.result.sellingPrice, lang, settings.currency)}
-                    </div>
+                <div className={`h-1 w-full ${item.result.profitStatus.key === 'loss' ? 'bg-status-loss' : item.result.profitStatus.key === 'low' ? 'bg-status-low' : item.result.profitStatus.key === 'okay' ? 'bg-status-okay' : 'bg-status-good'}`}></div>
+                <div className="p-5 flex-1 flex flex-col">
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="font-bold text-text-primary truncate pr-2 text-lg group-hover:text-brand-primary transition-colors tracking-tight">{item.productName}</div>
+                    <Badge variant={item.result.profitStatus.key} className="shrink-0">
+                      {t(`result.status.${item.result.profitStatus.key}`)}
+                    </Badge>
                   </div>
-                  <div className="text-right">
-                    <div className="text-[10px] font-bold text-text-tertiary uppercase tracking-wider mb-1">Margin</div>
-                    <div className="font-bold text-brand-primary">
-                      {formatPercent(item.result.marginPercent, lang)}
+                  
+                  <div className="flex justify-between items-end mt-auto pt-4 border-t border-border/50">
+                    <div>
+                      <div className="text-[10px] font-bold text-text-tertiary uppercase tracking-wider mb-1">Harga Jual</div>
+                      <div className="font-semibold text-text-primary tabular-nums">
+                        {formatCurrency(item.result.sellingPrice, lang, settings.currency)}
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-[10px] font-bold text-text-tertiary uppercase tracking-wider mb-1">Margin</div>
+                      <div className="font-bold text-brand-primary tabular-nums">
+                        {formatPercent(item.result.marginPercent, lang)}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -230,58 +245,59 @@ export const DashboardPage = () => {
           </div>
 
           <div className="mt-8 mb-4">
-            <h2 className="text-lg font-bold text-text-primary">Simulasi & Penjualan</h2>
-            <p className="text-sm text-text-secondary">Simulasi harga untuk berbagai channel penjualan</p>
+            <h2 className="text-lg font-bold text-text-primary tracking-tight">Akses Cepat</h2>
+            <p className="text-sm text-text-secondary">Pintasan ke fitur utama Modalin</p>
           </div>
           
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
             <Card 
-              className="p-4 flex flex-col items-center justify-center text-center cursor-pointer hover:border-brand-primary transition-colors bg-white group"
+              className="p-5 flex flex-col items-center justify-center text-center cursor-pointer border-border/60 hover:border-brand-primary/50 transition-all duration-300 bg-surface group hover:shadow-md"
               onClick={() => navigate('/channel-pricing')}
             >
-              <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mb-3 group-hover:bg-blue-100 transition-colors">
-                <Calculator className="w-6 h-6 text-blue-600" />
+              <div className="w-12 h-12 bg-surface-muted rounded-2xl flex items-center justify-center mb-3 group-hover:bg-brand-soft transition-colors duration-300">
+                <Calculator className="w-6 h-6 text-text-secondary group-hover:text-brand-primary transition-colors" />
               </div>
               <h3 className="font-semibold text-sm text-text-primary">Simulasi Harga</h3>
             </Card>
             
             <Card 
-              className="p-4 flex flex-col items-center justify-center text-center cursor-pointer hover:border-brand-primary transition-colors bg-white group"
+              className="p-5 flex flex-col items-center justify-center text-center cursor-pointer border-border/60 hover:border-brand-primary/50 transition-all duration-300 bg-surface group hover:shadow-md"
               onClick={() => navigate('/pricing-simulations')}
             >
-              <div className="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center mb-3 group-hover:bg-purple-100 transition-colors">
-                <ShoppingBag className="w-6 h-6 text-purple-600" />
+              <div className="w-12 h-12 bg-surface-muted rounded-2xl flex items-center justify-center mb-3 group-hover:bg-brand-soft transition-colors duration-300">
+                <ShoppingBag className="w-6 h-6 text-text-secondary group-hover:text-brand-primary transition-colors" />
               </div>
               <h3 className="font-semibold text-sm text-text-primary">Riwayat Simulasi</h3>
             </Card>
             
             <Card 
-              className="p-4 flex flex-col items-center justify-center text-center cursor-pointer hover:border-brand-primary transition-colors bg-white group"
+              className="p-5 flex flex-col items-center justify-center text-center cursor-pointer border-border/60 hover:border-brand-primary/50 transition-all duration-300 bg-surface group hover:shadow-md"
               onClick={() => navigate('/channel-profiles')}
             >
-              <div className="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center mb-3 group-hover:bg-orange-100 transition-colors">
-                <Store className="w-6 h-6 text-orange-600" />
+              <div className="w-12 h-12 bg-surface-muted rounded-2xl flex items-center justify-center mb-3 group-hover:bg-brand-soft transition-colors duration-300">
+                <Store className="w-6 h-6 text-text-secondary group-hover:text-brand-primary transition-colors" />
               </div>
               <h3 className="font-semibold text-sm text-text-primary">Profil Channel</h3>
             </Card>
 
             <Card 
-              className="p-4 flex flex-col items-center justify-center text-center cursor-pointer hover:border-brand-primary transition-colors bg-white group"
+              className="p-5 flex flex-col items-center justify-center text-center cursor-pointer border-border/60 hover:border-brand-primary/50 transition-all duration-300 bg-surface group hover:shadow-md"
               onClick={() => navigate('/ingredients')}
             >
-              <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center mb-3 group-hover:bg-green-100 transition-colors">
-                <Box className="w-6 h-6 text-green-600" />
+              <div className="w-12 h-12 bg-surface-muted rounded-2xl flex items-center justify-center mb-3 group-hover:bg-brand-soft transition-colors duration-300">
+                <Box className="w-6 h-6 text-text-secondary group-hover:text-brand-primary transition-colors" />
               </div>
               <h3 className="font-semibold text-sm text-text-primary">Bahan Baku</h3>
             </Card>
+            
             <Card 
-              className="p-4 flex flex-col items-center justify-center text-center cursor-pointer hover:border-brand-primary transition-colors bg-white group"
+              className="p-5 flex flex-col items-center justify-center text-center cursor-pointer border-border/60 hover:border-brand-primary/50 transition-all duration-300 bg-surface group hover:shadow-md sm:col-span-4 lg:col-span-1"
               onClick={() => navigate('/reports')}
             >
-              <div className="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center mb-3 group-hover:bg-purple-100 transition-colors">
-                <BarChart3 className="w-6 h-6 text-purple-600" />
+              <div className="w-12 h-12 bg-surface-muted rounded-2xl flex items-center justify-center mb-3 group-hover:bg-brand-soft transition-colors duration-300">
+                <BarChart3 className="w-6 h-6 text-text-secondary group-hover:text-brand-primary transition-colors" />
               </div>
-              <h3 className="font-semibold text-sm text-text-primary">Laporan & Insight</h3>
+              <h3 className="font-semibold text-sm text-text-primary">Laporan Bisnis</h3>
             </Card>
           </div>
 

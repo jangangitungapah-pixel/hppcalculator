@@ -54,39 +54,54 @@ export const HistoryPage = () => {
         <StaggerContainer className="data-list">
           {calculations.map((item) => (
             <FadeIn key={item.id}>
-              <Card className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-premium hover:border-brand-primary/40 hover:shadow-floating cursor-default">
-                <div className="flex-1 cursor-pointer" onClick={() => navigate(`/history/${item.id}`)}>
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-bold text-lg text-text-primary hover:text-brand-primary transition-colors">{item.productName}</h3>
+              <Card className="p-0 flex flex-col sm:flex-row sm:items-stretch overflow-hidden transition-all duration-300 hover:shadow-md border-border/50 group bg-surface">
+                {/* Status Indicator Bar */}
+                <div className={`w-full sm:w-1.5 h-1.5 sm:h-auto ${item.result.profitStatus.key === 'loss' ? 'bg-status-loss' : item.result.profitStatus.key === 'low' ? 'bg-status-low' : item.result.profitStatus.key === 'okay' ? 'bg-status-okay' : 'bg-status-good'}`}></div>
+                
+                <div className="flex-1 p-4 sm:p-5 flex flex-col justify-center cursor-pointer" onClick={() => navigate(`/history/${item.id}`)}>
+                  <div className="flex items-center gap-3 mb-2">
+                    <h3 className="font-bold text-lg text-text-primary group-hover:text-brand-primary transition-colors tracking-tight">{item.productName}</h3>
                     <Badge variant={item.result.profitStatus.key}>{t(`result.status.${item.result.profitStatus.key}`)}</Badge>
                     {item.source === 'demo' && (
-                      <Badge variant="neutral" className="ml-2 text-[10px] py-0 px-1.5">{t('history.sourceDemo')}</Badge>
+                      <Badge variant="neutral" className="ml-1 text-[10px] py-0 px-1.5 uppercase font-bold tracking-wider opacity-60">{t('history.sourceDemo')}</Badge>
                     )}
                   </div>
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm text-text-secondary mt-2 max-w-sm">
-                    <span>HPP: <span className="font-medium text-text-primary">{formatCurrency(item.result.hppPerUnit, lang, settings.currency)}</span></span>
-                    <span>Jual: <span className="font-medium text-text-primary">{formatCurrency(item.result.sellingPrice, lang, settings.currency)}</span></span>
-                    <span>Untung: <span className="font-medium text-text-primary">{formatCurrency(item.result.profitPerUnit, lang, settings.currency)}</span></span>
-                    <span>Margin: <span className="font-medium text-text-primary">{formatPercent(item.result.marginPercent, lang)}</span></span>
+                  
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-3">
+                    <div className="flex flex-col">
+                      <span className="text-xs text-text-muted uppercase tracking-wider font-semibold mb-1">HPP</span>
+                      <span className="font-medium text-text-primary tabular-nums">{formatCurrency(item.result.hppPerUnit, lang, settings.currency)}</span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-xs text-text-muted uppercase tracking-wider font-semibold mb-1">Jual</span>
+                      <span className="font-medium text-text-primary tabular-nums">{formatCurrency(item.result.sellingPrice, lang, settings.currency)}</span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-xs text-text-muted uppercase tracking-wider font-semibold mb-1">Untung</span>
+                      <span className={`font-medium tabular-nums ${item.result.profitPerUnit < 0 ? 'text-status-loss' : 'text-status-good'}`}>{formatCurrency(item.result.profitPerUnit, lang, settings.currency)}</span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-xs text-text-muted uppercase tracking-wider font-semibold mb-1">Margin</span>
+                      <span className="font-bold text-text-primary tabular-nums">{formatPercent(item.result.marginPercent, lang)}</span>
+                    </div>
                   </div>
                 </div>
                 
-                <div className="flex sm:flex-col gap-2 w-full sm:w-auto">
-                  <Button 
-                    variant="secondary" 
-                    className="flex-1 sm:flex-none border-border hover:border-brand-primary/50"
+                <div className="flex sm:flex-col border-t sm:border-t-0 sm:border-l border-border/50 bg-surface-muted/30 w-full sm:w-20 shrink-0">
+                  <button 
+                    className="flex-1 sm:h-1/2 flex items-center justify-center text-text-muted hover:text-brand-primary hover:bg-brand-primary/5 transition-colors"
                     onClick={() => navigate(`/history/${item.id}`)}
+                    title={t('history.viewDetail')}
                   >
-                    {t('history.viewDetail')}
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    className="flex-1 sm:flex-none text-status-loss hover:bg-status-lossBg border border-transparent hover:border-status-loss/20"
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                  </button>
+                  <button 
+                    className="flex-1 sm:h-1/2 flex items-center justify-center text-text-muted hover:text-status-loss hover:bg-status-lossBg transition-colors border-l sm:border-l-0 sm:border-t border-border/50"
                     onClick={() => setDeleteId(item.id)}
+                    title={t('history.delete')}
                   >
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    {t('history.delete')}
-                  </Button>
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                 </div>
               </Card>
             </FadeIn>

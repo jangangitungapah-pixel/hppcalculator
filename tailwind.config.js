@@ -90,7 +90,7 @@ export default {
         'glow-success': 'var(--shadow-glow-success)',
       },
       fontFamily: {
-        sans: ['Poppins', 'Nunito', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
       },
       spacing: {
         'page-mobile': 'var(--space-page-mobile)',

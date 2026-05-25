@@ -70,20 +70,28 @@ export const SidebarNav = () => {
                 <NavLink
                   key={item.to}
                   to={item.to}
-                  className={({ isActive }) => cn("sidebar-nav-link group", isActive && "sidebar-nav-link-active")}
+                  className={({ isActive }) => cn("relative flex items-center p-2 rounded-xl group transition-colors", !isActive && "hover:bg-white/5")}
                 >
                   {({ isActive }) => (
                     <>
+                      {isActive && (
+                        <motion.div
+                          layoutId="sidebar-active"
+                          className="absolute inset-0 bg-white shadow-sm rounded-xl border border-black/5"
+                          initial={false}
+                          transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                        />
+                      )}
                       <div className="relative z-10 flex items-center gap-3 w-full">
                         <div className={cn(
                           "flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-300",
-                          isActive ? "bg-gradient-to-br from-brand-primary to-accent-coral text-white shadow-glow-primary" : "bg-white/5 text-white/60 group-hover:bg-white/10 group-hover:text-white"
+                          isActive ? "text-brand-primary" : "text-white/60 group-hover:text-white"
                         )}>
                           <span className={cn("transition-transform duration-300", isActive && "scale-110")}>
                             {item.icon}
                           </span>
                         </div>
-                        <span className="truncate font-semibold tracking-wide">{item.label}</span>
+                        <span className={cn("truncate font-semibold tracking-wide transition-colors duration-300", isActive ? "text-brand-primary" : "text-white/70 group-hover:text-white")}>{item.label}</span>
                       </div>
                     </>
                   )}

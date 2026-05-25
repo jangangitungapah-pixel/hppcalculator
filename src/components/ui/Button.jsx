@@ -9,13 +9,14 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: "bg-primary text-white shadow-md hover:bg-primary-hover shadow-glow-primary",
-        secondary: "border border-border-strong bg-white text-text-primary shadow-sm hover:bg-surface-muted hover:border-primary/40 hover:text-primary",
-        soft: "bg-primary-soft text-primary hover:bg-primary-softer",
-        ghost: "bg-transparent text-text-secondary hover:bg-surface-muted hover:text-text-primary",
-        destructive: "bg-status-loss text-white shadow-sm hover:bg-[#C53030]",
-        premium: "bg-gradient-to-r from-primary to-accent-coral text-white shadow-floating hover:shadow-glow-primary relative overflow-hidden after:absolute after:inset-0 after:bg-gradient-to-r after:from-transparent after:via-white/20 after:to-transparent after:-translate-x-full hover:after:translate-x-full after:transition-transform after:duration-700",
-        success: "bg-status-good text-white shadow-sm hover:bg-[#009040] shadow-glow-success",
+        primary: "bg-primary text-white shadow-md shadow-glow-primary hover:shadow-lg hover:bg-primary-hover border border-transparent",
+        secondary: "bg-surface border border-border text-text-primary shadow-sm hover:shadow-md hover:bg-surface-muted hover:border-border-strong transition-all",
+        soft: "bg-primary-soft text-primary font-bold hover:bg-primary-soft/80 border border-transparent",
+        ghost: "bg-transparent text-text-secondary hover:bg-surface-muted hover:text-text-primary border border-transparent",
+        destructive: "bg-status-loss text-white shadow-sm shadow-status-loss/20 hover:bg-[#C53030] hover:shadow-md border border-transparent",
+        premium: "bg-gradient-to-r from-primary to-accent-coral text-white shadow-floating hover:shadow-glow-primary relative overflow-hidden after:absolute after:inset-0 after:bg-gradient-to-r after:from-transparent after:via-white/20 after:to-transparent after:-translate-x-full hover:after:translate-x-full after:transition-transform after:duration-700 border border-transparent",
+        success: "bg-status-good text-white shadow-sm shadow-glow-success hover:shadow-md border border-transparent",
+        white: "bg-white text-primary shadow-sm hover:shadow-md hover:bg-white/95 border border-transparent font-bold",
       },
       size: {
         sm: "h-9 px-3 text-sm rounded-lg",

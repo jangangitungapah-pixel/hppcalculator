@@ -14,7 +14,7 @@ import { ResultCard } from '../components/ui/ResultCard';
 import { Badge } from '../components/ui/Badge';
 import { calculateQuickHpp, validateQuickCalculationInput, formatCurrency, formatPercent } from '../lib/calculations';
 import { createCalculationInputFromForm, createFormFromSavedCalculation } from '../lib/data/calculationMapper';
-import { AlertTriangle, Plus, Calculator } from 'lucide-react';
+import { AlertTriangle, Plus, Calculator, ChevronRight, Sparkles } from 'lucide-react';
 import { StaggerContainer } from '../components/motion/StaggerContainer';
 import { FadeIn } from '../components/motion/FadeIn';
 import { AnimatedNumber } from '../components/motion/AnimatedNumber';
@@ -184,11 +184,16 @@ export const CalculatorPage = () => {
         <h1 className="page-title text-3xl md:text-4xl">{t('calculator.pageTitle')}</h1>
         <p className="page-subtitle text-lg">{t('calculator.pageSubtitle')}</p>
         
-        <div className="mt-4 p-3 bg-surface border border-border rounded-xl inline-flex items-center gap-2 text-sm text-text-secondary">
-          <span className="font-medium text-text-primary">1. Isi Biaya</span> → 
-          <span className="font-medium text-text-primary">2. Hasil Produksi</span> → 
-          <span className="font-medium text-text-primary">3. Harga Jual</span> → 
-          <span className="font-medium text-brand-primary">Lihat Untung</span>
+        <div className="mt-6 flex flex-wrap items-center gap-2 text-sm text-text-secondary">
+          <div className="px-3 py-1.5 bg-surface border border-border/60 rounded-full font-medium text-text-primary shadow-sm">1. Isi Biaya</div>
+          <ChevronRight className="w-4 h-4 opacity-50" />
+          <div className="px-3 py-1.5 bg-surface border border-border/60 rounded-full font-medium text-text-primary shadow-sm">2. Hasil Produksi</div>
+          <ChevronRight className="w-4 h-4 opacity-50" />
+          <div className="px-3 py-1.5 bg-surface border border-border/60 rounded-full font-medium text-text-primary shadow-sm">3. Harga Jual</div>
+          <ChevronRight className="w-4 h-4 opacity-50" />
+          <div className="px-3 py-1.5 bg-brand-primary text-white rounded-full font-bold shadow-glow-primary flex items-center gap-1.5">
+            <Sparkles className="w-4 h-4" /> Lihat Untung
+          </div>
         </div>
       </div>
 
@@ -213,41 +218,40 @@ export const CalculatorPage = () => {
 
           {/* 1. Product Info */}
           <FadeIn>
-            <Card className="p-6 lg:p-8 bg-white/90 rounded-3xl shadow-sm border border-brand-soft/50 transition-premium hover:shadow-floating">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-8 h-8 rounded-full bg-brand-primary text-white flex items-center justify-center font-bold text-sm shadow-sm shadow-glow-primary">1</div>
+            <Card className="p-6 lg:p-8 bg-surface rounded-3xl shadow-sm border border-border/50 transition-premium hover:shadow-md">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-8 h-8 rounded-full bg-brand-soft text-brand-primary flex items-center justify-center font-bold text-sm shadow-sm">1</div>
                 <h2 className="text-xl font-bold text-text-primary tracking-tight">{t('calculator.productInfo')}</h2>
               </div>
-              <p className="text-sm text-text-secondary mb-6 ml-11 leading-relaxed">
-                {lang === 'en' ? 'What product are you calculating?' : 'Produk apa yang ingin kamu hitung?'}
-              </p>
-              <div className="ml-11">
+              <div>
                 <Input 
                   label={t('calculator.productName')}
                   placeholder={t('calculator.productNamePlaceholder')}
                   value={form.productName}
                   onChange={(e) => updateField('productName', e.target.value)}
                   error={validationErrors?.productName}
+                  className="text-lg font-semibold h-12"
                 />
-                <p className="text-xs text-text-secondary mt-2">
-                  {lang === 'en' ? 'Example: Chocolate Donut, Iced Milk Coffee, Chicken Rice Bowl' : 'Contoh: Donat Coklat, Es Kopi Susu, Rice Bowl Ayam'}
-                </p>
               </div>
             </Card>
           </FadeIn>
 
           {/* 2. Cost Items */}
           <FadeIn>
-            <Card className="p-6 lg:p-8 bg-white/90 rounded-3xl shadow-sm border border-brand-soft/50 transition-premium hover:shadow-floating">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-8 h-8 rounded-full bg-brand-primary text-white flex items-center justify-center font-bold text-sm shadow-sm shadow-glow-primary">2</div>
+            <Card className="p-6 lg:p-8 bg-surface rounded-3xl shadow-sm border border-border/50 transition-premium hover:shadow-md">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-8 h-8 rounded-full bg-brand-soft text-brand-primary flex items-center justify-center font-bold text-sm shadow-sm">2</div>
                 <h2 className="text-xl font-bold text-text-primary tracking-tight">{t('calculator.costItems')}</h2>
               </div>
-              <p className="text-sm text-text-secondary mb-6 ml-11 leading-relaxed">
-                {lang === 'en' ? 'Enter all costs to produce one batch of this product.' : 'Masukkan semua biaya untuk membuat satu resep/batch produk ini.'}
-              </p>
               
-              <div className="space-y-4 ml-11">
+              <div className="hidden sm:flex text-xs font-bold text-text-muted uppercase tracking-wider px-2 pb-2 mb-2 border-b border-border/60">
+                <div className="flex-[2] pl-3">Nama Biaya</div>
+                <div className="flex-[1.5] pl-3">Kategori</div>
+                <div className="flex-[1.5] pl-3">Nominal</div>
+                <div className="w-10"></div>
+              </div>
+
+              <div className="space-y-2 sm:space-y-0">
                 {form.costItems.map((item, i) => (
                   <CostItemRow 
                     key={item.id}
@@ -262,14 +266,13 @@ export const CalculatorPage = () => {
               </div>
               
               {validationErrors?.costItems && (
-                <p className="text-sm text-status-loss mt-3 ml-11">{validationErrors.costItems}</p>
+                <p className="text-sm text-status-loss mt-3">{validationErrors.costItems}</p>
               )}
 
               <Button 
                 variant="ghost" 
                 onClick={addCostItem} 
-                className="w-full mt-6 border border-dashed border-border hover:bg-surface-muted ml-11"
-                iconLeft={<Plus className="w-4 h-4" />}
+                className="w-full mt-4 border border-dashed border-border hover:bg-surface-muted/50 text-text-secondary"
               >
                 {t('calculator.addCost')}
               </Button>
@@ -278,15 +281,12 @@ export const CalculatorPage = () => {
 
           {/* 3. Production Output */}
           <FadeIn>
-            <Card className="p-6 lg:p-8 bg-white/90 rounded-3xl shadow-sm border border-brand-soft/50 transition-premium hover:shadow-floating">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-8 h-8 rounded-full bg-brand-primary text-white flex items-center justify-center font-bold text-sm shadow-sm shadow-glow-primary">3</div>
+            <Card className="p-6 lg:p-8 bg-surface rounded-3xl shadow-sm border border-border/50 transition-premium hover:shadow-md">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-8 h-8 rounded-full bg-brand-soft text-brand-primary flex items-center justify-center font-bold text-sm shadow-sm">3</div>
                 <h2 className="text-xl font-bold text-text-primary tracking-tight">{t('calculator.productionOutput')}</h2>
               </div>
-              <p className="text-sm text-text-secondary mb-6 ml-11 leading-relaxed">
-                {lang === 'en' ? 'How many sellable units are produced from the costs above?' : 'Berapa banyak produk yang bisa dijual dari biaya di atas?'}
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 ml-11">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="flex gap-2 items-start">
                   <Input 
                     type="number"
@@ -316,9 +316,6 @@ export const CalculatorPage = () => {
                     onChange={(e) => updateField('failedQuantity', e.target.value)}
                     error={validationErrors?.failedQuantity}
                   />
-                  <p className="text-xs text-text-secondary mt-2">
-                    {lang === 'en' ? 'Rejected output reduces sellable quantity, so cost per unit can increase.' : 'Produk gagal mengurangi jumlah yang bisa dijual, sehingga HPP per produk bisa naik.'}
-                  </p>
                 </div>
               </div>
             </Card>
@@ -326,15 +323,12 @@ export const CalculatorPage = () => {
 
           {/* 4. Selling Price */}
           <FadeIn>
-            <Card className="p-6 lg:p-8 bg-white/90 rounded-3xl shadow-sm border border-brand-soft/50 transition-premium hover:shadow-floating">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-8 h-8 rounded-full bg-brand-primary text-white flex items-center justify-center font-bold text-sm shadow-sm shadow-glow-primary">4</div>
+            <Card className="p-6 lg:p-8 bg-surface rounded-3xl shadow-sm border border-border/50 transition-premium hover:shadow-md">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-8 h-8 rounded-full bg-brand-soft text-brand-primary flex items-center justify-center font-bold text-sm shadow-sm">4</div>
                 <h2 className="text-xl font-bold text-text-primary tracking-tight">{t('calculator.sellingPrice')}</h2>
               </div>
-              <p className="text-sm text-text-secondary mb-6 ml-11 leading-relaxed">
-                {lang === 'en' ? 'Enter the selling price you want to test.' : 'Masukkan harga jual yang ingin kamu tes.'}
-              </p>
-              <div className="ml-11">
+              <div>
                 <Input 
                   type="number"
                   min="0"
@@ -370,13 +364,16 @@ export const CalculatorPage = () => {
                   <Badge variant={result.profitStatus.key}>{t(`result.status.${result.profitStatus.key}`)}</Badge>
                 </div>
 
-                <div className="mb-6 bg-brand-soft p-4 rounded-xl text-center">
-                  <div className="text-sm font-semibold opacity-80 mb-1">{t('result.hppPerUnit')}</div>
-                  <AnimatedNumber 
-                    value={result.hppPerUnit} 
-                    isCurrency={true}
-                    className="text-5xl md:text-6xl font-black text-brand-primary tracking-tight drop-shadow-sm"
-                  />
+                <div className="mb-6 bg-gradient-to-br from-brand-primary to-accent-coral p-5 rounded-2xl text-center shadow-glow-primary relative overflow-hidden">
+                  <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4xNSkiLz48L3N2Zz4=')] opacity-30"></div>
+                  <div className="relative z-10">
+                    <div className="text-sm font-semibold opacity-90 text-white/90 mb-1 uppercase tracking-wider">{t('result.hppPerUnit')}</div>
+                    <AnimatedNumber 
+                      value={result.hppPerUnit} 
+                      isCurrency={true}
+                      className="text-5xl md:text-6xl font-black text-white tracking-tight drop-shadow-md"
+                    />
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 mb-6">

@@ -21,39 +21,34 @@ export const CostItemRow = ({
   ];
 
   return (
-    <div className="flex flex-col gap-3 p-4 bg-gradient-to-r from-surface-muted to-transparent border border-transparent hover:border-brand-soft rounded-2xl relative group transition-colors">
+    <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 py-3 px-2 items-start sm:items-center border-b border-border/50 hover:bg-surface-muted/50 transition-colors group relative rounded-lg sm:rounded-none">
       
-      {/* Header row with name and delete button */}
-      <div className="flex justify-between items-start gap-3">
+      {/* Name Input */}
+      <div className="w-full sm:flex-[2]">
         <Input
           placeholder="Cth: Tepung Terigu"
           value={item.name}
           onChange={(e) => onChange(index, 'name', e.target.value)}
-          containerClassName="flex-1"
+          containerClassName="w-full"
+          className="bg-transparent border-transparent hover:bg-black/5 focus:bg-surface focus:border-border shadow-none h-10 px-3"
           aria-label={t('calculator.costName')}
         />
-        {canRemove && (
-          <button 
-            type="button"
-            onClick={() => onRemove(index)}
-            className="p-2.5 text-text-muted hover:text-status-loss hover:bg-status-lossBg rounded-md transition-colors"
-            title={t('calculator.removeCost')}
-            aria-label={t('calculator.removeCost')}
-          >
-            <Trash2 className="w-5 h-5" />
-          </button>
-        )}
       </div>
 
-      {/* Second row with category and amount */}
-      <div className="flex gap-3">
+      {/* Category Select */}
+      <div className="w-full sm:flex-[1.5]">
         <Select
           options={categoryOptions}
           value={item.category}
           onChange={(e) => onChange(index, 'category', e.target.value)}
-          containerClassName="flex-1 max-w-[120px]"
+          containerClassName="w-full"
+          className="bg-transparent border-transparent hover:bg-black/5 focus:bg-surface focus:border-border shadow-none h-10 px-3"
           aria-label={t('calculator.costCategory')}
         />
+      </div>
+
+      {/* Amount Input */}
+      <div className="w-full sm:flex-[1.5] flex items-center gap-2">
         <Input
           type="number"
           min="0"
@@ -62,10 +57,24 @@ export const CostItemRow = ({
           value={item.amount || ''}
           onChange={(e) => onChange(index, 'amount', e.target.value)}
           containerClassName="flex-1"
+          className="bg-transparent border-transparent hover:bg-black/5 focus:bg-surface focus:border-border shadow-none h-10 pl-10 pr-3 font-medium"
           aria-label={t('calculator.costAmount')}
         />
+        
+        <div className="w-10 flex justify-end shrink-0">
+          {canRemove && (
+            <button 
+              type="button"
+              onClick={() => onRemove(index)}
+              className="p-2 text-text-muted opacity-0 group-hover:opacity-100 focus:opacity-100 hover:text-status-loss hover:bg-status-lossBg rounded-lg transition-all"
+              title={t('calculator.removeCost')}
+              aria-label={t('calculator.removeCost')}
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          )}
+        </div>
       </div>
-
     </div>
   );
 };

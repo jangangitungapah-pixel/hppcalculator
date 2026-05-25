@@ -4,7 +4,7 @@
 */
 
 :root {
-  font-family: 'Inter', 'Poppins', 'Nunito', system-ui, -apple-system, sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Inter', 'Poppins', system-ui, -apple-system, sans-serif;
   color: var(--color-text-primary);
   background: var(--color-background);
   font-synthesis: none;
@@ -27,9 +27,9 @@ body {
   min-height: 100vh;
   /* Premium warm gradient background */
   background:
-    radial-gradient(circle at 15% 50%, rgba(255, 106, 0, 0.05), transparent 45rem),
-    radial-gradient(circle at 85% 30%, rgba(255, 178, 36, 0.04), transparent 45rem),
-    linear-gradient(180deg, var(--color-background) 0%, #FAF6F0 100%);
+    radial-gradient(circle at 15% 50%, rgba(255, 106, 0, 0.03), transparent 45rem),
+    radial-gradient(circle at 85% 30%, rgba(255, 178, 36, 0.02), transparent 45rem),
+    var(--color-background);
   background-attachment: fixed;
 }
 

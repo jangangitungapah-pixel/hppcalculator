@@ -3,21 +3,21 @@ import { Card } from './Card';
 
 export const ResultCard = ({ label, value, helper, tone = 'neutral', large = false, className = '' }) => {
   const toneStyles = {
-    neutral: 'bg-surface-muted border-transparent text-text-primary',
-    good: 'bg-status-goodBg border-status-good/20 text-status-good',
-    loss: 'bg-status-lossBg border-status-loss/20 text-status-loss',
-    brand: 'bg-brand-soft border-brand-primary/20 text-brand-primary',
+    neutral: 'bg-surface border-border/60 text-text-primary shadow-sm',
+    good: 'bg-gradient-to-br from-status-goodBg to-surface border-status-good/30 text-status-good shadow-sm',
+    loss: 'bg-gradient-to-br from-status-lossBg to-surface border-status-loss/30 text-status-loss shadow-sm',
+    brand: 'bg-gradient-to-br from-brand-soft to-surface border-brand-primary/20 text-brand-primary shadow-sm',
   };
 
   const style = toneStyles[tone] || toneStyles.neutral;
 
   return (
-    <Card className={`p-4 border ${style} ${className || ''}`}>
-      <div className="text-sm font-semibold opacity-80 mb-1">{label}</div>
-      <div className={`${large ? 'text-2xl md:text-3xl' : 'text-xl'} font-bold tabular-nums`}>
+    <Card className={`p-5 border ${style} transition-all duration-300 hover:shadow-md ${className || ''}`}>
+      <div className="text-xs uppercase tracking-wider font-bold opacity-70 mb-2">{label}</div>
+      <div className={`${large ? 'text-3xl md:text-4xl' : 'text-2xl'} font-extrabold tabular-nums tracking-tight`}>
         {value}
       </div>
-      {helper && <div className="text-xs opacity-80 mt-1">{helper}</div>}
+      {helper && <div className="text-xs opacity-70 mt-2 font-medium">{helper}</div>}
     </Card>
   );
 };
