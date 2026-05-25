@@ -1,0 +1,26 @@
+# Phase 10 Manual Test Checklist
+
+- [ ] Data & Backup page opens at `/data-backup`
+- [ ] Storage health appears with accurate counts
+- [ ] Backup reminder appears when applicable (lots of records, no previous backup)
+- [ ] Export JSON works (prompts for file download)
+- [ ] JSON file can be opened locally and contains properly structured data
+- [ ] Import invalid JSON shows error (e.g. uploading an image or random json)
+- [ ] Import valid JSON shows preview panel with correct counts
+- [ ] Merge import works (adds new IDs, skips duplicates)
+- [ ] Replace import works (wipes old data, writes backup data)
+- [ ] Include settings toggle works (checked imports settings, unchecked ignores)
+- [ ] CSV export center lists all active modules
+- [ ] CSV export calculations works
+- [ ] CSV export ingredients works
+- [ ] CSV export recipes works
+- [ ] CSV export products works
+- [ ] CSV export pricing simulations works
+- [ ] Reset draft works (clears quick calculator state)
+- [ ] Reset module works (clears only the selected module)
+- [ ] Reset all requires typing "HAPUS"
+- [ ] Reset all works (clears all business records but leaves UI intact)
+- [ ] Settings page link works (routes to Data & Backup)
+- [ ] Dashboard backup reminder link works (routes to Data & Backup)
+- [ ] Build passes (`npm run build`)
+- [ ] Tests pass (`npm run test`)

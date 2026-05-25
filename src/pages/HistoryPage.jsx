@@ -13,9 +13,9 @@ import { History as HistoryIcon, Trash2 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 
 export const HistoryPage = () => {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const navigate = useNavigate();
-  const { calculations, loadDemoData, deleteCalculation } = useAppData();
+  const { settings, calculations, loadDemoData, deleteCalculation } = useAppData();
   const { addToast } = useToast();
 
   const [deleteId, setDeleteId] = useState(null);
@@ -61,10 +61,10 @@ export const HistoryPage = () => {
                   )}
                 </div>
                 <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm text-text-secondary mt-2 max-w-sm">
-                  <span>HPP: {formatCurrency(item.result.hppPerUnit, 'IDR', 'id-ID')}</span>
-                  <span>Jual: {formatCurrency(item.result.sellingPrice, 'IDR', 'id-ID')}</span>
-                  <span>Untung: {formatCurrency(item.result.profitPerUnit, 'IDR', 'id-ID')}</span>
-                  <span>Margin: {formatPercent(item.result.marginPercent, 'id-ID')}</span>
+                  <span>HPP: {formatCurrency(item.result.hppPerUnit, lang, settings.currency)}</span>
+                  <span>Jual: {formatCurrency(item.result.sellingPrice, lang, settings.currency)}</span>
+                  <span>Untung: {formatCurrency(item.result.profitPerUnit, lang, settings.currency)}</span>
+                  <span>Margin: {formatPercent(item.result.marginPercent, lang)}</span>
                 </div>
               </div>
               
@@ -119,3 +119,4 @@ export const HistoryPage = () => {
     </PageContainer>
   );
 };
+

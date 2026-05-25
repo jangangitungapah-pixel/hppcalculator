@@ -16,8 +16,8 @@ import { ArrowLeft, History as HistoryIcon, Trash2 } from 'lucide-react';
 export const HistoryDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { t } = useLanguage();
-  const { calculations, deleteCalculation } = useAppData();
+  const { t, lang } = useLanguage();
+  const { settings, calculations, deleteCalculation } = useAppData();
   const { addToast } = useToast();
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -71,20 +71,20 @@ export const HistoryDetailPage = () => {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <ResultCard 
           label={t('result.hppPerUnit')} 
-          value={formatCurrency(result.hppPerUnit, 'IDR', 'id-ID')}
+          value={formatCurrency(result.hppPerUnit, lang, settings.currency)}
         />
         <ResultCard 
           label={t('result.profitPerUnit')} 
-          value={formatCurrency(result.profitPerUnit, 'IDR', 'id-ID')}
+          value={formatCurrency(result.profitPerUnit, lang, settings.currency)}
           tone={result.profitPerUnit > 0 ? 'good' : result.profitPerUnit < 0 ? 'loss' : 'neutral'}
         />
         <ResultCard 
           label={t('result.margin')} 
-          value={formatPercent(result.marginPercent, 'id-ID')}
+          value={formatPercent(result.marginPercent, lang)}
         />
         <ResultCard 
           label={t('result.markup')} 
-          value={formatPercent(result.markupPercent, 'id-ID')}
+          value={formatPercent(result.markupPercent, lang)}
         />
       </div>
 
@@ -100,14 +100,14 @@ export const HistoryDetailPage = () => {
                     <div className="text-sm text-text-secondary">{cost.category}</div>
                   </div>
                   <div className="font-medium">
-                    {formatCurrency(cost.amount, 'IDR', 'id-ID')}
+                    {formatCurrency(cost.amount, lang, settings.currency)}
                   </div>
                 </div>
               ))}
             </div>
             <div className="p-4 bg-surface-muted border-t border-border flex justify-between items-center font-bold">
               <span>{t('result.totalProductionCost')}</span>
-              <span>{formatCurrency(result.totalProductionCost, 'IDR', 'id-ID')}</span>
+              <span>{formatCurrency(result.totalProductionCost, lang, settings.currency)}</span>
             </div>
           </Card>
         </div>
@@ -123,6 +123,24 @@ export const HistoryDetailPage = () => {
               <div className="flex justify-between p-4 bg-surface">
                 <span className="text-text-secondary">{t('calculator.failedQuantity')}</span>
                 <span className="font-medium">{input.failedQuantity} {input.sellingUnit}</span>
+              </div>
+            </div>
+          </Card>
+
+          <h2 className="text-lg font-semibold mb-3">{t('result.suggestedPrices')}</h2>
+          <Card className="p-0 overflow-hidden border-border mb-6">
+            <div className="divide-y divide-border">
+              <div className="flex justify-between p-4 bg-surface-muted">
+                <span className="text-text-secondary">{t('result.safePrice')} (15%)</span>
+                <span className="font-bold">{formatCurrency(result.suggestedPrices?.safe?.price || 0, lang, settings.currency)}</span>
+              </div>
+              <div className="flex justify-between p-4 bg-status-okayBg text-status-okay">
+                <span className="font-medium">{t('result.idealPrice')} (30%)</span>
+                <span className="font-bold">{formatCurrency(result.suggestedPrices?.ideal?.price || 0, lang, settings.currency)}</span>
+              </div>
+              <div className="flex justify-between p-4 bg-status-goodBg text-status-good">
+                <span className="font-medium">{t('result.premiumPrice')} (50%)</span>
+                <span className="font-bold">{formatCurrency(result.suggestedPrices?.premium?.price || 0, lang, settings.currency)}</span>
               </div>
             </div>
           </Card>
@@ -153,3 +171,4 @@ export const HistoryDetailPage = () => {
     </PageContainer>
   );
 };
+

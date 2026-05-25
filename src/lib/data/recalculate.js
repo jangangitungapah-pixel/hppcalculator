@@ -16,7 +16,7 @@ export const recalculateSavedCalculation = (savedCalculation, currentSettings) =
   };
 
   try {
-    const newResult = calculateQuickHpp(payloadForCalculation, payloadForCalculation.roundingStep);
+    const newResult = calculateQuickHpp(payloadForCalculation);
     
     // Return updated object (does NOT save to localStorage automatically)
     return {

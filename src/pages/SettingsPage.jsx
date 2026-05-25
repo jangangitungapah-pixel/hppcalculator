@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../hooks/useLanguage';
 import { useAppData } from '../hooks/useAppData';
 import { useToast } from '../hooks/useToast';
@@ -7,10 +8,13 @@ import { LanguageSwitch } from '../components/ui/LanguageSwitch';
 import { Select } from '../components/ui/Select';
 import { Alert } from '../components/ui/Alert';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
+import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
+import { Database } from 'lucide-react';
 
 export const SettingsPage = () => {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const navigate = useNavigate();
   const { settings, updateSettings, clearDraft, calculatorDraft } = useAppData();
   const { addToast } = useToast();
   
@@ -40,13 +44,13 @@ export const SettingsPage = () => {
       </div>
 
       <div className="flex flex-col gap-6">
-        <div className="bg-surface border border-border rounded-xl p-5">
-          <h2 className="text-lg font-semibold mb-4 text-text-primary">{t('settings.language')}</h2>
+        <Card className="p-6">
+          <h2 className="text-lg font-bold mb-4 text-text-primary">{t('settings.language')}</h2>
           <LanguageSwitch />
-        </div>
+        </Card>
 
-        <div className="bg-surface border border-border rounded-xl p-5">
-          <h2 className="text-lg font-semibold mb-4 text-text-primary">Pengaturan Kalkulator</h2>
+        <Card className="p-6">
+          <h2 className="text-lg font-bold mb-4 text-text-primary">{lang === 'en' ? 'Calculator Settings' : 'Pengaturan Kalkulator'}</h2>
           
           <div className="flex flex-col gap-4">
             <Select 
@@ -70,10 +74,10 @@ export const SettingsPage = () => {
               onChange={handleRoundingChange}
             />
           </div>
-        </div>
+        </Card>
 
-        <div className="bg-surface border border-border rounded-xl p-5">
-          <h2 className="text-lg font-semibold mb-4 text-text-primary">Data</h2>
+        <Card className="p-6">
+          <h2 className="text-lg font-bold mb-4 text-text-primary">{lang === 'en' ? 'Data Management' : 'Kelola Data'}</h2>
           <div className="flex flex-col gap-4">
             <Button 
               variant="secondary" 
@@ -82,13 +86,19 @@ export const SettingsPage = () => {
             >
               {t('settings.clearDraft')}
             </Button>
-            <div className="flex flex-col gap-2 opacity-50 pointer-events-none">
-              <Button variant="secondary">{t('settings.exportDataFuture')}</Button>
-              <Button variant="secondary">{t('settings.importDataFuture')}</Button>
-              <Button variant="destructive">{t('settings.deleteAllData')}</Button>
+            
+            <div className="border-t pt-4 mt-2">
+              <Button 
+                variant="outline" 
+                className="w-full flex items-center justify-center gap-2"
+                onClick={() => navigate('/data-backup')}
+              >
+                <Database size={18} />
+                {t('settings.manageDataBackup', 'Kelola Data & Backup')}
+              </Button>
             </div>
           </div>
-        </div>
+        </Card>
 
         <Alert type="info">
           {t('settings.localStorageNote')}

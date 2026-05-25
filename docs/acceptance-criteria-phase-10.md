@@ -1,0 +1,24 @@
+# Acceptance Criteria Phase 10
+
+- [x] Data & Backup route added (`/data-backup`)
+- [x] Backup JSON export implemented
+- [x] Backup JSON import implemented
+- [x] Import preview implemented
+- [x] Merge/replace import modes implemented
+- [x] Duplicate handling implemented (Skip in Merge mode)
+- [x] Settings backup/import implemented (Checkbox toggle)
+- [x] Calculator draft excluded from backup
+- [x] CSV export center implemented
+- [x] Data health check implemented
+- [x] Backup reminder implemented (Dashboard & Banner)
+- [x] Reset all data implemented with strong confirmation ("HAPUS")
+- [x] Reset per module implemented
+- [x] Reset draft implemented
+- [x] Settings page link added
+- [x] Dashboard reminder added if applicable
+- [x] Unit tests added
+- [x] Build passes
+- [x] Tests pass
+- [x] No backend/auth added
+- [x] No dependency added
+- [x] No encryption/ZIP/PDF/Excel added

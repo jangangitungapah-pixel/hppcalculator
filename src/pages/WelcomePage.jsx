@@ -22,10 +22,10 @@ export const WelcomePage = () => {
 
       <PageContainer className="flex-1 flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-24">
         <div className="flex-1 max-w-lg text-center lg:text-left">
-          <h1 className="text-4xl md:text-5xl font-bold text-text-primary mb-6 leading-tight">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-text-primary mb-6 leading-tight tracking-tight">
             {t('welcome.headline')}
           </h1>
-          <p className="text-lg text-text-secondary mb-10">
+          <p className="text-lg md:text-xl text-text-secondary mb-10 max-w-lg mx-auto lg:mx-0">
             {t('welcome.subheadline')}
           </p>
           
@@ -39,11 +39,25 @@ export const WelcomePage = () => {
           </div>
         </div>
 
-        <div className="flex-1 w-full max-w-md">
-          <div className="bg-surface p-6 md:p-8 rounded-2xl shadow-floating border border-border">
+        <div className="flex-1 w-full max-w-md relative">
+          {/* Decorative background element */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-brand-soft to-transparent rounded-3xl transform rotate-3 scale-105 -z-10 opacity-70"></div>
+          
+          <div className="bg-white/95 p-6 md:p-8 rounded-3xl shadow-floating border border-brand-soft">
+            <div className="mb-6 pb-6 border-b border-border flex justify-between items-center">
+              <div>
+                <p className="text-xs text-text-secondary font-medium uppercase tracking-wider mb-1">Total Modal</p>
+                <p className="text-xl font-bold text-text-primary">Rp 45.000</p>
+              </div>
+              <div className="text-right">
+                <p className="text-xs text-text-secondary font-medium uppercase tracking-wider mb-1">HPP / Unit</p>
+                <p className="text-xl font-bold text-brand-primary">Rp 4.500</p>
+              </div>
+            </div>
+
             <div className="space-y-6">
               <div className="flex items-start gap-4">
-                <div className="p-3 bg-brand-soft text-brand-primary rounded-xl">
+                <div className="p-3 bg-brand-soft text-brand-primary rounded-2xl">
                   <Calculator className="w-6 h-6" />
                 </div>
                 <div>
@@ -52,7 +66,7 @@ export const WelcomePage = () => {
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="p-3 bg-status-goodBg text-status-good rounded-xl">
+                <div className="p-3 bg-status-goodBg text-status-good rounded-2xl">
                   <PieChart className="w-6 h-6" />
                 </div>
                 <div>
@@ -61,7 +75,7 @@ export const WelcomePage = () => {
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="p-3 bg-status-okayBg text-status-okay rounded-xl">
+                <div className="p-3 bg-status-okayBg text-status-okay rounded-2xl">
                   <ShieldCheck className="w-6 h-6" />
                 </div>
                 <div>

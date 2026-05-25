@@ -10,10 +10,10 @@ export const Button = React.forwardRef(({
   className = '', 
   ...props 
 }, ref) => {
-  const baseStyles = "inline-flex items-center justify-center font-semibold rounded-md transition-colors duration-normal ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary";
+  const baseStyles = "inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-normal ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary";
   
   const variants = {
-    primary: "bg-brand-primary text-white hover:bg-brand-hover active:bg-brand-primary",
+    primary: "bg-brand-primary text-white shadow-md hover:shadow-lg hover:bg-[#D95F0D] active:bg-brand-primary transform hover:-translate-y-0.5",
     secondary: "border border-brand-primary text-brand-primary bg-transparent hover:bg-brand-soft",
     ghost: "bg-transparent text-text-secondary hover:bg-surface-muted active:bg-surface-muted",
     destructive: "bg-status-loss text-white hover:opacity-90 active:opacity-100",

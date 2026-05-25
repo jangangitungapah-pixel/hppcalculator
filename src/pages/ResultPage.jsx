@@ -16,7 +16,7 @@ export const ResultPage = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { t, lang } = useLanguage();
-  const { saveCalculation } = useAppData();
+  const { settings, saveCalculation } = useAppData();
   const { addToast } = useToast();
 
   if (!state || (!state.input && !state.result)) {
@@ -52,9 +52,7 @@ export const ResultPage = () => {
       title: t('toasts.calculationSavedTitle'),
       message: t('toasts.calculationSavedMessage')
     });
-    // Redirect to detail page (saved will be void if saveCalculation doesn't return, but we modified it to return object)
-    // Actually our AppDataContext saveCalculation doesn't return. Let's just go to history.
-    navigate('/history');
+    navigate('/history/' + saved.id);
   };
 
   return (
@@ -76,7 +74,7 @@ export const ResultPage = () => {
           <div className="mb-6">
             <div className="text-sm font-semibold opacity-80 mb-1">{t('result.hppPerUnit')}</div>
             <div className="text-4xl font-bold text-text-primary">
-              {formatCurrency(result.hppPerUnit, 'IDR', 'id-ID')}
+              {formatCurrency(result.hppPerUnit, lang, settings.currency)}
             </div>
           </div>
 
@@ -84,13 +82,13 @@ export const ResultPage = () => {
             <div>
               <div className="text-sm font-semibold opacity-80">{t('result.profitPerUnit')}</div>
               <div className={`text-2xl font-bold ${isLoss ? 'text-status-loss' : 'text-status-good'}`}>
-                {formatCurrency(result.profitPerUnit, 'IDR', 'id-ID')}
+                {formatCurrency(result.profitPerUnit, lang, settings.currency)}
               </div>
             </div>
             <div>
               <div className="text-sm font-semibold opacity-80">{t('result.margin')}</div>
               <div className={`text-2xl font-bold ${isLoss ? 'text-status-loss' : 'text-status-good'}`}>
-                {formatPercent(result.marginPercent, 'id-ID')}
+                {formatPercent(result.marginPercent, lang)}
               </div>
             </div>
           </div>
@@ -123,38 +121,71 @@ export const ResultPage = () => {
         <div className="grid grid-cols-2 gap-4">
           <ResultCard 
             label={t('result.totalProductionCost')}
-            value={formatCurrency(result.totalProductionCost, 'IDR', 'id-ID')}
+            value={formatCurrency(result.totalProductionCost, lang, settings.currency)}
           />
           <ResultCard 
             label={t('result.grossRevenue')}
-            value={formatCurrency(result.grossRevenue, 'IDR', 'id-ID')}
+            value={formatCurrency(result.grossRevenue, lang, settings.currency)}
           />
           <ResultCard 
             label={t('result.totalProfit')}
-            value={formatCurrency(result.totalProfit, 'IDR', 'id-ID')}
+            value={formatCurrency(result.totalProfit, lang, settings.currency)}
             tone={result.totalProfit > 0 ? 'good' : result.totalProfit < 0 ? 'loss' : 'neutral'}
           />
           <ResultCard 
             label={t('result.markup')}
-            value={formatPercent(result.markupPercent, 'id-ID')}
+            value={formatPercent(result.markupPercent, lang)}
           />
         </div>
 
+        {/* Cost Breakdown */}
+        {input && (
+          <Card className="p-0 overflow-hidden border-border bg-surface">
+            <h3 className="font-bold text-lg p-5 pb-2">{t('calculator.costItems')}</h3>
+            <div className="divide-y divide-border px-5 pb-3">
+              {input.costItems.map(cost => (
+                <div key={cost.id} className="flex justify-between items-center py-3">
+                  <div>
+                    <div className="font-medium text-sm">{cost.name}</div>
+                    <div className="text-xs text-text-secondary">{cost.category}</div>
+                  </div>
+                  <div className="font-medium text-sm">
+                    {formatCurrency(cost.amount, lang, settings.currency)}
+                  </div>
+                </div>
+              ))}
+            </div>
+            {input.failedQuantity > 0 && (
+              <div className="px-5 py-3 bg-status-lossBg border-t border-status-loss/10 text-sm text-status-loss flex justify-between">
+                <span>{lang === 'en' ? 'Rejected Output' : 'Produk Gagal'}</span>
+                <span>{input.failedQuantity} {input.sellingUnit}</span>
+              </div>
+            )}
+            <div className="p-5 bg-surface-muted border-t border-border flex justify-between items-center font-bold">
+              <span>{t('result.totalProductionCost')}</span>
+              <span>{formatCurrency(result.totalProductionCost, lang, settings.currency)}</span>
+            </div>
+          </Card>
+        )}
+
         {/* Suggested Prices */}
         <Card className="p-5">
-          <h3 className="font-bold text-lg mb-4">{t('result.suggestedPrices')}</h3>
-          <div className="flex flex-col gap-3">
-            <div className="flex justify-between items-center p-3 rounded-md bg-surface-muted">
-              <span className="font-medium text-text-secondary">{t('result.safePrice')}</span>
-              <span className="font-bold">{formatCurrency(result.suggestedPrices?.safe?.price || 0, 'IDR', 'id-ID')}</span>
+          <h3 className="font-bold text-lg mb-2">{t('result.suggestedPrices')}</h3>
+          <p className="text-sm text-text-secondary mb-4">
+            {lang === 'en' ? 'These prices are calculated from target margins and rounded up.' : 'Harga ini dihitung dari target margin dan dibulatkan ke atas.'}
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="flex flex-col p-4 rounded-xl bg-surface-muted border border-border">
+              <span className="font-medium text-text-secondary text-sm mb-1">{t('result.safePrice')} (15%)</span>
+              <span className="font-bold text-lg">{formatCurrency(result.suggestedPrices?.safe?.price || 0, lang, settings.currency)}</span>
             </div>
-            <div className="flex justify-between items-center p-3 rounded-md bg-status-okayBg text-status-okay">
-              <span className="font-medium">{t('result.idealPrice')}</span>
-              <span className="font-bold">{formatCurrency(result.suggestedPrices?.ideal?.price || 0, 'IDR', 'id-ID')}</span>
+            <div className="flex flex-col p-4 rounded-xl bg-status-okayBg border border-status-okay/20 text-status-okay">
+              <span className="font-medium text-sm mb-1">{t('result.idealPrice')} (30%)</span>
+              <span className="font-bold text-lg">{formatCurrency(result.suggestedPrices?.ideal?.price || 0, lang, settings.currency)}</span>
             </div>
-            <div className="flex justify-between items-center p-3 rounded-md bg-status-goodBg text-status-good">
-              <span className="font-medium">{t('result.premiumPrice')}</span>
-              <span className="font-bold">{formatCurrency(result.suggestedPrices?.premium?.price || 0, 'IDR', 'id-ID')}</span>
+            <div className="flex flex-col p-4 rounded-xl bg-status-goodBg border border-status-good/20 text-status-good">
+              <span className="font-medium text-sm mb-1">{t('result.premiumPrice')} (50%)</span>
+              <span className="font-bold text-lg">{formatCurrency(result.suggestedPrices?.premium?.price || 0, lang, settings.currency)}</span>
             </div>
           </div>
         </Card>
@@ -173,3 +204,5 @@ export const ResultPage = () => {
     </PageContainer>
   );
 };
+
+

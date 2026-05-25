@@ -14,7 +14,7 @@ import { ResultCard } from '../components/ui/ResultCard';
 import { Badge } from '../components/ui/Badge';
 import { calculateQuickHpp, validateQuickCalculationInput, formatCurrency, formatPercent } from '../lib/calculations';
 import { createCalculationInputFromForm, createFormFromSavedCalculation } from '../lib/data/calculationMapper';
-import { AlertTriangle, Plus } from 'lucide-react';
+import { AlertTriangle, Plus, Calculator } from 'lucide-react';
 
 const emptyCostItem = () => ({
   id: Math.random().toString(36).substring(7),
@@ -26,9 +26,10 @@ const emptyCostItem = () => ({
 const defaultForm = {
   productName: '',
   costItems: [
-    { id: '1', name: '', category: 'Bahan', amount: '' },
-    { id: '2', name: '', category: 'Kemasan', amount: '' },
-    { id: '3', name: '', category: 'Operasional', amount: '' },
+    { id: '1', name: 'Biaya Bahan', category: 'Bahan', amount: '' },
+    { id: '2', name: 'Biaya Kemasan', category: 'Kemasan', amount: '' },
+    { id: '3', name: 'Biaya Tenaga Kerja', category: 'TenagaKerja', amount: '' },
+    { id: '4', name: 'Biaya Operasional', category: 'Operasional', amount: '' },
   ],
   outputQuantity: '',
   failedQuantity: '',
@@ -135,7 +136,7 @@ export const CalculatorPage = () => {
     setValidationErrors(null);
     
     try {
-      const calcResult = calculateQuickHpp(payload, settings.roundingStep);
+      const calcResult = calculateQuickHpp(payload);
       setResult(calcResult);
       setHasCalculatedOnce(true);
 
@@ -153,14 +154,14 @@ export const CalculatorPage = () => {
   const handleSaveCalculation = () => {
     if (!result) return;
     const payload = getCleanInputPayload();
-    saveCalculation(payload, result);
+    const saved = saveCalculation(payload, result);
     addToast({
       type: 'success',
       title: t('toasts.calculationSavedTitle'),
       message: t('toasts.calculationSavedMessage')
     });
     clearDraft(); // clear draft after saving
-    navigate('/history');
+    navigate('/history/' + saved.id);
   };
 
   const unitOptions = [
@@ -173,9 +174,19 @@ export const CalculatorPage = () => {
 
   return (
     <PageContainer maxWidth="max-w-[1280px]">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-text-primary mb-1">{t('calculator.pageTitle')}</h1>
-        <p className="text-text-secondary">{t('calculator.pageSubtitle')}</p>
+      <div className="mb-8">
+        <Badge variant="neutral" className="mb-3 bg-brand-soft text-brand-primary border-none">
+          {lang === 'en' ? 'Quick HPP Calculator' : 'Kalkulator Cepat'}
+        </Badge>
+        <h1 className="text-3xl font-extrabold text-text-primary mb-2">{t('calculator.pageTitle')}</h1>
+        <p className="text-text-secondary text-lg">{t('calculator.pageSubtitle')}</p>
+        
+        <div className="mt-4 p-3 bg-surface border border-border rounded-xl inline-flex items-center gap-2 text-sm text-text-secondary">
+          <span className="font-medium text-text-primary">1. Isi Biaya</span> → 
+          <span className="font-medium text-text-primary">2. Hasil Produksi</span> → 
+          <span className="font-medium text-text-primary">3. Harga Jual</span> → 
+          <span className="font-medium text-brand-primary">Lihat Untung</span>
+        </div>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-8 items-start">
@@ -198,24 +209,39 @@ export const CalculatorPage = () => {
           )}
 
           {/* 1. Product Info */}
-          <Card className="p-5 lg:p-6">
-            <h2 className="text-lg font-bold mb-4">{t('calculator.productInfo')}</h2>
-            <Input 
-              label={t('calculator.productName')}
-              placeholder={t('calculator.productNamePlaceholder')}
-              value={form.productName}
-              onChange={(e) => updateField('productName', e.target.value)}
-              error={validationErrors?.productName}
-            />
+          <Card className="p-6 lg:p-8 bg-white/90 rounded-3xl shadow-sm border border-brand-soft/50">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-8 h-8 rounded-full bg-brand-primary text-white flex items-center justify-center font-bold text-sm">1</div>
+              <h2 className="text-xl font-bold text-text-primary">{t('calculator.productInfo')}</h2>
+            </div>
+            <p className="text-sm text-text-secondary mb-6 ml-11">
+              {lang === 'en' ? 'What product are you calculating?' : 'Produk apa yang ingin kamu hitung?'}
+            </p>
+            <div className="ml-11">
+              <Input 
+                label={t('calculator.productName')}
+                placeholder={t('calculator.productNamePlaceholder')}
+                value={form.productName}
+                onChange={(e) => updateField('productName', e.target.value)}
+                error={validationErrors?.productName}
+              />
+              <p className="text-xs text-text-secondary mt-2">
+                {lang === 'en' ? 'Example: Chocolate Donut, Iced Milk Coffee, Chicken Rice Bowl' : 'Contoh: Donat Coklat, Es Kopi Susu, Rice Bowl Ayam'}
+              </p>
+            </div>
           </Card>
 
           {/* 2. Cost Items */}
-          <Card className="p-5 lg:p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-bold">{t('calculator.costItems')}</h2>
+          <Card className="p-6 lg:p-8 bg-white/90 rounded-3xl shadow-sm border border-brand-soft/50">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-8 h-8 rounded-full bg-brand-primary text-white flex items-center justify-center font-bold text-sm">2</div>
+              <h2 className="text-xl font-bold text-text-primary">{t('calculator.costItems')}</h2>
             </div>
+            <p className="text-sm text-text-secondary mb-6 ml-11">
+              {lang === 'en' ? 'Enter all costs to produce one batch of this product.' : 'Masukkan semua biaya untuk membuat satu resep/batch produk ini.'}
+            </p>
             
-            <div className="space-y-4">
+            <div className="space-y-4 ml-11">
               {form.costItems.map((item, i) => (
                 <CostItemRow 
                   key={item.id}
@@ -230,13 +256,13 @@ export const CalculatorPage = () => {
             </div>
             
             {validationErrors?.costItems && (
-              <p className="text-sm text-status-loss mt-3">{validationErrors.costItems}</p>
+              <p className="text-sm text-status-loss mt-3 ml-11">{validationErrors.costItems}</p>
             )}
 
             <Button 
               variant="ghost" 
               onClick={addCostItem} 
-              className="w-full mt-4 border border-dashed border-border"
+              className="w-full mt-6 border border-dashed border-border hover:bg-surface-muted ml-11"
               iconLeft={<Plus className="w-4 h-4" />}
             >
               {t('calculator.addCost')}
@@ -244,9 +270,15 @@ export const CalculatorPage = () => {
           </Card>
 
           {/* 3. Production Output */}
-          <Card className="p-5 lg:p-6">
-            <h2 className="text-lg font-bold mb-4">{t('calculator.productionOutput')}</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Card className="p-6 lg:p-8 bg-white/90 rounded-3xl shadow-sm border border-brand-soft/50">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-8 h-8 rounded-full bg-brand-primary text-white flex items-center justify-center font-bold text-sm">3</div>
+              <h2 className="text-xl font-bold text-text-primary">{t('calculator.productionOutput')}</h2>
+            </div>
+            <p className="text-sm text-text-secondary mb-6 ml-11">
+              {lang === 'en' ? 'How many sellable units are produced from the costs above?' : 'Berapa banyak produk yang bisa dijual dari biaya di atas?'}
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 ml-11">
               <div className="flex gap-2 items-start">
                 <Input 
                   type="number"
@@ -266,31 +298,44 @@ export const CalculatorPage = () => {
                   containerClassName="w-[100px] shrink-0"
                 />
               </div>
-              <Input 
-                type="number"
-                min="0"
-                label={t('calculator.failedQuantity')}
-                placeholder="0"
-                value={form.failedQuantity}
-                onChange={(e) => updateField('failedQuantity', e.target.value)}
-                error={validationErrors?.failedQuantity}
-              />
+              <div>
+                <Input 
+                  type="number"
+                  min="0"
+                  label={t('calculator.failedQuantity')}
+                  placeholder="0"
+                  value={form.failedQuantity}
+                  onChange={(e) => updateField('failedQuantity', e.target.value)}
+                  error={validationErrors?.failedQuantity}
+                />
+                <p className="text-xs text-text-secondary mt-2">
+                  {lang === 'en' ? 'Rejected output reduces sellable quantity, so cost per unit can increase.' : 'Produk gagal mengurangi jumlah yang bisa dijual, sehingga HPP per produk bisa naik.'}
+                </p>
+              </div>
             </div>
           </Card>
 
           {/* 4. Selling Price */}
-          <Card className="p-5 lg:p-6">
-            <h2 className="text-lg font-bold mb-4">{t('calculator.sellingPrice')}</h2>
-            <Input 
-              type="number"
-              min="0"
-              prefix="Rp"
-              label={t('calculator.sellingPrice')}
-              placeholder="0"
-              value={form.sellingPrice}
-              onChange={(e) => updateField('sellingPrice', e.target.value)}
-              error={validationErrors?.sellingPrice}
-            />
+          <Card className="p-6 lg:p-8 bg-white/90 rounded-3xl shadow-sm border border-brand-soft/50">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-8 h-8 rounded-full bg-brand-primary text-white flex items-center justify-center font-bold text-sm">4</div>
+              <h2 className="text-xl font-bold text-text-primary">{t('calculator.sellingPrice')}</h2>
+            </div>
+            <p className="text-sm text-text-secondary mb-6 ml-11">
+              {lang === 'en' ? 'Enter the selling price you want to test.' : 'Masukkan harga jual yang ingin kamu tes.'}
+            </p>
+            <div className="ml-11">
+              <Input 
+                type="number"
+                min="0"
+                prefix="Rp"
+                label={t('calculator.sellingPrice')}
+                placeholder="0"
+                value={form.sellingPrice}
+                onChange={(e) => updateField('sellingPrice', e.target.value)}
+                error={validationErrors?.sellingPrice}
+              />
+            </div>
           </Card>
 
           {/* Mobile Calculate Button */}
@@ -317,19 +362,19 @@ export const CalculatorPage = () => {
                 <div className="mb-6 bg-brand-soft p-4 rounded-xl text-center">
                   <div className="text-sm font-semibold opacity-80 mb-1">{t('result.hppPerUnit')}</div>
                   <div className="text-4xl font-bold text-brand-primary">
-                    {formatCurrency(result.hppPerUnit, 'IDR', 'id-ID')}
+                    {formatCurrency(result.hppPerUnit, lang, settings.currency)}
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <ResultCard 
                     label={t('result.profitPerUnit')} 
-                    value={formatCurrency(result.profitPerUnit, 'IDR', 'id-ID')}
+                    value={formatCurrency(result.profitPerUnit, lang, settings.currency)}
                     tone={result.profitPerUnit > 0 ? 'good' : result.profitPerUnit < 0 ? 'loss' : 'neutral'}
                   />
                   <ResultCard 
                     label={t('result.margin')} 
-                    value={formatPercent(result.marginPercent, 'id-ID')}
+                    value={formatPercent(result.marginPercent, lang)}
                   />
                 </div>
                 
@@ -347,13 +392,31 @@ export const CalculatorPage = () => {
                 <div className="space-y-4 mb-6">
                   <div className="flex justify-between text-sm">
                     <span className="text-text-secondary">{t('result.totalProductionCost')}</span>
-                    <span className="font-semibold">{formatCurrency(result.totalProductionCost, 'IDR', 'id-ID')}</span>
+                    <span className="font-semibold">{formatCurrency(result.totalProductionCost, lang, settings.currency)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-text-secondary">{t('result.totalProfit')}</span>
                     <span className={`font-semibold ${result.totalProfit < 0 ? 'text-status-loss' : 'text-status-good'}`}>
-                      {formatCurrency(result.totalProfit, 'IDR', 'id-ID')}
+                      {formatCurrency(result.totalProfit, lang, settings.currency)}
                     </span>
+                  </div>
+                </div>
+
+                <div className="mb-6">
+                  <h4 className="text-sm font-bold text-text-primary mb-3">{t('result.suggestedPrices')}</h4>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex justify-between items-center p-2.5 rounded-lg bg-surface-muted text-sm">
+                      <span className="text-text-secondary font-medium">{t('result.safePrice')} (15%)</span>
+                      <span className="font-bold">{formatCurrency(result.suggestedPrices?.safe?.price || 0, lang, settings.currency)}</span>
+                    </div>
+                    <div className="flex justify-between items-center p-2.5 rounded-lg bg-status-okayBg text-status-okay text-sm">
+                      <span className="font-medium">{t('result.idealPrice')} (30%)</span>
+                      <span className="font-bold">{formatCurrency(result.suggestedPrices?.ideal?.price || 0, lang, settings.currency)}</span>
+                    </div>
+                    <div className="flex justify-between items-center p-2.5 rounded-lg bg-status-goodBg text-status-good text-sm">
+                      <span className="font-medium">{t('result.premiumPrice')} (50%)</span>
+                      <span className="font-bold">{formatCurrency(result.suggestedPrices?.premium?.price || 0, lang, settings.currency)}</span>
+                    </div>
                   </div>
                 </div>
 
@@ -367,9 +430,9 @@ export const CalculatorPage = () => {
                 </div>
               </Card>
             ) : (
-              <Card className="p-8 text-center bg-surface-muted border-dashed h-full min-h-[400px] flex flex-col items-center justify-center">
-                <div className="w-16 h-16 bg-surface rounded-full flex items-center justify-center mb-4 text-brand-primary">
-                  <AlertTriangle className="w-8 h-8 opacity-50" />
+              <Card className="p-8 text-center bg-surface-muted/50 border border-dashed border-border h-full min-h-[400px] flex flex-col items-center justify-center rounded-3xl">
+                <div className="w-20 h-20 bg-brand-soft rounded-full flex items-center justify-center mb-6 text-brand-primary">
+                  <Calculator className="w-10 h-10" />
                 </div>
                 <h3 className="font-semibold text-lg mb-2">{t('calculator.resultPlaceholderTitle')}</h3>
                 <p className="text-text-secondary text-sm">{t('calculator.resultPlaceholderBody')}</p>
@@ -384,3 +447,5 @@ export const CalculatorPage = () => {
     </PageContainer>
   );
 };
+
+
