@@ -79,6 +79,12 @@ export const DataBackupPage = () => {
           </p>
         </div>
 
+        <div className="mb-6">
+          <div className="p-4 bg-blue-50 text-blue-800 border border-blue-200 rounded-xl text-sm leading-relaxed">
+            <strong>Catatan Sinkronisasi:</strong> Meskipun Anda mengaktifkan Cloud Sync, pencadangan manual dalam format JSON (Local Backup) tetap sangat disarankan sebagai cadangan tambahan yang aman.
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <BackupSummaryCard 
             title={t('businessRecords', 'Total Data Bisnis')}

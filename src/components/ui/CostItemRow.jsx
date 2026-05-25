@@ -21,7 +21,7 @@ export const CostItemRow = ({
   ];
 
   return (
-    <div className="flex flex-col gap-3 p-4 bg-surface-muted border border-border rounded-lg relative group">
+    <div className="flex flex-col gap-3 p-4 bg-gradient-to-r from-surface-muted to-transparent border border-transparent hover:border-brand-soft rounded-2xl relative group transition-colors">
       
       {/* Header row with name and delete button */}
       <div className="flex justify-between items-start gap-3">

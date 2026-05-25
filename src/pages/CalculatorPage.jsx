@@ -375,7 +375,7 @@ export const CalculatorPage = () => {
                   <AnimatedNumber 
                     value={result.hppPerUnit} 
                     isCurrency={true}
-                    className="text-4xl font-bold text-brand-primary"
+                    className="text-5xl md:text-6xl font-black text-brand-primary tracking-tight drop-shadow-sm"
                   />
                 </div>
 

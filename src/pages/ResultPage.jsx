@@ -82,7 +82,7 @@ export const ResultPage = () => {
                 <AnimatedNumber 
                   value={result.hppPerUnit}
                   isCurrency={true}
-                  className="text-4xl sm:text-5xl font-extrabold text-brand-primary"
+                  className="text-5xl sm:text-7xl font-black text-brand-primary tracking-tight drop-shadow-md"
                 />
               </div>
 

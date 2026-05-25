@@ -10,8 +10,8 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary: "bg-primary text-white shadow-md hover:bg-primary-hover shadow-glow-primary",
-        secondary: "border-2 border-primary/20 bg-transparent text-primary hover:bg-primary-softer hover:border-primary/40",
-        soft: "bg-primary-soft text-primary hover:bg-[#FFE4D6]",
+        secondary: "border border-border-strong bg-white text-text-primary shadow-sm hover:bg-surface-muted hover:border-primary/40 hover:text-primary",
+        soft: "bg-primary-soft text-primary hover:bg-primary-softer",
         ghost: "bg-transparent text-text-secondary hover:bg-surface-muted hover:text-text-primary",
         destructive: "bg-status-loss text-white shadow-sm hover:bg-[#C53030]",
         premium: "bg-gradient-to-r from-primary to-accent-coral text-white shadow-floating hover:shadow-glow-primary relative overflow-hidden after:absolute after:inset-0 after:bg-gradient-to-r after:from-transparent after:via-white/20 after:to-transparent after:-translate-x-full hover:after:translate-x-full after:transition-transform after:duration-700",

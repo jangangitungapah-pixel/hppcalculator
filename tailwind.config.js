@@ -1,3 +1,5 @@
+import tailwindcssAnimate from "tailwindcss-animate";
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -17,11 +19,23 @@ export default {
           'secondary-hover': 'var(--color-secondary-hover)',
           softGreen: 'var(--color-secondary-soft)',
         },
+        primary: 'var(--color-primary)',
+        'primary-hover': 'var(--color-primary-hover)',
+        'primary-active': 'var(--color-primary-active)',
+        'primary-soft': 'var(--color-primary-soft)',
+        'primary-softer': 'var(--color-primary-softer)',
+        secondary: 'var(--color-secondary)',
+        'accent-gold': 'var(--color-accent-gold)',
+        'accent-coral': 'var(--color-accent-coral)',
+        'accent-mint': 'var(--color-accent-mint)',
+        'accent-espresso': 'var(--color-accent-espresso)',
         surface: {
           DEFAULT: 'var(--color-surface)',
           raised: 'var(--color-surface-raised)',
           muted: 'var(--color-surface-muted)',
         },
+        'surface-glass': 'var(--color-surface-glass)',
+        'surface-cream': 'var(--color-surface-cream)',
         border: 'var(--color-border)',
         'border-strong': 'var(--color-border-strong)',
         text: {
@@ -72,6 +86,8 @@ export default {
         'card-hover': 'var(--shadow-card-hover)',
         'floating': 'var(--shadow-floating)',
         'soft-glow': 'var(--shadow-soft-glow)',
+        'glow-primary': 'var(--shadow-glow-primary)',
+        'glow-success': 'var(--shadow-glow-success)',
       },
       fontFamily: {
         sans: ['Poppins', 'Nunito', 'Inter', 'system-ui', 'sans-serif'],
@@ -86,5 +102,5 @@ export default {
       }
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [tailwindcssAnimate],
 }

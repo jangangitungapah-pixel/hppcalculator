@@ -9,6 +9,13 @@ import { HistoryPage } from './pages/HistoryPage';
 import { HistoryDetailPage } from './pages/HistoryDetailPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { NotFoundPage } from './pages/NotFoundPage';
+import { OfflinePage } from './pages/OfflinePage';
+
+import { LoginPage } from './pages/auth/LoginPage';
+import { RegisterPage } from './pages/auth/RegisterPage';
+import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage';
+import { AccountPage } from './pages/AccountPage';
+import { SyncCenterPage } from './pages/SyncCenterPage';
 
 import { IngredientsPage } from './pages/IngredientsPage';
 import { IngredientFormPage } from './pages/IngredientFormPage';
@@ -36,6 +43,11 @@ function App() {
         
         {/* Welcome screen (doesn't use AppShell's sidebar) */}
         <Route path="/welcome" element={<WelcomePage />} />
+        
+        {/* Auth Routes */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         
         {/* Main App Routes with Shell */}
         <Route element={<AppShell />}>
@@ -67,6 +79,9 @@ function App() {
           <Route path="/reports" element={<ReportsPage />} />
           <Route path="/data-backup" element={<DataBackupPage />} />
           <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/account" element={<AccountPage />} />
+          <Route path="/sync" element={<SyncCenterPage />} />
+          <Route path="/offline" element={<OfflinePage />} />
 
           <Route path="*" element={<NotFoundPage />} />
         </Route>

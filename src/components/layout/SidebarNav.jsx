@@ -10,7 +10,7 @@ export const SidebarNav = () => {
 
   const navGroups = [
     {
-      label: "Main",
+      label: "Main Menu",
       items: [
         { to: '/dashboard', icon: <LayoutDashboard className="w-5 h-5" />, label: t('nav.dashboard') },
         { to: '/calculator', icon: <Calculator className="w-5 h-5" />, label: t('nav.calculate') },
@@ -38,7 +38,7 @@ export const SidebarNav = () => {
       ]
     },
     {
-      label: "System",
+      label: "Tools & System",
       items: [
         { to: '/data-backup', icon: <Database className="w-5 h-5" />, label: t('nav.dataBackup') || 'Data & Backup' },
         { to: '/settings', icon: <Settings className="w-5 h-5" />, label: t('nav.settings') },
@@ -48,13 +48,16 @@ export const SidebarNav = () => {
 
   return (
     <aside className="app-sidebar">
-      <div className="app-sidebar-header">
-        <div className="sidebar-logo-container relative z-10">
-          <Sparkles className="w-5 h-5" />
-        </div>
-        <div className="flex flex-col relative z-10">
-          <span className="sidebar-brand-title">{t('app.name')}</span>
-          <span className="text-[10px] text-white/50 font-medium tracking-wide">F&B BUSINESS ASSISTANT</span>
+      <div className="p-4">
+        <div className="relative overflow-hidden bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center shadow-lg">
+          <div className="absolute -top-10 -left-10 w-32 h-32 rounded-full bg-brand-primary opacity-20 blur-2xl pointer-events-none"></div>
+          <div className="flex items-center justify-center w-10 h-10 rounded-xl mr-3 shadow-glow-primary bg-gradient-to-br from-brand-primary to-accent-coral text-white shrink-0 relative z-10">
+            <Sparkles className="w-5 h-5" />
+          </div>
+          <div className="flex flex-col relative z-10">
+            <span className="font-extrabold text-lg tracking-tight text-white">{t('app.name')}</span>
+            <span className="text-[9px] text-white/50 font-bold tracking-widest uppercase">F&B Business</span>
+          </div>
         </div>
       </div>
       
@@ -67,15 +70,20 @@ export const SidebarNav = () => {
                 <NavLink
                   key={item.to}
                   to={item.to}
-                  className={({ isActive }) => cn("nav-link", isActive && "nav-link-active")}
+                  className={({ isActive }) => cn("sidebar-nav-link group", isActive && "sidebar-nav-link-active")}
                 >
                   {({ isActive }) => (
                     <>
                       <div className="relative z-10 flex items-center gap-3 w-full">
-                        <span className={cn("transition-transform duration-300", isActive && "scale-110")}>
-                          {item.icon}
-                        </span>
-                        <span className="truncate">{item.label}</span>
+                        <div className={cn(
+                          "flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-300",
+                          isActive ? "bg-gradient-to-br from-brand-primary to-accent-coral text-white shadow-glow-primary" : "bg-white/5 text-white/60 group-hover:bg-white/10 group-hover:text-white"
+                        )}>
+                          <span className={cn("transition-transform duration-300", isActive && "scale-110")}>
+                            {item.icon}
+                          </span>
+                        </div>
+                        <span className="truncate font-semibold tracking-wide">{item.label}</span>
                       </div>
                     </>
                   )}
@@ -87,16 +95,19 @@ export const SidebarNav = () => {
       </nav>
 
       <div className="p-4 mt-auto">
-        <div className="p-4 bg-white/5 border border-white/10 rounded-2xl text-sm relative overflow-hidden backdrop-blur-md">
-          <div className="absolute top-0 right-0 p-3 opacity-10">
-            <ShieldCheck className="w-16 h-16" />
+        <div className="p-4 bg-gradient-to-br from-white/10 to-white/5 border border-white/10 rounded-2xl relative overflow-hidden backdrop-blur-md shadow-lg group hover:border-white/20 transition-all duration-300">
+          <div className="absolute -top-4 -right-4 opacity-10 group-hover:opacity-20 transition-opacity duration-300 text-brand-primary">
+            <ShieldCheck className="w-20 h-20" />
           </div>
-          <p className="font-bold text-white mb-1 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-status-good animate-pulse"></span>
-            Local-first MVP
-          </p>
-          <p className="text-white/60 text-[11px] leading-relaxed relative z-10">
-            Data tersimpan aman di dalam browser Anda. Tidak ada data yang dikirim ke server.
+          <div className="flex items-center gap-2 mb-2 relative z-10">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-good opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-status-good"></span>
+            </span>
+            <p className="font-bold text-white text-xs tracking-wider uppercase">Local-first MVP</p>
+          </div>
+          <p className="text-white/60 text-[11px] leading-relaxed relative z-10 font-medium">
+            Data aman tersimpan di browser Anda. Tidak ada data yang dikirim ke server.
           </p>
         </div>
       </div>

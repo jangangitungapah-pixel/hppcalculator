@@ -134,6 +134,7 @@
   
   .app-main {
     padding-bottom: 0;
+    margin-left: 280px; /* Make room for the fixed sidebar */
   }
 
   .app-bottom-nav {

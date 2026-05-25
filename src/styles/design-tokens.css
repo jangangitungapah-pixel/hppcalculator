@@ -40,6 +40,7 @@
   --color-text-secondary: #635853;
   --color-text-muted: #9E938D;
   --color-text-soft: #BCAEAA;
+  --color-text-tertiary: #8C7D79;
   --color-text-inverse: #FFFFFF;
 
   /* Status Colors */
@@ -74,6 +75,7 @@
   --radius-3xl: 28px;
   --radius-4xl: 32px;
   --radius-pill: 9999px;
+  --radius-full: 9999px;
 
   /* Box Shadows */
   --shadow-xs: 0 1px 2px rgba(45, 35, 31, 0.04);
@@ -85,6 +87,7 @@
   --shadow-card-hover: 0 24px 48px rgba(45, 35, 31, 0.12);
   --shadow-floating: 0 20px 50px rgba(45, 35, 31, 0.15);
   --shadow-sidebar: 4px 0 24px rgba(45, 35, 31, 0.05);
+  --shadow-soft-glow: 0 0 24px rgba(255, 106, 0, 0.14);
   --shadow-glow-primary: 0 0 20px rgba(255, 106, 0, 0.2);
   --shadow-glow-success: 0 0 20px rgba(0, 166, 80, 0.2);
 

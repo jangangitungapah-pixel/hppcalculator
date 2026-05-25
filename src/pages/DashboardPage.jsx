@@ -6,6 +6,7 @@ import { useReports } from '../hooks/useReports';
 import { useToast } from '../hooks/useToast';
 import { useDataBackup } from '../hooks/useDataBackup';
 import { BackupReminderBanner } from '../components/backup/BackupReminderBanner';
+import { InstallAppBanner } from '../components/pwa/InstallAppBanner';
 import { PageContainer } from '../components/layout/PageContainer';
 import { SummaryCard } from '../components/ui/SummaryCard';
 import { Card } from '../components/ui/Card';
@@ -13,7 +14,7 @@ import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
 import { EmptyState } from '../components/ui/EmptyState';
 import { formatCurrency, formatPercent } from '../lib/calculations';
-import { Box, TrendingUp, CheckCircle, Database, Calculator, Store, Users, ShoppingBag, BarChart3, ChevronRight, AlertTriangle } from 'lucide-react';
+import { Box, TrendingUp, CheckCircle, Database, Calculator, Store, Users, ShoppingBag, BarChart3, ChevronRight, AlertTriangle, Sparkles, BookOpen } from 'lucide-react';
 import { AnimatedNumber } from '../components/motion/AnimatedNumber';
 import { StaggerContainer } from '../components/motion/StaggerContainer';
 import { FadeIn } from '../components/motion/FadeIn';
@@ -49,6 +50,8 @@ export const DashboardPage = () => {
           onExport={() => navigate('/data-backup')}
         />
       )}
+      
+      <InstallAppBanner />
 
       <div className="page-header mb-8">
         <h1 className="text-3xl font-extrabold text-text-primary tracking-tight mb-2">
@@ -114,22 +117,53 @@ export const DashboardPage = () => {
       )}
 
       {!hasAnyData ? (
-        <EmptyState 
-          icon={<Database className="w-8 h-8" />}
-          title={t('dashboard.emptyTitle')}
-          description={t('dashboard.emptyBody')}
-          className="mb-8"
-          action={
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Button onClick={() => navigate('/calculator')}>
-                {t('dashboard.startCalculating')}
-              </Button>
-              <Button variant="secondary" onClick={handleLoadDemo}>
-                {t('dashboard.loadDemoData')}
-              </Button>
+        <FadeIn className="space-y-6 mb-8">
+          <Card className="p-8 md:p-10 bg-gradient-to-br from-surface to-[var(--color-primary-softer)] border border-brand-primary/10 relative overflow-hidden shadow-soft-glow">
+            <div className="absolute top-0 right-0 opacity-10 w-64 h-64 translate-x-1/3 -translate-y-1/3 bg-brand-primary rounded-full blur-3xl pointer-events-none"></div>
+            <div className="relative z-10 flex flex-col items-center text-center">
+              <div className="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-6 text-brand-primary">
+                <Sparkles className="w-8 h-8" />
+              </div>
+              <h2 className="text-2xl font-bold text-text-primary mb-3">Selamat datang di {t('app.name')}!</h2>
+              <p className="text-text-secondary max-w-md mx-auto mb-8 leading-relaxed">
+                Aplikasi ini membantumu menghitung HPP, mengelola resep, dan menentukan harga jual yang aman agar bisnismu selalu untung.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                <Button size="lg" onClick={() => navigate('/calculator')} className="shadow-glow-primary w-full sm:w-auto px-8">
+                  {t('dashboard.startCalculating')}
+                </Button>
+                <Button size="lg" variant="secondary" onClick={handleLoadDemo} className="bg-white border border-border w-full sm:w-auto px-8 hover:bg-surface-muted">
+                  {t('dashboard.loadDemoData')}
+                </Button>
+              </div>
             </div>
-          }
-        />
+          </Card>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card variant="clickable" className="p-6 bg-white group hover:border-brand-primary/50 transition-premium shadow-sm hover:shadow-md" onClick={() => navigate('/calculator')}>
+              <div className="w-12 h-12 bg-[var(--color-primary-softer)] text-brand-primary rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <Calculator className="w-6 h-6" />
+              </div>
+              <h3 className="font-bold text-text-primary mb-1">Hitung HPP</h3>
+              <p className="text-sm text-text-secondary">Hitung modal dan harga jual per produk.</p>
+            </Card>
+            <Card variant="clickable" className="p-6 bg-white group hover:border-brand-primary/50 transition-premium shadow-sm hover:shadow-md" onClick={() => navigate('/recipes')}>
+              <div className="w-12 h-12 bg-[var(--color-primary-softer)] text-brand-primary rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <BookOpen className="w-6 h-6" />
+              </div>
+              <h3 className="font-bold text-text-primary mb-1">Buat Resep</h3>
+              <p className="text-sm text-text-secondary">Simpan resep rahasia bisnismu.</p>
+            </Card>
+            <Card variant="clickable" className="p-6 bg-white group hover:border-brand-primary/50 transition-premium shadow-sm hover:shadow-md" onClick={() => navigate('/channel-pricing')}>
+              <div className="w-12 h-12 bg-[var(--color-primary-softer)] text-brand-primary rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <Store className="w-6 h-6" />
+              </div>
+              <h3 className="font-bold text-text-primary mb-1">Simulasi Harga</h3>
+              <p className="text-sm text-text-secondary">Atur harga untuk GoFood, GrabFood, dll.</p>
+            </Card>
+          </div>
+        </FadeIn>
       ) : (
         <>
           <Card className="p-6 md:p-8 mb-10 bg-gradient-to-r from-brand-primary to-accent-coral text-white border-none shadow-floating relative overflow-hidden">
@@ -279,8 +313,16 @@ export const DashboardPage = () => {
         </>
       )}
 
-      <div className="mt-8 p-4 bg-status-lowBg border border-status-low/20 rounded-lg text-status-low text-sm font-medium">
-        {t('dashboard.beginnerTip')}
+      <div className="mt-8 p-5 bg-gradient-to-r from-[var(--color-status-low-bg)] to-white border border-status-low/20 rounded-2xl flex items-start gap-4 shadow-sm">
+        <div className="w-10 h-10 bg-status-low/10 rounded-full flex items-center justify-center text-status-low shrink-0 mt-0.5">
+          <Sparkles className="w-5 h-5" />
+        </div>
+        <div>
+          <h4 className="font-bold text-text-primary text-sm mb-1">Tips Pemula</h4>
+          <p className="text-text-secondary text-sm leading-relaxed">
+            {t('dashboard.beginnerTip')}
+          </p>
+        </div>
       </div>
     </PageContainer>
   );

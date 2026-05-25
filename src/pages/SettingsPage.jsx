@@ -10,7 +10,8 @@ import { Alert } from '../components/ui/Alert';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
-import { Database } from 'lucide-react';
+import { InstallAppCard } from '../components/pwa/InstallAppCard';
+import { Database, Cloud } from 'lucide-react';
 import { StaggerContainer } from '../components/motion/StaggerContainer';
 import { FadeIn } from '../components/motion/FadeIn';
 
@@ -46,6 +47,10 @@ export const SettingsPage = () => {
       </div>
 
       <StaggerContainer className="content-stack">
+        <FadeIn>
+          <InstallAppCard />
+        </FadeIn>
+
         <FadeIn>
           <Card className="p-6 transition-premium hover:shadow-floating border-brand-soft/50">
             <h2 className="text-lg font-bold mb-4 text-text-primary">{t('settings.language')}</h2>
@@ -104,6 +109,29 @@ export const SettingsPage = () => {
                   {t('settings.manageDataBackup', 'Kelola Data & Backup')}
                 </Button>
               </div>
+            </div>
+          </Card>
+        </FadeIn>
+
+        <FadeIn>
+          <Card className="p-6 transition-premium hover:shadow-floating border-brand-soft/50">
+            <h2 className="text-lg font-bold mb-4 text-text-primary">Cloud Sync & Akun</h2>
+            <div className="flex flex-col gap-4">
+              <Button 
+                variant="outline" 
+                className="w-full flex items-center justify-center gap-2"
+                onClick={() => navigate('/sync')}
+              >
+                <Cloud size={18} />
+                Buka Pusat Sinkronisasi
+              </Button>
+              <Button 
+                variant="outline" 
+                className="w-full flex items-center justify-center gap-2"
+                onClick={() => navigate('/account')}
+              >
+                Kelola Akun & Profil Bisnis
+              </Button>
             </div>
           </Card>
         </FadeIn>
