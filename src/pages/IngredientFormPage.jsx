@@ -7,7 +7,7 @@ import { Input } from '../components/ui/Input';
 import { useLanguage } from '../hooks/useLanguage';
 import { useIngredients } from '../hooks/useIngredients';
 import { useAppData } from '../hooks/useAppData';
-import { getLocalizedUnitOptions, calculateCostPerBaseUnit, getBaseUnit, formatQuantityWithUnit } from '../lib/units';
+import { getLocalizedUnitOptions, calculateCostPerBaseUnit, getBaseUnit, formatQuantityWithUnit, getUnitType, UNIT_TYPES } from '../lib/units';
 import { validateIngredientInput, calculateIngredientBaseData } from '../lib/recipe';
 import { formatCurrency } from '../lib/calculations';
 import { useToast } from '../hooks/useToast';
@@ -30,7 +30,8 @@ export const IngredientFormPage = () => {
     purchaseQuantity: '1',
     purchaseUnit: 'kg',
     supplier: '',
-    notes: ''
+    notes: '',
+    density: '1.0'
   });
   
   const [errors, setErrors] = useState({});
@@ -46,7 +47,8 @@ export const IngredientFormPage = () => {
           purchaseQuantity: existing.purchaseQuantity.toString(),
           purchaseUnit: existing.purchaseUnit,
           supplier: existing.supplier || '',
-          notes: existing.notes || ''
+          notes: existing.notes || '',
+          density: (existing.density || 1.0).toString()
         });
       } else {
         navigate('/ingredients');
@@ -73,7 +75,8 @@ export const IngredientFormPage = () => {
     const ingredientData = calculateIngredientBaseData({
       ...form,
       purchasePrice: Number(form.purchasePrice),
-      purchaseQuantity: Number(form.purchaseQuantity)
+      purchaseQuantity: Number(form.purchaseQuantity),
+      density: form.density !== undefined && form.density !== '' ? Number(form.density) : 1.0
     });
 
     if (isEdit) {
@@ -177,6 +180,24 @@ export const IngredientFormPage = () => {
             </div>
           </div>
         </div>
+
+        {(getUnitType(form.purchaseUnit) === UNIT_TYPES.WEIGHT || getUnitType(form.purchaseUnit) === UNIT_TYPES.VOLUME) && (
+          <div className="bg-background border border-border p-4 rounded-2xl space-y-2">
+            <Input 
+              type="number"
+              step="0.01"
+              min="0.01"
+              label={t('ingredients.density')}
+              placeholder="1.0"
+              value={form.density}
+              onChange={(e) => updateField('density', e.target.value)}
+              error={errors.density && 'Massa jenis harus berupa angka positif (cth: 0.92)'}
+            />
+            <p className="text-xs text-text-muted font-medium">
+              {t('ingredients.densityHelp')}
+            </p>
+          </div>
+        )}
 
         {/* Live Preview Panel */}
         <div className="bg-brand-soft/30 p-4 rounded-2xl flex justify-between items-center border border-brand-soft">

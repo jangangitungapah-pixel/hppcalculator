@@ -1,17 +1,18 @@
 import { calculateIngredientUsageCost } from './ingredientCosting';
 import { calculateSuggestedPrices } from '../calculations';
+import { preciseAdd, preciseSubtract, preciseMultiply, preciseDivide } from '../calculations/rounding';
 
 export const calculateTotalIngredientCost = (recipeIngredients) => {
   if (!recipeIngredients || recipeIngredients.length === 0) return 0;
   return recipeIngredients.reduce((total, ing) => {
-    return total + (Number(ing.totalCost) || 0);
+    return preciseAdd(total, Number(ing.totalCost) || 0);
   }, 0);
 };
 
 export const calculateTotalExtraCost = (extraCosts) => {
   if (!extraCosts || extraCosts.length === 0) return 0;
   return extraCosts.reduce((total, cost) => {
-    return total + (Number(cost.amount) || 0);
+    return preciseAdd(total, Number(cost.amount) || 0);
   }, 0);
 };
 
@@ -21,17 +22,17 @@ export const calculateSellableQuantity = (outputQuantity, failedQuantity = 0, wa
   const waste = Number(wastePercent) || 0;
   
   // Output quantity after removing failed/rejected items physically
-  const goodOutput = Math.max(0, outQty - failQty);
+  const goodOutput = Math.max(0, preciseSubtract(outQty, failQty));
   
   // Apply waste percentage
-  const sellable = goodOutput - (outQty * (waste / 100));
+  const sellable = preciseSubtract(goodOutput, preciseMultiply(outQty, preciseDivide(waste, 100)));
   
   return Math.max(0, sellable);
 };
 
 export const calculateRecipeHppPerUnit = (totalRecipeCost, sellableQuantity) => {
   if (!sellableQuantity || sellableQuantity <= 0) return 0;
-  return totalRecipeCost / sellableQuantity;
+  return preciseDivide(totalRecipeCost, sellableQuantity);
 };
 
 export const calculateRecipeCost = (recipeInput, settings = {}) => {
@@ -45,7 +46,7 @@ export const calculateRecipeCost = (recipeInput, settings = {}) => {
 
   const totalIngredientCost = calculateTotalIngredientCost(ingredients);
   const totalExtraCost = calculateTotalExtraCost(extraCosts);
-  const totalRecipeCost = totalIngredientCost + totalExtraCost;
+  const totalRecipeCost = preciseAdd(totalIngredientCost, totalExtraCost);
   
   const sellableQuantity = calculateSellableQuantity(outputQuantity, failedQuantity, wastePercent);
   

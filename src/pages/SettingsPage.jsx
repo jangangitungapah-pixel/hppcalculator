@@ -18,10 +18,20 @@ import { FadeIn } from '../components/motion/FadeIn';
 export const SettingsPage = () => {
   const { t, lang } = useLanguage();
   const navigate = useNavigate();
-  const { settings, updateSettings, clearDraft, calculatorDraft } = useAppData();
+  const { settings, updateSettings, clearDraft, calculatorDraft, hasDemoData, clearDemoDataOnly } = useAppData();
   const { addToast } = useToast();
   
   const [showClearDraftConfirm, setShowClearDraftConfirm] = useState(false);
+  const [showClearDemoConfirm, setShowClearDemoConfirm] = useState(false);
+
+  const handleClearDemo = () => {
+    clearDemoDataOnly();
+    setShowClearDemoConfirm(false);
+    addToast({
+      type: 'success',
+      title: t('toasts.demoClearedToast')
+    });
+  };
 
   const handleRoundingChange = (e) => {
     updateSettings({ roundingStep: parseInt(e.target.value, 10) });
@@ -99,6 +109,16 @@ export const SettingsPage = () => {
                 {t('settings.clearDraft')}
               </Button>
               
+              {hasDemoData() && (
+                <Button 
+                  variant="outline" 
+                  className="w-full border-amber-300 text-amber-700 hover:bg-amber-50"
+                  onClick={() => setShowClearDemoConfirm(true)}
+                >
+                  {t('settings.clearDemoData')}
+                </Button>
+              )}
+              
               <div className="border-t pt-4 mt-2">
                 <Button 
                   variant="outline" 
@@ -153,6 +173,17 @@ export const SettingsPage = () => {
         variant="danger"
         onConfirm={handleClearDraft}
         onCancel={() => setShowClearDraftConfirm(false)}
+      />
+
+      <ConfirmDialog 
+        open={showClearDemoConfirm}
+        title={t('settings.clearDemoDataConfirmTitle')}
+        description={t('settings.clearDemoDataConfirmBody')}
+        confirmLabel={t('common.delete')}
+        cancelLabel={t('common.cancel')}
+        variant="danger"
+        onConfirm={handleClearDemo}
+        onCancel={() => setShowClearDemoConfirm(false)}
       />
     </PageContainer>
   );

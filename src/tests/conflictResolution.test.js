@@ -41,4 +41,44 @@ describe('conflictResolution', () => {
     
     expect(compareRecordFreshness(local, cloud)).toBe('local');
   });
+
+  it('should merge active record payloads on conflict', () => {
+    const local = {
+      recordType: 'recipes',
+      localUpdatedAt: '2023-01-02T00:00:00Z',
+      payload: {
+        name: 'Donat Coklat',
+        ingredients: [
+          { id: '1', ingredientId: 'ing-1', usedQuantity: 100 }
+        ],
+        extraCosts: []
+      }
+    };
+    const cloud = {
+      recordType: 'recipes',
+      localUpdatedAt: '2023-01-01T00:00:00Z',
+      payload: {
+        name: 'Donat Coklat Enak',
+        ingredients: [
+          { id: '2', ingredientId: 'ing-2', usedQuantity: 200 }
+        ],
+        extraCosts: [
+          { id: 'cost-1', name: 'Gas', amount: 5000 }
+        ]
+      }
+    };
+
+    const result = resolveRecordConflict(local, cloud);
+    // Should merge the ingredient lists (containing both ing-1 and ing-2)
+    expect(result.payload.ingredients.length).toBe(2);
+    expect(result.payload.ingredients.some(i => i.ingredientId === 'ing-1')).toBe(true);
+    expect(result.payload.ingredients.some(i => i.ingredientId === 'ing-2')).toBe(true);
+    
+    // Should merge extraCosts
+    expect(result.payload.extraCosts.length).toBe(1);
+    expect(result.payload.extraCosts[0].name).toBe('Gas');
+
+    // Should preserve name from local as it is newer
+    expect(result.payload.name).toBe('Donat Coklat');
+  });
 });

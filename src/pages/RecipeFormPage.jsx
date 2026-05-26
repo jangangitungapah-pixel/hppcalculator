@@ -7,8 +7,8 @@ import { Input } from '../components/ui/Input';
 import { useLanguage } from '../hooks/useLanguage';
 import { useRecipes } from '../hooks/useRecipes';
 import { useIngredients } from '../hooks/useIngredients';
-import { getLocalizedUnitOptions } from '../lib/units';
-import { validateRecipeInput, calculateRecipeCost } from '../lib/recipe';
+import { getLocalizedUnitOptions, convertBetweenUnits } from '../lib/units';
+import { validateRecipeInput, calculateRecipeCost, calculateIngredientUsageCost } from '../lib/recipe';
 import { formatCurrency } from '../lib/calculations';
 import { useToast } from '../hooks/useToast';
 import { useAppData } from '../hooks/useAppData';
@@ -144,33 +144,27 @@ export const RecipeFormPage = () => {
   const getIngredientCost = (ing) => {
     const selectedIng = ingredients.find(i => i.id === ing.ingredientId);
     if (!selectedIng) return 0;
-
-    let multiplier = 1;
-    // Basic unit conversion check (kg -> gram, liter -> ml)
-    if (ing.usedUnit === 'gram' && selectedIng.baseUnit === 'gram') multiplier = 1;
-    else if (ing.usedUnit === 'kg' && selectedIng.baseUnit === 'gram') multiplier = 1000;
-    else if (ing.usedUnit === 'ml' && selectedIng.baseUnit === 'ml') multiplier = 1;
-    else if (ing.usedUnit === 'liter' && selectedIng.baseUnit === 'ml') multiplier = 1000;
-    
-    // For counting units
-    if (ing.usedUnit === 'pcs' || ing.usedUnit === 'unit') multiplier = 1;
-
-    const baseQty = Number(ing.usedQuantity) * multiplier;
-    return baseQty * selectedIng.costPerBaseUnit;
+    return calculateIngredientUsageCost(selectedIng, Number(ing.usedQuantity), ing.usedUnit);
   };
 
   const handleSave = () => {
     // Populate costs before saving
     const populatedIngredients = form.ingredients.map(ing => {
       const selectedIng = ingredients.find(i => i.id === ing.ingredientId);
-      let multiplier = 1;
-      if (ing.usedUnit === 'kg' || ing.usedUnit === 'liter') multiplier = 1000;
       
       const totalCost = getIngredientCost(ing);
+      let baseQuantity = Number(ing.usedQuantity);
+      if (selectedIng) {
+        try {
+          baseQuantity = convertBetweenUnits(Number(ing.usedQuantity), ing.usedUnit, selectedIng.baseUnit, selectedIng.density);
+        } catch (e) {
+          console.warn('[RecipeFormPage] Could not convert units:', e);
+        }
+      }
       return {
         ...ing,
         usedQuantity: Number(ing.usedQuantity),
-        baseQuantity: Number(ing.usedQuantity) * multiplier,
+        baseQuantity,
         baseUnit: selectedIng?.baseUnit || ing.usedUnit,
         ingredientNameSnapshot: selectedIng?.name || 'Unknown',
         costPerBaseUnitSnapshot: selectedIng?.costPerBaseUnit || 0,

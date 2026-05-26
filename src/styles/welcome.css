@@ -1,0 +1,298 @@
+/* 
+  Welcome Page Overhaul Premium Styles
+*/
+
+/* 1. Header Navigation */
+.welcome-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background-color: rgba(250, 250, 250, 0.8);
+  border-bottom: 1px solid rgba(228, 228, 231, 0.5);
+  transition: all 0.3s ease;
+}
+
+/* 2. Moving Gradient Blob Mesh Backgrounds */
+.mesh-bg-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: -10;
+  pointer-events: none;
+}
+
+.mesh-blob {
+  position: absolute;
+  border-radius: var(--radius-full);
+  filter: blur(80px);
+  opacity: 0.15;
+  mix-blend-mode: multiply;
+  animation: float-mesh 20s infinite alternate ease-in-out;
+}
+
+.mesh-blob-orange {
+  background-color: var(--color-primary);
+  width: 30rem;
+  height: 30rem;
+  top: -10%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.mesh-blob-green {
+  background-color: var(--color-secondary);
+  width: 25rem;
+  height: 25rem;
+  bottom: 20%;
+  right: 10%;
+  animation-delay: 4s;
+}
+
+.mesh-blob-gold {
+  background-color: var(--color-accent-gold);
+  width: 20rem;
+  height: 20rem;
+  top: 40%;
+  left: 50%;
+  animation-delay: 8s;
+}
+
+@keyframes float-mesh {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1) rotate(120deg);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9) rotate(240deg);
+  }
+  100% {
+    transform: translate(0, 0) scale(1) rotate(360deg);
+  }
+}
+
+/* 3. Hero Subtext & Counter Styles */
+.stat-counter-card {
+  background-color: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(228, 228, 231, 0.8);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-counter-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 106, 0, 0.3);
+  box-shadow: var(--shadow-md);
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* 4. Mini Calculator Demo Widget UI */
+.demo-calc-container {
+  position: relative;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1.5px solid rgba(255, 106, 0, 0.15);
+  box-shadow: var(--shadow-floating), 0 0 30px rgba(255, 106, 0, 0.05);
+}
+
+.demo-calc-input-group {
+  position: relative;
+  background-color: rgba(244, 244, 245, 0.5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 0.5rem 0.875rem;
+  transition: all 0.25s ease;
+}
+
+.demo-calc-input-group:focus-within {
+  background-color: var(--color-surface);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.15);
+}
+
+.demo-calc-gauge-container {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  background-color: var(--color-border-soft);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.demo-calc-gauge-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s ease;
+}
+
+/* 5. Feature Showcase Grid Styles */
+.premium-feature-card {
+  position: relative;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border-soft);
+  border-radius: var(--radius-2xl);
+  padding: 2rem;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.premium-feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(to right, var(--color-primary), var(--color-accent-coral));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.premium-feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-card-hover), 0 10px 30px rgba(255, 106, 0, 0.05);
+  border-color: rgba(255, 106, 0, 0.2);
+}
+
+.premium-feature-card:hover::before {
+  opacity: 1;
+}
+
+.feature-icon-box {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: var(--radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.premium-feature-card:hover .feature-icon-box {
+  transform: scale(1.1) rotate(3deg);
+}
+
+/* 6. Stepped Process Timeline */
+.timeline-line {
+  position: absolute;
+  top: 2rem;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(to right, var(--color-border), var(--color-primary-soft), var(--color-border));
+  z-index: 0;
+}
+
+@media (max-width: 1023px) {
+  .timeline-line {
+    top: 0;
+    left: 2rem;
+    bottom: 0;
+    width: 2px;
+    height: auto;
+  }
+}
+
+.timeline-step-node {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+@media (max-width: 1023px) {
+  .timeline-step-node {
+    flex-direction: row;
+    align-items: flex-start;
+    text-align: left;
+    gap: 1.5rem;
+  }
+}
+
+.timeline-step-badge {
+  width: 4rem;
+  height: 4rem;
+  border-radius: var(--radius-2xl);
+  background-color: var(--color-surface);
+  border: 2px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.25rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.timeline-step-node:hover .timeline-step-badge {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: var(--shadow-md), var(--shadow-glow-primary);
+}
+
+/* 7. FAQ Accordion Cards */
+.faq-accordion-item {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.faq-accordion-item:hover {
+  border-color: rgba(255, 106, 0, 0.25);
+  box-shadow: var(--shadow-sm);
+}
+
+.faq-accordion-trigger {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  font-weight: 700;
+  color: var(--color-accent-espresso);
+  text-align: left;
+  cursor: pointer;
+  background: none;
+  border: none;
+  outline: none;
+}
+
+.faq-chevron {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--color-text-secondary);
+}
+
+/* 8. Bottom CTA Banner Mesh Glow */
+.cta-banner-container {
+  position: relative;
+  background: linear-gradient(135deg, var(--color-sidebar-dark) 0%, #1a1512 100%);
+  border-radius: var(--radius-3xl);
+  padding: 4rem 2rem;
+  overflow: hidden;
+  box-shadow: var(--shadow-floating);
+  border: 1px solid rgba(255, 106, 0, 0.15);
+}
+
+.cta-banner-glow {
+  position: absolute;
+  width: 30rem;
+  height: 30rem;
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary);
+  filter: blur(120px);
+  opacity: 0.15;
+  top: -50%;
+  right: -20%;
+  pointer-events: none;
+}

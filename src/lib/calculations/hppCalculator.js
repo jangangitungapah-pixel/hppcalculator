@@ -2,14 +2,14 @@ import { calculateGrossRevenue, calculateProfitPerUnit, calculateTotalProfit, ca
 import { getProfitStatus } from './profitStatus.js';
 import { validateQuickCalculationInput, sanitizeQuickCalculationInput } from './validation.js';
 import { DEFAULT_TARGET_MARGINS, DEFAULT_ROUNDING_STEP } from './constants.js';
-import { safeDivide } from './rounding.js';
+import { safeDivide, preciseAdd, preciseSubtract } from './rounding.js';
 
 export function calculateTotalCost(costItems) {
-  return costItems.reduce((sum, item) => sum + (item.amount || 0), 0);
+  return costItems.reduce((sum, item) => preciseAdd(sum, item.amount || 0), 0);
 }
 
 export function calculateSellableQuantity(outputQuantity, failedQuantity) {
-  return outputQuantity - failedQuantity;
+  return preciseSubtract(outputQuantity, failedQuantity);
 }
 
 export function calculateHppPerUnit(totalProductionCost, sellableQuantity) {

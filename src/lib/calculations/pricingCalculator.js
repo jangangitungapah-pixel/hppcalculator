@@ -1,32 +1,32 @@
-import { safeDivide, roundUpToStep } from './rounding.js';
+import { safeDivide, roundUpToStep, preciseSubtract, preciseMultiply, preciseDivide } from './rounding.js';
 
 export function calculateGrossRevenue(sellingPrice, sellableQuantity) {
-  return sellingPrice * sellableQuantity;
+  return preciseMultiply(sellingPrice, sellableQuantity);
 }
 
 export function calculateProfitPerUnit(sellingPrice, hppPerUnit) {
-  return sellingPrice - hppPerUnit;
+  return preciseSubtract(sellingPrice, hppPerUnit);
 }
 
 export function calculateTotalProfit(grossRevenue, totalProductionCost) {
-  return grossRevenue - totalProductionCost;
+  return preciseSubtract(grossRevenue, totalProductionCost);
 }
 
 export function calculateMarginPercent(profitPerUnit, sellingPrice) {
   if (sellingPrice <= 0) return 0;
-  return (profitPerUnit / sellingPrice) * 100;
+  return preciseMultiply(preciseDivide(profitPerUnit, sellingPrice), 100);
 }
 
 export function calculateMarkupPercent(profitPerUnit, hppPerUnit) {
   if (hppPerUnit <= 0) return 0;
-  return (profitPerUnit / hppPerUnit) * 100;
+  return preciseMultiply(preciseDivide(profitPerUnit, hppPerUnit), 100);
 }
 
 export function calculateSuggestedPriceFromMargin(hppPerUnit, targetMarginPercent, roundingStep) {
   const decimalMargin = targetMarginPercent;
   if (decimalMargin >= 1) return hppPerUnit; // Invalid margin, cannot be 100% or more conceptually unless price is infinity
   
-  const rawTargetPrice = safeDivide(hppPerUnit, 1 - decimalMargin, hppPerUnit);
+  const rawTargetPrice = safeDivide(hppPerUnit, preciseSubtract(1, decimalMargin), hppPerUnit);
   return roundUpToStep(rawTargetPrice, roundingStep);
 }
 

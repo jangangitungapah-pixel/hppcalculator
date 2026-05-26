@@ -19,6 +19,7 @@ import { DashboardRecommendations } from '../components/dashboard/DashboardRecom
 import { DashboardTipsCard } from '../components/dashboard/DashboardTipsCard';
 import { DashboardBusinessPulse } from '../components/dashboard/DashboardBusinessPulse';
 import { DashboardNewProductCta } from '../components/dashboard/DashboardNewProductCta';
+import { DemoDataBanner } from '../components/dashboard/DemoDataBanner';
 
 export const DashboardPage = () => {
   const { t } = useLanguage();
@@ -52,6 +53,8 @@ export const DashboardPage = () => {
         )}
         
         <InstallAppBanner />
+
+        <DemoDataBanner />
 
         {/* Hero Banner Component */}
         <DashboardHero hasAnyData={hasAnyData} />
