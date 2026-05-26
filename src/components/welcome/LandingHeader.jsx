@@ -157,10 +157,10 @@ export const LandingHeader = () => {
           <button
             onClick={() => navigate('/dashboard')}
             aria-label={t('welcome.goToDashboard')}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-extrabold text-brand-primary bg-brand-primary/8 border border-brand-primary/20 hover:bg-brand-primary/15 hover:border-brand-primary/40 hover:shadow-sm active:scale-[0.97] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50 focus-visible:ring-offset-1 cursor-pointer whitespace-nowrap"
+            className="welcome-dashboard-cta"
           >
             {t('welcome.goToDashboard')}
-            <ArrowRight className="w-3.5 h-3.5 shrink-0" />
+            <ArrowRight className="welcome-dashboard-cta-icon shrink-0" />
           </button>
         </div>
 
@@ -173,7 +173,7 @@ export const LandingHeader = () => {
             aria-label={isMobileMenuOpen ? 'Tutup menu navigasi' : 'Buka menu navigasi'}
             className="p-2.5 bg-white/70 border border-zinc-200/80 hover:border-brand-primary/40 rounded-xl text-text-primary hover:text-brand-primary transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50 backdrop-blur-sm shadow-sm"
           >
-            {isMobileMenuOpen ? <X className="w-4.5 h-4.5" /> : <Menu className="w-4.5 h-4.5" />}
+            {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </div>

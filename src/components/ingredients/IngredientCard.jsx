@@ -1,6 +1,7 @@
 import React from 'react';
 import { Edit2, Trash2, Eye, Info } from 'lucide-react';
 import { Card } from '../ui/Card';
+import { Button } from '../ui/Button';
 import { IngredientCategoryPill } from './IngredientCategoryPill';
 import { 
   formatIngredientPurchasePrice, 
@@ -73,28 +74,32 @@ export const IngredientCard = ({
 
         {/* Actions Footer */}
         <div className="ingredient-card-actions flex items-center justify-end border-t border-border/40 pt-3 gap-1">
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={(e) => {
               e.stopPropagation();
               onEdit();
             }}
-            className="p-2 text-text-secondary hover:text-brand-primary hover:bg-brand-soft/40 rounded-xl transition-all"
+            className="w-8 h-8 rounded-xl text-text-secondary hover:text-brand-primary hover:bg-brand-soft"
             title="Edit Bahan"
             aria-label="Edit Bahan"
           >
             <Edit2 className="w-4 h-4" />
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={(e) => {
               e.stopPropagation();
               onDelete();
             }}
-            className="p-2 text-text-secondary hover:text-status-loss hover:bg-status-loss/10 rounded-xl transition-all"
+            className="w-8 h-8 rounded-xl text-text-secondary hover:text-status-loss hover:bg-status-loss/10"
             title="Hapus Bahan"
             aria-label="Hapus Bahan"
           >
             <Trash2 className="w-4 h-4" />
-          </button>
+          </Button>
         </div>
       </div>
     </Card>

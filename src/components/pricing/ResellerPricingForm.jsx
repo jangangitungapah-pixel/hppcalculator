@@ -76,98 +76,118 @@ export const ResellerPricingForm = ({ sourceData, onSave }) => {
 
   if (!sourceData || !sourceData.hppPerUnit) {
     return (
-      <Card className="p-8 text-center bg-gray-50 border-gray-100 border-dashed">
+      <Card className="p-8 text-center bg-gray-50 border-gray-100 border-dashed rounded-2xl">
         <p className="text-text-tertiary">{t('pricing.sourceRequired')}</p>
       </Card>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-4">
-          <Card className="p-5 border-gray-200">
-            <h3 className="text-sm font-semibold text-text-primary mb-4">Pengaturan Reseller</h3>
-            
-            <div className="space-y-4">
-              <Input
-                label={t('pricing.ownerTargetMargin')}
-                name="ownerTargetMarginPercent"
-                type="number"
-                value={formData.ownerTargetMarginPercent || ''}
-                onChange={handleChange}
-                error={validationErrors?.ownerTargetMarginPercent}
-              />
-              <Input
-                label={t('pricing.resellerTargetMargin')}
-                name="resellerTargetMarginPercent"
-                type="number"
-                value={formData.resellerTargetMarginPercent || ''}
-                onChange={handleChange}
-                error={validationErrors?.resellerTargetMarginPercent}
-              />
-              <Input
-                label={t('pricing.moq')}
-                name="moq"
-                type="number"
-                value={formData.moq || ''}
-                onChange={handleChange}
-                min="1"
-              />
+    <div className="pricing-grid">
+      {/* Left Column: Input Steps */}
+      <div className="space-y-6">
+        <div className="pricing-step-card">
+          <h3 className="font-bold text-text-primary text-base mb-1">1. Pengaturan Reseller</h3>
+          <p className="text-xs text-text-secondary mb-4">Tentukan target profit Anda dan margin untuk komisi reseller Anda.</p>
+          
+          <div className="space-y-4">
+            <Input
+              label={t('pricing.ownerTargetMargin') + " (%)"}
+              name="ownerTargetMarginPercent"
+              type="number"
+              value={formData.ownerTargetMarginPercent || ''}
+              onChange={handleChange}
+              error={validationErrors?.ownerTargetMarginPercent}
+            />
+            <Input
+              label={t('pricing.resellerTargetMargin') + " (%)"}
+              name="resellerTargetMarginPercent"
+              type="number"
+              value={formData.resellerTargetMarginPercent || ''}
+              onChange={handleChange}
+              error={validationErrors?.resellerTargetMarginPercent}
+            />
+            <Input
+              label={t('pricing.moq') + " (Unit)"}
+              name="moq"
+              type="number"
+              value={formData.moq || ''}
+              onChange={handleChange}
+              min="1"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Right Column: Sticky Result Preview */}
+      <div className="pricing-result-panel">
+        <h3 className="font-bold text-text-primary text-base">2. Hasil Analisis Harga</h3>
+        
+        {validationErrors?.hppPerUnit ? (
+          <Card className="p-4 bg-red-50 border-red-200">
+            <div className="flex gap-2 items-start text-red-700">
+              <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+              <p className="text-sm font-medium">{validationErrors.hppPerUnit}</p>
             </div>
           </Card>
-        </div>
-
-        <div className="space-y-4">
-          {validationErrors?.hppPerUnit ? (
-            <Card className="p-4 bg-red-50 border-red-200">
-              <div className="flex gap-2 items-start text-red-700">
-                <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                <p className="text-sm font-medium">{validationErrors.hppPerUnit}</p>
-              </div>
-            </Card>
-          ) : result ? (
-            <Card className="p-5 border-brand-primary/30 bg-brand-soft overflow-hidden">
+        ) : result ? (
+          <div className="space-y-4">
+            {/* Owner/Reseller Split Card */}
+            <div className="pricing-result-hero profit-good">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <h3 className="text-sm font-medium text-text-tertiary mb-1">{t('pricing.wholesalePrice')}</h3>
-                  <div className="text-xl font-bold text-brand-primary">
+                  <div className="text-xs opacity-85 uppercase tracking-wider mb-1">Harga Grosir</div>
+                  <div className="text-xl font-extrabold tracking-tight">
                     {formatCurrency(result.wholesalePrice, lang, currency)}
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-text-tertiary mb-1">{t('pricing.resellerSuggestedPrice')}</h3>
-                  <div className="text-xl font-bold text-text-primary">
+                  <div className="text-xs opacity-85 uppercase tracking-wider mb-1">Rekomendasi Jual</div>
+                  <div className="text-xl font-extrabold tracking-tight text-text-primary">
                     {formatCurrency(result.resellerSuggestedPrice, lang, currency)}
                   </div>
                 </div>
               </div>
-              
-              <div className="grid grid-cols-2 gap-4 mt-6 pt-4 border-t border-brand-primary/20">
-                <div>
-                  <div className="text-xs text-text-tertiary">{t('pricing.ownerProfit')}</div>
-                  <div className="font-semibold text-text-secondary">{formatCurrency(result.ownerProfitPerUnit, lang, currency)}</div>
-                  <div className="text-xs text-brand-primary">{formatPercent(result.ownerMarginPercent, lang)}</div>
-                </div>
-                <div>
-                  <div className="text-xs text-text-tertiary">{t('pricing.resellerProfit')}</div>
-                  <div className="font-semibold text-text-secondary">{formatCurrency(result.resellerProfitPerUnit, lang, currency)}</div>
-                  <div className="text-xs text-brand-primary">{formatPercent(result.resellerMarginPercent, lang)}</div>
+            </div>
+
+            {/* Metrics Breakdown */}
+            <div className="bg-zinc-50 border border-zinc-100 rounded-xl px-4 py-2 mt-2">
+              <div className="pricing-result-metric">
+                <span className="text-xs text-text-secondary">Profit Anda (Owner)</span>
+                <div className="text-right">
+                  <span className="text-sm font-bold text-status-good block">
+                    {formatCurrency(result.ownerProfitPerUnit, lang, currency)}
+                  </span>
+                  <span className="text-xs text-text-muted">
+                    Margin {formatPercent(result.ownerMarginPercent, lang)}
+                  </span>
                 </div>
               </div>
-            </Card>
-          ) : null}
+              
+              <div className="pricing-result-metric">
+                <span className="text-xs text-text-secondary">Profit Reseller</span>
+                <div className="text-right">
+                  <span className="text-sm font-semibold text-text-primary block">
+                    {formatCurrency(result.resellerProfitPerUnit, lang, currency)}
+                  </span>
+                  <span className="text-xs text-text-muted">
+                    Margin {formatPercent(result.resellerMarginPercent, lang)}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : null}
 
-          <TierPricingTable tiers={tierResult} />
+        <TierPricingTable tiers={tierResult} />
 
-          <Button 
-            className="w-full py-3" 
-            onClick={handleSave}
-            disabled={!result}
-          >
-            {t('pricing.saveSimulation')}
-          </Button>
-        </div>
+        <Button 
+          className="w-full py-3 mt-2" 
+          onClick={handleSave}
+          disabled={!result}
+        >
+          {t('pricing.saveSimulation')}
+        </Button>
       </div>
     </div>
   );

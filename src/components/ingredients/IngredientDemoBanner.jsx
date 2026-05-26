@@ -30,13 +30,15 @@ export const IngredientDemoBanner = ({ onLoadDemoClick }) => {
         >
           Muat Data Demo
         </Button>
-        <button 
+        <Button 
+          variant="ghost" 
+          size="icon" 
           onClick={() => setIsVisible(false)}
-          className="text-text-secondary hover:text-text-primary p-1 rounded-lg"
+          className="w-8 h-8 text-text-secondary hover:text-text-primary"
           aria-label="Tutup"
         >
           <X className="w-4 h-4" />
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import React from 'react';
 import { useLanguage } from '../../hooks/useLanguage';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
+import { Button } from '../ui/Button';
 import { formatPercent, formatCurrency } from '../../lib/calculations';
 import { Store, Tag, Users, Package, ShoppingBag, Edit2, Trash2 } from 'lucide-react';
 
@@ -44,14 +45,26 @@ export const ChannelProfileCard = ({ profile, onEdit, onDelete }) => {
         </div>
         <div className="flex gap-1">
           {!profile.isPreset && onEdit && (
-            <button onClick={() => onEdit(profile)} className="p-1.5 text-gray-400 hover:text-brand-primary rounded-lg transition-colors">
+            <Button 
+              variant="ghost"
+              size="icon"
+              onClick={() => onEdit(profile)} 
+              className="w-8 h-8 text-gray-400 hover:text-brand-primary hover:bg-brand-soft rounded-lg transition-colors"
+              aria-label="Edit"
+            >
               <Edit2 className="w-4 h-4" />
-            </button>
+            </Button>
           )}
           {!profile.isPreset && onDelete && (
-            <button onClick={() => onDelete(profile.id)} className="p-1.5 text-gray-400 hover:text-red-500 rounded-lg transition-colors">
+            <Button 
+              variant="ghost"
+              size="icon"
+              onClick={() => onDelete(profile.id)} 
+              className="w-8 h-8 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+              aria-label="Delete"
+            >
               <Trash2 className="w-4 h-4" />
-            </button>
+            </Button>
           )}
         </div>
       </div>

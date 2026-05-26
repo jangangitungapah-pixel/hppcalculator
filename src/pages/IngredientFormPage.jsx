@@ -100,12 +100,15 @@ export const IngredientFormPage = () => {
   return (
     <PageContainer maxWidth="max-w-2xl">
       <div className="mb-6 flex items-center gap-4">
-        <button 
+        <Button 
+          variant="ghost" 
+          size="icon" 
           onClick={() => navigate('/ingredients')}
-          className="p-2 rounded-full hover:bg-surface-muted transition-colors"
+          aria-label={t('common.back', 'Kembali')}
+          className="-ml-2"
         >
           <ArrowLeft className="w-5 h-5 text-text-secondary" />
-        </button>
+        </Button>
         <h1 className="text-2xl font-bold text-text-primary">
           {isEdit ? t('ingredients.editIngredient') : t('ingredients.addIngredient')}
         </h1>

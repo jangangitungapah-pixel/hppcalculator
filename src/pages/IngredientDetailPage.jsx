@@ -55,12 +55,15 @@ export const IngredientDetailPage = () => {
     <PageContainer maxWidth="max-w-2xl">
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <button 
+          <Button 
+            variant="ghost" 
+            size="icon" 
             onClick={() => navigate('/ingredients')}
-            className="p-2 rounded-full hover:bg-surface-muted transition-colors"
+            aria-label="Kembali ke Daftar Bahan"
+            className="-ml-2"
           >
             <ArrowLeft className="w-5 h-5 text-text-secondary" />
-          </button>
+          </Button>
           <h1 className="text-2xl font-bold text-text-primary line-clamp-1">Detail Bahan</h1>
         </div>
         <div className="flex gap-2">

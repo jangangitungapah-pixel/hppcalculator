@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLanguage } from '../../hooks/useLanguage';
 import { Card } from '../ui/Card';
+import { Button } from '../ui/Button';
 import { BarChart3, Calculator, Download } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -23,22 +24,23 @@ export const ReportEmptyState = ({ onLoadDemo }) => {
       </p>
       
       <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-        <button
+        <Button
           onClick={() => navigate('/calculator')}
-          className="btn-primary py-2.5 px-6 flex items-center justify-center gap-2"
+          leftIcon={<Calculator className="w-4 h-4" />}
+          className="w-full sm:w-auto"
         >
-          <Calculator className="w-4 h-4" />
           {t('dashboard.startCalculating')}
-        </button>
+        </Button>
         
         {onLoadDemo && (
-          <button
+          <Button
+            variant="outline"
             onClick={onLoadDemo}
-            className="btn-outline py-2.5 px-6 flex items-center justify-center gap-2"
+            leftIcon={<Download className="w-4 h-4" />}
+            className="w-full sm:w-auto"
           >
-            <Download className="w-4 h-4" />
             {t('dashboard.loadDemoData')}
-          </button>
+          </Button>
         )}
       </div>
     </Card>

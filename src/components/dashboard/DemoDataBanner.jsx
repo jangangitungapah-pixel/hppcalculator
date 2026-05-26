@@ -38,13 +38,14 @@ export const DemoDataBanner = () => {
               {t('settings.clearDemoDataConfirmBody')}
             </p>
           </div>
-          <div className="shrink-0 w-full sm:w-auto">
+          <div className="shrink-0">
             <Button 
-              variant="secondary" 
-              className="w-full sm:w-auto flex items-center justify-center gap-2 border-amber-200 hover:bg-amber-100/50 text-amber-700 font-medium"
+              variant="outline" 
+              size="sm"
+              className="border-red-200 text-status-loss hover:bg-status-loss/5"
               onClick={() => setShowConfirm(true)}
+              leftIcon={<Trash2 size={16} />}
             >
-              <Trash2 size={18} className="text-amber-600" />
               {t('settings.clearDemoData')}
             </Button>
           </div>

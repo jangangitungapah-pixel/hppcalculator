@@ -97,7 +97,7 @@ export const ConsignmentPricingForm = ({ sourceData, onSave }) => {
 
   if (!sourceData || !sourceData.hppPerUnit) {
     return (
-      <Card className="p-8 text-center bg-gray-50 border-gray-100 border-dashed">
+      <Card className="p-8 text-center bg-gray-50 border-gray-100 border-dashed rounded-2xl">
         <p className="text-text-tertiary">{t('pricing.sourceRequired')}</p>
       </Card>
     );
@@ -105,11 +105,13 @@ export const ConsignmentPricingForm = ({ sourceData, onSave }) => {
 
   return (
     <div className="space-y-6">
-      <Card className="p-5 border-gray-200">
-        <div className="flex justify-between items-center mb-4">
-          <label className="block text-sm font-semibold text-text-primary">
-            {t('pricing.profilesTitle')}
-          </label>
+      {/* Step 1: Channel Profile */}
+      <div className="pricing-step-card">
+        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 mb-4">
+          <div>
+            <h3 className="font-bold text-text-primary text-base">1. Profil Titip Jual (Konsinyasi)</h3>
+            <p className="text-xs text-text-secondary mt-0.5">Pilih outlet titip jual atau toko fisik mitra Anda.</p>
+          </div>
           {!hasProfiles && (
             <Button variant="ghost" size="sm" onClick={loadPresetChannelProfiles}>
               {t('pricing.loadPresetProfiles')}
@@ -117,24 +119,45 @@ export const ConsignmentPricingForm = ({ sourceData, onSave }) => {
           )}
         </div>
         
-        <select
-          value={profileId}
-          onChange={(e) => setProfileId(e.target.value)}
-          className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-primary outline-none"
-        >
-          <option value="">-- Pilih Profil Titip Jual --</option>
-          {consignmentProfiles.map(p => (
-            <option key={p.id} value={p.id}>{p.name}</option>
-          ))}
-        </select>
+        {consignmentProfiles.length > 0 ? (
+          <div className="pricing-channel-grid">
+            {consignmentProfiles.map(p => {
+              const isSelected = profileId === p.id;
+              const feeDesc = p.consignmentFeePercent > 0 ? `${p.consignmentFeePercent}%` : '0%';
+              
+              return (
+                <div 
+                  key={p.id}
+                  onClick={() => setProfileId(isSelected ? '' : p.id)}
+                  className={`pricing-channel-card ${isSelected ? 'selected' : ''}`}
+                >
+                  <div className="font-bold text-sm text-text-primary">{p.name}</div>
+                  <div className="text-xs text-text-muted">Bagi Hasil: {feeDesc}</div>
+                  {isSelected && (
+                    <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-brand-primary" />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="text-center py-6 border border-dashed border-border rounded-xl">
+            <p className="text-sm text-text-secondary mb-3">Belum ada profil konsinyasi.</p>
+            <Button size="sm" variant="outline" onClick={loadPresetChannelProfiles}>
+              Muat Preset Bawaan
+            </Button>
+          </div>
+        )}
         
-        {profileId && <PricingDisclaimer className="mt-3" />}
-      </Card>
+        {profileId && <PricingDisclaimer className="mt-4" />}
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-4">
-          <Card className="p-5 border-gray-200">
-            <h3 className="text-sm font-semibold text-text-primary mb-4">Input Harga & Potongan</h3>
+      <div className="pricing-grid">
+        {/* Left Column: Form Inputs */}
+        <div className="space-y-6">
+          <div className="pricing-step-card">
+            <h3 className="font-bold text-text-primary text-base mb-1">2. Harga & Bagi Hasil</h3>
+            <p className="text-xs text-text-secondary mb-4">Atur harga jual di toko mitra dan biaya konsinyasi terkait.</p>
             
             <div className="space-y-4">
               <Input
@@ -144,6 +167,7 @@ export const ConsignmentPricingForm = ({ sourceData, onSave }) => {
                 value={formData.sellingPrice || ''}
                 onChange={handleChange}
                 placeholder="0"
+                className="font-bold text-lg"
               />
               <Input
                 label={t('pricing.quantity')}
@@ -154,7 +178,7 @@ export const ConsignmentPricingForm = ({ sourceData, onSave }) => {
                 min="1"
               />
               <Input
-                label={t('pricing.storeFee')}
+                label={t('pricing.storeFee') + " (%)"}
                 name="consignmentFeePercent"
                 type="number"
                 value={formData.consignmentFeePercent || ''}
@@ -175,10 +199,13 @@ export const ConsignmentPricingForm = ({ sourceData, onSave }) => {
                 onChange={handleChange}
               />
             </div>
-          </Card>
+          </div>
         </div>
 
-        <div className="space-y-4">
+        {/* Right Column: Sticky Result Preview */}
+        <div className="pricing-result-panel">
+          <h3 className="font-bold text-text-primary text-base">3. Hasil & Rekomendasi</h3>
+          
           <PricingResultSummary result={{...result, recommendedPrice}} showRecommended={true} />
           
           {result && (
@@ -189,7 +216,7 @@ export const ConsignmentPricingForm = ({ sourceData, onSave }) => {
           )}
 
           <Button 
-            className="w-full py-3" 
+            className="w-full py-3 mt-2" 
             onClick={handleSave}
             disabled={!result}
           >

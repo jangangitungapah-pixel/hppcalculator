@@ -1,5 +1,6 @@
 import React from 'react';
 import { CheckCircle2, AlertCircle, AlertTriangle, Info, X } from 'lucide-react';
+import { Button } from './Button';
 
 export const Toast = ({ id, type = 'info', title, message, onRemove }) => {
   const types = {
@@ -44,14 +45,16 @@ export const Toast = ({ id, type = 'info', title, message, onRemove }) => {
         {message && <p className={`mt-1 text-sm opacity-90 ${style.text}`}>{message}</p>}
       </div>
       <div className="shrink-0 flex ml-4">
-        <button
-          className={`rounded-md inline-flex hover:opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary ${style.text}`}
+        <Button
+          variant="ghost"
+          size="icon"
+          className={`rounded-md hover:opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary w-8 h-8 ${style.text}`}
           onClick={() => onRemove(id)}
           aria-label="Close"
         >
           <span className="sr-only">Close</span>
           <X className="w-5 h-5" />
-        </button>
+        </Button>
       </div>
     </div>
   );

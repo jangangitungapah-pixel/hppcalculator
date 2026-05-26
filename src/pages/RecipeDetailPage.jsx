@@ -86,12 +86,15 @@ export const RecipeDetailPage = () => {
     <PageContainer maxWidth="max-w-4xl">
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <button 
+          <Button 
+            variant="ghost" 
+            size="icon" 
             onClick={() => navigate('/recipes')}
-            className="p-2 rounded-full hover:bg-surface-muted transition-colors"
+            aria-label="Kembali ke Daftar Resep"
+            className="-ml-2"
           >
             <ArrowLeft className="w-5 h-5 text-text-secondary" />
-          </button>
+          </Button>
           <h1 className="text-2xl font-bold text-text-primary line-clamp-1">Detail Resep</h1>
         </div>
         <div className="flex gap-2">
@@ -314,12 +317,17 @@ export const RecipeDetailPage = () => {
                 />
               </div>
 
-              <div className="flex gap-3">
-                <Button variant="secondary" className="flex-1" onClick={() => setShowScaleModal(false)}>
+              <div className="flex flex-col sm:flex-row gap-2 mt-6">
+                <Button 
+                  variant="ghost" 
+                  className="w-full sm:flex-1 order-2 sm:order-1" 
+                  onClick={() => setShowScaleModal(false)}
+                >
                   Batal
                 </Button>
                 <Button 
-                  className="flex-1" 
+                  variant="primary"
+                  className="w-full sm:flex-1 order-1 sm:order-2" 
                   onClick={handleApplyScale}
                   disabled={!targetScaleQty || Number(targetScaleQty) <= 0 || Number(targetScaleQty) === recipe.outputQuantity}
                 >

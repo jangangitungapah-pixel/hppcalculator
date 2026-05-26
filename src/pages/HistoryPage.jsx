@@ -88,20 +88,26 @@ export const HistoryPage = () => {
                 </div>
                 
                 <div className="flex sm:flex-col border-t sm:border-t-0 sm:border-l border-border/50 bg-surface-muted/30 w-full sm:w-20 shrink-0">
-                  <button 
-                    className="flex-1 sm:h-1/2 flex items-center justify-center text-text-muted hover:text-brand-primary hover:bg-brand-primary/5 transition-colors"
+                  <Button 
+                    variant="ghost"
+                    size="icon"
+                    className="flex-1 sm:h-1/2 flex items-center justify-center text-text-muted hover:text-brand-primary hover:bg-brand-primary/5 transition-colors rounded-none w-full border-none"
                     onClick={() => navigate(`/history/${item.id}`)}
                     title={t('history.viewDetail')}
+                    aria-label={t('history.viewDetail')}
                   >
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
-                  </button>
-                  <button 
-                    className="flex-1 sm:h-1/2 flex items-center justify-center text-text-muted hover:text-status-loss hover:bg-status-lossBg transition-colors border-l sm:border-l-0 sm:border-t border-border/50"
+                  </Button>
+                  <Button 
+                    variant="ghost"
+                    size="icon"
+                    className="flex-1 sm:h-1/2 flex items-center justify-center text-text-muted hover:text-status-loss hover:bg-status-lossBg transition-colors border-l sm:border-l-0 sm:border-t border-border/50 rounded-none w-full border-none"
                     onClick={() => setDeleteId(item.id)}
                     title={t('history.delete')}
+                    aria-label={t('history.delete')}
                   >
                     <Trash2 className="w-4 h-4" />
-                  </button>
+                  </Button>
                 </div>
               </Card>
             </FadeIn>

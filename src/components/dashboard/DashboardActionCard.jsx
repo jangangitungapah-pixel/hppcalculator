@@ -6,6 +6,14 @@ export const DashboardActionCard = ({ title, description, icon: Icon, color = 'o
     <div 
       className={`dashboard-action-card ${color} group`}
       onClick={onClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick();
+        }
+      }}
     >
       {Icon && (
         <div className="dashboard-action-icon">

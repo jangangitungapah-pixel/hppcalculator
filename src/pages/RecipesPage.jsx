@@ -52,13 +52,20 @@ export const RecipesPage = () => {
         </div>
         <div className="flex gap-3 w-full md:w-auto">
           {recipes.length === 0 && (
-            <Button variant="secondary" onClick={handleLoadDemo} className="flex-1 md:flex-none">
-              <ArchiveRestore className="w-4 h-4 mr-2" />
+            <Button 
+              variant="secondary" 
+              onClick={handleLoadDemo} 
+              className="flex-1 md:flex-none"
+              leftIcon={<ArchiveRestore className="w-4 h-4" />}
+            >
               {t('recipes.loadDemoRecipes')}
             </Button>
           )}
-          <Button onClick={() => navigate('/recipes/new')} className="flex-1 md:flex-none">
-            <Plus className="w-4 h-4 mr-2" />
+          <Button 
+            onClick={() => navigate('/recipes/new')} 
+            className="flex-1 md:flex-none"
+            leftIcon={<Plus className="w-4 h-4" />}
+          >
             {t('recipes.createRecipe')}
           </Button>
         </div>
@@ -141,19 +148,24 @@ export const RecipesPage = () => {
           )}
 
           <div className="flex flex-col sm:flex-row gap-4">
-            <Button onClick={() => {
-              if (ingredients.length === 0) {
-                addToast({ type: 'error', title: t('errors.noIngredientsAvailable') });
-                navigate('/ingredients');
-              } else {
-                navigate('/recipes/new');
-              }
-            }}>
-              <Plus className="w-4 h-4 mr-2" />
+            <Button 
+              onClick={() => {
+                if (ingredients.length === 0) {
+                  addToast({ type: 'error', title: t('errors.noIngredientsAvailable') });
+                  navigate('/ingredients');
+                } else {
+                  navigate('/recipes/new');
+                }
+              }}
+              leftIcon={<Plus className="w-4 h-4" />}
+            >
               {t('recipes.createRecipe')}
             </Button>
-            <Button variant="secondary" onClick={handleLoadDemo}>
-              <ArchiveRestore className="w-4 h-4 mr-2" />
+            <Button 
+              variant="secondary" 
+              onClick={handleLoadDemo}
+              leftIcon={<ArchiveRestore className="w-4 h-4" />}
+            >
               {t('recipes.loadDemoRecipes')}
             </Button>
           </div>

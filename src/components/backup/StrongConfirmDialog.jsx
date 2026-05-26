@@ -46,13 +46,17 @@ export const StrongConfirmDialog = ({
             />
           </div>
           
-          <div className="flex gap-3">
-            <Button variant="secondary" className="flex-1" onClick={onCancel}>
+          <div className="flex flex-col sm:flex-row gap-2 mt-6">
+            <Button 
+              variant="ghost" 
+              className="w-full sm:flex-1 order-2 sm:order-1" 
+              onClick={onCancel}
+            >
               {cancelLabel || t('cancel', 'Batal')}
             </Button>
             <Button 
               variant="danger" 
-              className="flex-1" 
+              className="w-full sm:flex-1 order-1 sm:order-2" 
               disabled={!isMatch} 
               onClick={() => {
                 if (isMatch) onConfirm();

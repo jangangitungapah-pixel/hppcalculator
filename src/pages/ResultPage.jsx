@@ -59,9 +59,15 @@ export const ResultPage = () => {
   return (
     <PageContainer>
       <div className="page-header flex items-center gap-3 mb-6">
-        <button onClick={() => navigate(-1)} className="p-2 -ml-2 rounded-full hover:bg-surface-muted text-text-secondary">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="-ml-2" 
+          onClick={() => navigate(-1)}
+          aria-label={t('common.back', 'Kembali')}
+        >
           <ArrowLeft className="w-6 h-6" />
-        </button>
+        </Button>
         <h1 className="page-title text-xl">{t('result.resultTitle', 'Hasil HPP')}</h1>
       </div>
 
@@ -196,11 +202,20 @@ export const ResultPage = () => {
       </StaggerContainer>
 
       {/* Sticky Bottom Actions */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-surface-glass backdrop-blur-md border-t border-border z-sticky flex gap-3 pb-safe shadow-md">
-        <Button variant="secondary" className="flex-1 h-11 border-border bg-surface-muted text-text-primary" onClick={() => navigate(-1)}>
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-surface-glass backdrop-blur-md border-t border-border z-sticky flex gap-3 pb-safe shadow-md max-w-lg mx-auto sm:rounded-t-2xl">
+        <Button 
+          variant="secondary" 
+          className="flex-1" 
+          onClick={() => navigate(-1)}
+        >
           {t('result.editInput', 'Edit Input')}
         </Button>
-        <Button className="flex-1 h-11 shadow-glow-primary" onClick={handleSave} disabled={!input}>
+        <Button 
+          variant="primary"
+          className="flex-1" 
+          onClick={handleSave} 
+          disabled={!input}
+        >
           {t('result.saveCalculation', 'Simpan Hasil')}
         </Button>
       </div>

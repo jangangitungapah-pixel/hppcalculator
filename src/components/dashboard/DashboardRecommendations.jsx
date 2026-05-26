@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../hooks/useLanguage';
 import { AlertTriangle, Info, CheckCircle2, ChevronRight } from 'lucide-react';
+import { Button } from '../ui/Button';
 import { StaggerContainer } from '../motion/StaggerContainer';
 import { FadeIn } from '../motion/FadeIn';
 
@@ -58,12 +59,15 @@ export const DashboardRecommendations = ({ recommendations }) => {
                     <p className="recommendation-preview-message">
                       {rec.messageId || rec.messageEn}
                     </p>
-                    <button 
-                      className="recommendation-preview-action"
+                    <Button 
+                      variant="link" 
+                      size="sm"
+                      className="mt-2 text-xs font-bold"
                       onClick={() => navigate(rec.actionRoute || '/reports')}
+                      iconRight={<ChevronRight className="w-3.5 h-3.5" />}
                     >
-                      {rec.actionLabelId || 'Lihat Detail'} <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
-                    </button>
+                      {rec.actionLabelId || 'Lihat Detail'}
+                    </Button>
                   </div>
                 </div>
               </FadeIn>

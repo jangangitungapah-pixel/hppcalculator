@@ -2,6 +2,7 @@ import React from 'react';
 import { Download, CheckCircle2, Smartphone } from 'lucide-react';
 import { usePwaContext } from '../../contexts/PwaContext';
 import { useLanguage } from '../../hooks/useLanguage';
+import { Button } from '../ui/Button';
 
 export const InstallAppCard = () => {
   const { isInstalled, canInstall, promptInstall } = usePwaContext();
@@ -27,13 +28,12 @@ export const InstallAppCard = () => {
               {t('pwa.installed')}
             </div>
           ) : canInstall ? (
-            <button
+            <Button
               onClick={promptInstall}
-              className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-white text-sm font-bold rounded-xl shadow-sm transition-transform active:scale-95"
+              leftIcon={<Download className="w-4 h-4" />}
             >
-              <Download className="w-4 h-4" />
               {t('pwa.installCta')}
-            </button>
+            </Button>
           ) : (
             <div className="text-xs text-text-tertiary bg-surface-alt p-3 rounded-lg border border-border">
               Jika browser Anda mendukung, gunakan menu browser (Add to Home Screen / Install) untuk menambahkan Modalin ke layar utama perangkat Anda.

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Edit2, Trash2, ArrowRight } from 'lucide-react';
+import { Button } from '../ui/Button';
 import { IngredientCategoryPill } from './IngredientCategoryPill';
 import { 
   formatIngredientPurchasePrice, 
@@ -78,35 +79,41 @@ export const IngredientListView = ({
 
             {/* Column 5: Actions */}
             <div className="col-span-1 md:col-span-1 flex items-center justify-end gap-1 border-t md:border-t-0 border-border/40 pt-2 md:pt-0">
-              <button
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={(e) => {
                   e.stopPropagation();
                   onEdit(ing.id);
                 }}
-                className="p-2 text-text-secondary hover:text-brand-primary hover:bg-brand-soft/40 rounded-xl transition-all"
+                className="w-8 h-8 rounded-xl text-text-secondary hover:text-brand-primary hover:bg-brand-soft"
                 title="Edit Bahan"
                 aria-label="Edit Bahan"
               >
                 <Edit2 className="w-4 h-4" />
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={(e) => {
                   e.stopPropagation();
                   onDelete(ing.id);
                 }}
-                className="p-2 text-text-secondary hover:text-status-loss hover:bg-status-loss/10 rounded-xl transition-all"
+                className="w-8 h-8 rounded-xl text-text-secondary hover:text-status-loss hover:bg-status-loss/10"
                 title="Hapus Bahan"
                 aria-label="Hapus Bahan"
               >
                 <Trash2 className="w-4 h-4" />
-              </button>
-              <button
-                className="md:hidden p-2 text-brand-primary hover:bg-brand-soft/40 rounded-xl transition-all flex items-center gap-1 font-semibold text-xs"
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="md:hidden text-brand-primary hover:bg-brand-soft rounded-xl flex items-center gap-1 font-semibold text-xs py-1"
                 aria-label="Lihat Detail"
               >
                 <span>Detail</span>
                 <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+              </Button>
             </div>
           </div>
         );

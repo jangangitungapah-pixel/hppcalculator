@@ -1,6 +1,7 @@
 import React from 'react';
 import { Search, LayoutGrid, List } from 'lucide-react';
 import { Input } from '../ui/Input';
+import { Button } from '../ui/Button';
 import { getIngredientCategoryLabel } from '../../lib/ingredients/ingredientVisuals';
 
 export const IngredientsToolbar = ({
@@ -36,28 +37,32 @@ export const IngredientsToolbar = ({
 
         {/* View Mode Toggle */}
         <div className="ingredients-view-toggle flex items-center bg-surface-muted p-1 rounded-xl shrink-0 self-end md:self-auto gap-1 border border-border/40">
-          <button
+          <Button
+            variant={viewMode === 'grid' ? 'white' : 'ghost'}
+            size="icon"
             onClick={() => onViewModeChange('grid')}
-            className={`p-2 rounded-lg transition-all ${
+            className={`w-8 h-8 rounded-lg ${
               viewMode === 'grid' 
-                ? 'bg-white text-brand-primary shadow-sm' 
+                ? 'text-brand-primary' 
                 : 'text-text-secondary hover:text-text-primary'
             }`}
             aria-label="Grid View"
           >
             <LayoutGrid className="w-4 h-4" />
-          </button>
-          <button
+          </Button>
+          <Button
+            variant={viewMode === 'list' ? 'white' : 'ghost'}
+            size="icon"
             onClick={() => onViewModeChange('list')}
-            className={`p-2 rounded-lg transition-all ${
+            className={`w-8 h-8 rounded-lg ${
               viewMode === 'list' 
-                ? 'bg-white text-brand-primary shadow-sm' 
+                ? 'text-brand-primary' 
                 : 'text-text-secondary hover:text-text-primary'
             }`}
             aria-label="List View"
           >
             <List className="w-4 h-4" />
-          </button>
+          </Button>
         </div>
       </div>
 

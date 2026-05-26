@@ -125,12 +125,15 @@ export const ProductsPage = () => {
                   onClick={() => navigate(`/products/${product.id}`)}
                   className="bg-surface border border-border p-5 rounded-2xl cursor-pointer hover:shadow-floating hover:border-brand-soft transition-all duration-200 relative group"
                 >
-                  <button 
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
                     onClick={(e) => { e.stopPropagation(); setDeleteId(product.id); }}
-                    className="absolute top-3 right-3 p-2 text-text-secondary opacity-0 group-hover:opacity-100 transition-opacity hover:text-status-loss hover:bg-status-loss/10 rounded-lg"
+                    aria-label="Hapus Produk"
+                    className="absolute top-3 right-3 text-text-secondary opacity-0 group-hover:opacity-100 transition-opacity hover:text-status-loss"
                   >
                     <Trash2 className="w-4 h-4" />
-                  </button>
+                  </Button>
                   
                   <div className="flex justify-between items-start mb-3 pr-8">
                     <h3 className="font-bold text-lg text-text-primary line-clamp-1" title={product.name}>{product.name}</h3>

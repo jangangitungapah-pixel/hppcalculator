@@ -13,6 +13,8 @@ import { BundlePricingForm } from '../../components/pricing/BundlePricingForm';
 import { ConsignmentPricingForm } from '../../components/pricing/ConsignmentPricingForm';
 import { Toast } from '../../components/ui/Toast';
 import { PageContainer } from '../../components/layout/PageContainer';
+import { Button } from '../../components/ui/Button';
+import { History, Settings } from 'lucide-react';
 
 export const ChannelPricingPage = () => {
   const { t } = useLanguage();
@@ -82,20 +84,52 @@ export const ChannelPricingPage = () => {
   };
 
   return (
-    <PageContainer maxWidth="max-w-4xl">
-      {activeTab !== 'bundle' && (
-        <div className="mb-6">
-          <ProductSourcePicker 
-            value={sourceData} 
-            onChange={setSourceData} 
-          />
+    <PageContainer maxWidth="max-w-5xl">
+      <div className="pricing-page">
+        {/* Header/Hero Section */}
+        <div className="pricing-hero">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h1 className="text-2xl font-bold text-text-primary">Simulasi Harga</h1>
+              <p className="text-sm text-text-secondary mt-1">
+                Bandingkan harga jual, biaya channel, dan margin dari berbagai skenario.
+              </p>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                leftIcon={<History className="w-4 h-4" />}
+                onClick={() => navigate('/simulations')}
+              >
+                Riwayat Simulasi
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                leftIcon={<Settings className="w-4 h-4" />}
+                onClick={() => navigate('/channel-profiles')}
+              >
+                Kelola Profil
+              </Button>
+            </div>
+          </div>
         </div>
-      )}
 
-      <ChannelTabs activeTab={activeTab} onChange={setActiveTab} />
+        {activeTab !== 'bundle' && (
+          <div className="mb-6">
+            <ProductSourcePicker 
+              value={sourceData} 
+              onChange={setSourceData} 
+            />
+          </div>
+        )}
 
-      <div className="mt-4">
-        {renderActiveForm()}
+        <ChannelTabs activeTab={activeTab} onChange={setActiveTab} />
+
+        <div className="mt-4">
+          {renderActiveForm()}
+        </div>
       </div>
 
       {toast && (

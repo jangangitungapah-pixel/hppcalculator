@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../hooks/useLanguage';
 import { Calculator } from 'lucide-react';
 import { FadeIn } from '../motion/FadeIn';
+import { Button } from '../ui/Button';
 
 export const DashboardNewProductCta = () => {
   const { t } = useLanguage();
@@ -20,12 +21,14 @@ export const DashboardNewProductCta = () => {
           <p className="dashboard-new-product-body">
             Hitung HPP dan temukan harga jual yang tepat agar bisnismu tetap untung.
           </p>
-          <button 
-            className="dashboard-new-product-button" 
+          <Button 
+            variant="white" 
+            size="md"
+            className="dashboard-new-product-button font-bold rounded-xl"
             onClick={() => navigate('/calculator')}
           >
             {t('dashboard.mainCta')}
-          </button>
+          </Button>
         </div>
       </div>
     </FadeIn>

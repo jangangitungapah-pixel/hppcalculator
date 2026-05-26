@@ -54,8 +54,8 @@ export const WelcomePage = () => {
 
       addToast({
         type: 'success',
-        title: t('toasts.demoLoadedTitle', 'Workspace Contoh Dimuat'),
-        message: t('toasts.demoLoadedMessage', 'Workspace Anda kini berisi contoh bahan baku, resep, dan simulasi.')
+        title: t('toasts.demoLoadedTitle'),
+        message: t('toasts.demoLoadedMessage')
       });
 
       // Redirect user to dashboard to see their demo workspace
@@ -66,7 +66,7 @@ export const WelcomePage = () => {
       console.error(e);
       addToast({
         type: 'error',
-        title: t('toasts.errorTitle', 'Terjadi Kesalahan'),
+        title: t('toasts.errorTitle'),
         message: e.message
       });
     }
@@ -305,6 +305,7 @@ export const WelcomePage = () => {
               <div key={i} className="faq-accordion-item">
                 <button
                   onClick={() => toggleFaq(i)}
+                  aria-expanded={activeFaq === i}
                   className="faq-accordion-trigger"
                 >
                   <span>{faq.q}</span>

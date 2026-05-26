@@ -66,9 +66,15 @@ export const HistoryDetailPage = () => {
       <StaggerContainer>
         <FadeIn>
           <div className="mb-6 flex items-center gap-3">
-            <button onClick={() => navigate('/history')} className="p-2 -ml-2 rounded-full hover:bg-surface-muted text-text-secondary transition-colors">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate('/history')}
+              className="-ml-2 text-text-secondary hover:text-brand-primary rounded-full transition-colors w-9 h-9"
+              aria-label="Kembali ke Riwayat"
+            >
               <ArrowLeft className="w-6 h-6" />
-            </button>
+            </Button>
             <h1 className="text-2xl font-bold text-text-primary tracking-tight">{savedCalculation.productName}</h1>
             <Badge variant={result.profitStatus.key} className="ml-auto">{t(`result.status.${result.profitStatus.key}`)}</Badge>
           </div>

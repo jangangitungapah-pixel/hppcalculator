@@ -2,6 +2,7 @@ import React from 'react';
 import { useLanguage } from '../../hooks/useLanguage';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
+import { Button } from '../ui/Button';
 import { formatPercent, formatCurrency } from '../../lib/calculations';
 import { Store, Tag, Users, Package, ShoppingBag, Trash2, ChevronRight, Activity } from 'lucide-react';
 
@@ -130,15 +131,18 @@ export const SimulationCard = ({ simulation, onClick, onDelete }) => {
         </div>
         
         {onDelete && (
-          <button 
+          <Button 
+            variant="ghost"
+            size="icon"
             onClick={(e) => {
               e.stopPropagation();
               onDelete(simulation.id, isBundle);
             }} 
-            className="p-1.5 text-gray-400 hover:text-red-500 rounded-lg transition-colors"
+            className="w-8 h-8 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+            aria-label="Delete"
           >
             <Trash2 className="w-4 h-4" />
-          </button>
+          </Button>
         )}
       </div>
 

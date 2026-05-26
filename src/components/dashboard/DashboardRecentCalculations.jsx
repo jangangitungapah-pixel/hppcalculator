@@ -31,8 +31,9 @@ export const DashboardRecentCalculations = () => {
             size="sm" 
             onClick={() => navigate('/history')} 
             className="text-brand-primary font-bold hover:bg-brand-soft"
+            rightIcon={<ChevronRight className="w-4 h-4" />}
           >
-            {t('dashboard.viewAll')} <ChevronRight className="w-4 h-4 ml-1" />
+            {t('dashboard.viewAll')}
           </Button>
         )}
       </div>
@@ -60,6 +61,14 @@ export const DashboardRecentCalculations = () => {
                 <div 
                   className="recent-calc-card group" 
                   onClick={() => navigate(`/history/${item.id}`)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      navigate(`/history/${item.id}`);
+                    }
+                  }}
                 >
                   <div className={`recent-calc-accent ${statusKey}`} />
                   <div className="recent-calc-body">

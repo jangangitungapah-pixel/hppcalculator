@@ -88,156 +88,173 @@ export const BundlePricingForm = ({ onSave }) => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-4">
-          <Card className="p-5 border-gray-200">
-            <h3 className="text-sm font-semibold text-text-primary mb-4">{t('pricing.bundleItems')}</h3>
-            
-            <div className="space-y-4 mb-4">
-              {items.map((item, idx) => (
-                <div key={item.id} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-100">
-                  <div>
-                    <div className="font-medium text-text-primary text-sm">{item.sourceNameSnapshot}</div>
-                    <div className="text-xs text-text-tertiary">
-                      {item.quantity} x {formatCurrency(item.hppPerUnit, lang, currency)}
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="font-semibold text-sm">
-                      {formatCurrency(item.hppPerUnit * item.quantity, lang, currency)}
-                    </div>
-                    <button 
-                      onClick={() => handleRemoveItem(item.id)}
-                      className="text-gray-400 hover:text-red-500"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+    <div className="pricing-grid">
+      {/* Left Column: Form Inputs */}
+      <div className="space-y-6">
+        {/* Step 1: Bundle Items */}
+        <div className="pricing-step-card">
+          <h3 className="font-bold text-text-primary text-base mb-1">1. Isi Paket Produk (Bundle)</h3>
+          <p className="text-xs text-text-secondary mb-4">Pilih produk dan tentukan jumlah unit yang masuk ke dalam paket ini.</p>
+          
+          <div className="space-y-4 mb-4">
+            {items.map((item, idx) => (
+              <div key={item.id} className="flex justify-between items-center p-3 bg-zinc-50 rounded-lg border border-zinc-100">
+                <div>
+                  <div className="font-medium text-text-primary text-sm">{item.sourceNameSnapshot}</div>
+                  <div className="text-xs text-text-tertiary">
+                    {item.quantity} x {formatCurrency(item.hppPerUnit, lang, currency)}
                   </div>
                 </div>
-              ))}
-              {items.length === 0 && (
-                <div className="text-sm text-text-tertiary text-center py-2 italic">
-                  Belum ada item di paket ini.
+                <div className="flex items-center gap-3">
+                  <div className="font-semibold text-sm">
+                    {formatCurrency(item.hppPerUnit * item.quantity, lang, currency)}
+                  </div>
+                  <Button 
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleRemoveItem(item.id)}
+                    className="w-8 h-8 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg"
+                    aria-label={t('common.delete')}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
                 </div>
-              )}
-            </div>
-
-            <div className="p-4 border border-gray-200 rounded-xl space-y-3 bg-white">
-              <h4 className="text-xs font-semibold text-text-secondary uppercase">{t('pricing.addBundleItem')}</h4>
-              <ProductSourcePicker value={tempSource} onChange={setTempSource} />
-              
-              {tempSource && tempSource.sourceType === 'manual' && (
-                <div className="grid grid-cols-2 gap-3">
-                  <Input
-                    label="Nama Item"
-                    value={tempSource.sourceNameSnapshot || ''}
-                    onChange={(e) => setTempSource(prev => ({...prev, sourceNameSnapshot: e.target.value}))}
-                  />
-                  <Input
-                    label={t('pricing.hppPerUnit')}
-                    type="number"
-                    value={tempSource.hppPerUnit || ''}
-                    onChange={(e) => setTempSource(prev => ({...prev, hppPerUnit: Number(e.target.value) || 0}))}
-                  />
-                </div>
-              )}
-              
-              <div className="flex items-end gap-3">
-                <div className="flex-1">
-                  <Input
-                    label="Qty"
-                    type="number"
-                    value={tempQty}
-                    onChange={(e) => setTempQty(Number(e.target.value) || 1)}
-                    min="1"
-                  />
-                </div>
-                <Button 
-                  onClick={handleAddItem}
-                  disabled={!tempSource || !tempSource.hppPerUnit}
-                >
-                  Tambah
-                </Button>
               </div>
-            </div>
-          </Card>
+            ))}
+            {items.length === 0 && (
+              <div className="text-sm text-text-tertiary text-center py-4 border border-dashed border-zinc-200 rounded-xl bg-zinc-50/50 italic">
+                Belum ada item di paket ini. Tambahkan item di bawah.
+              </div>
+            )}
+          </div>
 
-          <Card className="p-5 border-gray-200">
-            <h3 className="text-sm font-semibold text-text-primary mb-4">Detail Paket</h3>
-            <div className="space-y-4">
-              <Input
-                label={t('pricing.bundleName')}
-                name="bundleName"
-                value={formData.bundleName}
-                onChange={handleChange}
-                placeholder="Cth: Paket Hemat Berdua"
-              />
-              <Input
-                label={t('pricing.bundleSellingPrice')}
-                name="bundleSellingPrice"
-                type="number"
-                value={formData.bundleSellingPrice || ''}
-                onChange={handleChange}
-              />
+          <div className="p-4 border border-zinc-200 rounded-xl space-y-3 bg-white shadow-xs">
+            <h4 className="text-xs font-semibold text-text-secondary uppercase">{t('pricing.addBundleItem')}</h4>
+            <ProductSourcePicker value={tempSource} onChange={setTempSource} />
+            
+            {tempSource && tempSource.sourceType === 'manual' && (
               <div className="grid grid-cols-2 gap-3">
                 <Input
-                  label={t('pricing.percentDiscount')}
-                  name="discountPercent"
-                  type="number"
-                  value={formData.discountPercent || ''}
-                  onChange={handleChange}
+                  label="Nama Item"
+                  value={tempSource.sourceNameSnapshot || ''}
+                  onChange={(e) => setTempSource(prev => ({...prev, sourceNameSnapshot: e.target.value}))}
                 />
                 <Input
-                  label={t('pricing.fixedDiscount')}
-                  name="discountFixed"
+                  label={t('pricing.hppPerUnit')}
                   type="number"
-                  value={formData.discountFixed || ''}
-                  onChange={handleChange}
+                  value={tempSource.hppPerUnit || ''}
+                  onChange={(e) => setTempSource(prev => ({...prev, hppPerUnit: Number(e.target.value) || 0}))}
                 />
               </div>
+            )}
+            
+            <div className="flex items-end gap-3">
+              <div className="flex-1">
+                <Input
+                  label="Qty"
+                  type="number"
+                  value={tempQty}
+                  onChange={(e) => setTempQty(Number(e.target.value) || 1)}
+                  min="1"
+                />
+              </div>
+              <Button 
+                onClick={handleAddItem}
+                disabled={!tempSource || !tempSource.hppPerUnit}
+              >
+                Tambah
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Step 2: Bundle Settings */}
+        <div className="pricing-step-card">
+          <h3 className="font-bold text-text-primary text-base mb-1">2. Detail Harga & Diskon Paket</h3>
+          <p className="text-xs text-text-secondary mb-4 font-normal">Tentukan nama paket, harga jual kotor, dan komisi/potongan jika ada diskon khusus.</p>
+          
+          <div className="space-y-4">
+            <Input
+              label={t('pricing.bundleName')}
+              name="bundleName"
+              value={formData.bundleName}
+              onChange={handleChange}
+              placeholder="Cth: Paket Hemat Berdua"
+            />
+            <Input
+              label={t('pricing.bundleSellingPrice')}
+              name="bundleSellingPrice"
+              type="number"
+              value={formData.bundleSellingPrice || ''}
+              onChange={handleChange}
+              className="font-bold text-lg"
+            />
+            <div className="grid grid-cols-2 gap-3">
+              <Input
+                label={t('pricing.percentDiscount') + " (%)"}
+                name="discountPercent"
+                type="number"
+                value={formData.discountPercent || ''}
+                onChange={handleChange}
+              />
+              <Input
+                label={t('pricing.fixedDiscount')}
+                name="discountFixed"
+                type="number"
+                value={formData.discountFixed || ''}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Column: Sticky Result Preview */}
+      <div className="pricing-result-panel">
+        <h3 className="font-bold text-text-primary text-base">3. Hasil Analisis Paket</h3>
+        
+        {validationErrors?.items ? (
+          <Card className="p-4 bg-red-50 border-red-200">
+            <div className="flex gap-2 items-start text-red-700">
+              <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+              <p className="text-sm font-medium">{validationErrors.items}</p>
             </div>
           </Card>
-        </div>
-
-        <div className="space-y-4">
-          {validationErrors?.items ? (
-            <Card className="p-4 bg-red-50 border-red-200">
-              <div className="flex gap-2 items-start text-red-700">
-                <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                <p className="text-sm font-medium">{validationErrors.items}</p>
-              </div>
-            </Card>
-          ) : result ? (
-            <>
-              <Card className="p-4 bg-gray-50 border-gray-200 mb-4 flex justify-between items-center">
-                <span className="font-medium text-text-secondary">{t('pricing.totalBundleHpp')}</span>
-                <span className="text-lg font-bold text-text-primary">
+        ) : result ? (
+          <div className="space-y-4">
+            <div className="bg-zinc-50 border border-zinc-100 rounded-xl px-4 py-2 mt-2">
+              <div className="pricing-result-metric">
+                <span className="text-xs text-text-secondary">{t('pricing.totalBundleHpp')}</span>
+                <span className="text-sm font-bold text-text-primary">
                   {formatCurrency(result.baseTotalHpp, lang, currency)}
                 </span>
-              </Card>
+              </div>
 
               {result.discountAmount > 0 && (
-                <Card className="p-4 bg-green-50 border-green-200 mb-4 flex justify-between items-center">
-                  <span className="font-medium text-green-700">Diskon Paket</span>
-                  <span className="font-bold text-green-700">
+                <div className="pricing-result-metric">
+                  <span className="text-xs text-status-good font-semibold">Diskon Paket</span>
+                  <span className="text-sm font-bold text-status-good">
                     -{formatCurrency(result.discountAmount, lang, currency)}
                   </span>
-                </Card>
+                </div>
               )}
+            </div>
 
-              <PricingResultSummary result={result} />
-            </>
-          ) : null}
+            <PricingResultSummary result={result} />
+          </div>
+        ) : (
+          <Card className="p-8 text-center bg-gray-50 border-gray-100 border-dashed rounded-2xl">
+            <p className="text-sm text-text-tertiary">Tambahkan item untuk melihat hasil simulasi</p>
+          </Card>
+        )}
 
-          <Button 
-            className="w-full py-3" 
-            onClick={handleSave}
-            disabled={!result || items.length === 0}
-          >
-            {t('pricing.saveSimulation')}
-          </Button>
-        </div>
+        <Button 
+          className="w-full py-3 mt-2" 
+          onClick={handleSave}
+          disabled={!result || items.length === 0}
+        >
+          {t('pricing.saveSimulation')}
+        </Button>
       </div>
     </div>
   );

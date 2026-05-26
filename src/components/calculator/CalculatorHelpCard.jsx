@@ -38,6 +38,7 @@ export const CalculatorHelpCard = ({ t }) => {
               <button
                 type="button"
                 onClick={() => toggleItem(idx)}
+                aria-expanded={isOpen}
                 className="w-full flex justify-between items-center text-left py-2 font-bold text-xs text-text-primary hover:text-brand-primary transition-colors focus:outline-none"
               >
                 <span>{item.title}</span>

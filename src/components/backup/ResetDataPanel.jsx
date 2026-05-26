@@ -7,6 +7,7 @@ import { Trash2, AlertOctagon } from 'lucide-react';
 import { ResetModuleCard } from './ResetModuleCard';
 import { StrongConfirmDialog } from './StrongConfirmDialog';
 import { ConfirmDialog } from '../ui/ConfirmDialog';
+import { Button } from '../ui/Button';
 
 export const ResetDataPanel = ({ modules, onResetModule, onResetAll, onResetDraft }) => {
   const { t } = useLanguage();
@@ -50,12 +51,17 @@ export const ResetDataPanel = ({ modules, onResetModule, onResetAll, onResetDraf
               </p>
             </div>
           </div>
-          <button 
-            className="w-full py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-bold transition-colors"
-            onClick={() => setDemoConfirmOpen(true)}
-          >
-            {t('settings.clearDemoData')}
-          </button>
+          <div className="flex">
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="border-red-200 text-status-loss hover:bg-status-loss/5"
+              onClick={() => setDemoConfirmOpen(true)}
+              leftIcon={<Trash2 size={16} />}
+            >
+              {t('settings.clearDemoData')}
+            </Button>
+          </div>
         </Card>
       )}
 
@@ -109,12 +115,15 @@ export const ResetDataPanel = ({ modules, onResetModule, onResetAll, onResetDraf
               </p>
             </div>
           </div>
-          <button 
-            className="w-full py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold transition-colors"
+          <Button 
+            variant="danger" 
+            size="md"
+            fullWidth
             onClick={() => setStrongConfirmOpen(true)}
+            leftIcon={<Trash2 size={16} />}
           >
             {t('resetAllData', 'HAPUS SEMUA DATA')}
-          </button>
+          </Button>
         </div>
       </Card>
 

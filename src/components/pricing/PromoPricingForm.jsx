@@ -68,7 +68,7 @@ export const PromoPricingForm = ({ sourceData, onSave }) => {
 
   if (!sourceData || !sourceData.hppPerUnit) {
     return (
-      <Card className="p-8 text-center bg-gray-50 border-gray-100 border-dashed">
+      <Card className="p-8 text-center bg-gray-50 border-gray-100 border-dashed rounded-2xl">
         <p className="text-text-tertiary">{t('pricing.sourceRequired')}</p>
       </Card>
     );
@@ -77,125 +77,128 @@ export const PromoPricingForm = ({ sourceData, onSave }) => {
   const isBogo = formData.promoType === 'bogo';
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-4">
-          <Card className="p-5 border-gray-200">
-            <h3 className="text-sm font-semibold text-text-primary mb-4">Pengaturan Promo</h3>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-semibold text-text-primary mb-2">
-                  {t('pricing.promoType')}
-                </label>
-                <select
-                  name="promoType"
-                  value={formData.promoType}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-primary outline-none"
-                >
-                  <option value="percent">{t('pricing.percentDiscount')}</option>
-                  <option value="fixed">{t('pricing.fixedDiscount')}</option>
-                  <option value="voucher">{t('pricing.voucherSubsidy')}</option>
-                  <option value="bogo">{t('pricing.bogo')}</option>
-                </select>
-              </div>
+    <div className="pricing-grid">
+      {/* Left Column: Form Inputs */}
+      <div className="space-y-6">
+        <div className="pricing-step-card">
+          <h3 className="font-bold text-text-primary text-base mb-1">1. Pengaturan Promo</h3>
+          <p className="text-xs text-text-secondary mb-4">Tentukan jenis promo diskon atau BOGO (Beli X Gratis Y) yang akan disimulasikan.</p>
+          
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-semibold text-text-primary mb-2">
+                {t('pricing.promoType')}
+              </label>
+              <select
+                name="promoType"
+                value={formData.promoType}
+                onChange={handleChange}
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-primary outline-none"
+              >
+                <option value="percent">{t('pricing.percentDiscount')}</option>
+                <option value="fixed">{t('pricing.fixedDiscount')}</option>
+                <option value="voucher">{t('pricing.voucherSubsidy')}</option>
+                <option value="bogo">{t('pricing.bogo')}</option>
+              </select>
+            </div>
 
+            <Input
+              label={t('pricing.currentSellingPrice')}
+              name="normalSellingPrice"
+              type="number"
+              value={formData.normalSellingPrice || ''}
+              onChange={handleChange}
+            />
+            
+            {!isBogo && (
               <Input
-                label={t('pricing.currentSellingPrice')}
-                name="normalSellingPrice"
+                label={t('pricing.quantity')}
+                name="quantity"
                 type="number"
-                value={formData.normalSellingPrice || ''}
+                value={formData.quantity || ''}
+                onChange={handleChange}
+                min="1"
+              />
+            )}
+
+            {formData.promoType === 'percent' && (
+              <Input
+                label={t('pricing.percentDiscount') + " (%)"}
+                name="discountPercent"
+                type="number"
+                value={formData.discountPercent || ''}
                 onChange={handleChange}
               />
-              
-              {!isBogo && (
+            )}
+
+            {formData.promoType === 'fixed' && (
+              <Input
+                label={t('pricing.fixedDiscount')}
+                name="discountFixed"
+                type="number"
+                value={formData.discountFixed || ''}
+                onChange={handleChange}
+              />
+            )}
+
+            {formData.promoType === 'voucher' && (
+              <Input
+                label={t('pricing.voucherSubsidy')}
+                name="sellerVoucherSubsidy"
+                type="number"
+                value={formData.sellerVoucherSubsidy || ''}
+                onChange={handleChange}
+              />
+            )}
+
+            {isBogo && (
+              <div className="grid grid-cols-2 gap-3">
                 <Input
-                  label={t('pricing.quantity')}
-                  name="quantity"
+                  label={t('pricing.bogoPaidQty')}
+                  name="bogoPaidQty"
                   type="number"
-                  value={formData.quantity || ''}
+                  value={formData.bogoPaidQty || ''}
                   onChange={handleChange}
                   min="1"
                 />
-              )}
-
-              {formData.promoType === 'percent' && (
                 <Input
-                  label={t('pricing.percentDiscount')}
-                  name="discountPercent"
+                  label={t('pricing.bogoFreeQty')}
+                  name="bogoFreeQty"
                   type="number"
-                  value={formData.discountPercent || ''}
+                  value={formData.bogoFreeQty || ''}
                   onChange={handleChange}
+                  min="1"
                 />
-              )}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
 
-              {formData.promoType === 'fixed' && (
-                <Input
-                  label={t('pricing.fixedDiscount')}
-                  name="discountFixed"
-                  type="number"
-                  value={formData.discountFixed || ''}
-                  onChange={handleChange}
-                />
-              )}
-
-              {formData.promoType === 'voucher' && (
-                <Input
-                  label={t('pricing.voucherSubsidy')}
-                  name="sellerVoucherSubsidy"
-                  type="number"
-                  value={formData.sellerVoucherSubsidy || ''}
-                  onChange={handleChange}
-                />
-              )}
-
-              {isBogo && (
-                <div className="grid grid-cols-2 gap-3">
-                  <Input
-                    label={t('pricing.bogoPaidQty')}
-                    name="bogoPaidQty"
-                    type="number"
-                    value={formData.bogoPaidQty || ''}
-                    onChange={handleChange}
-                    min="1"
-                  />
-                  <Input
-                    label={t('pricing.bogoFreeQty')}
-                    name="bogoFreeQty"
-                    type="number"
-                    value={formData.bogoFreeQty || ''}
-                    onChange={handleChange}
-                    min="1"
-                  />
-                </div>
-              )}
+      {/* Right Column: Sticky Result Preview */}
+      <div className="pricing-result-panel">
+        <h3 className="font-bold text-text-primary text-base">2. Hasil Simulasi Promo</h3>
+        
+        {result && (
+          <div className="p-4 bg-brand-soft border border-brand-primary/20 rounded-xl">
+            <div className="text-xs font-semibold text-brand-primary mb-1">
+              {isBogo ? t('pricing.effectivePrice') : t('pricing.finalPrice')}
             </div>
-          </Card>
-        </div>
+            <div className="text-xl font-extrabold text-brand-primary">
+              {formatCurrency(isBogo ? result.effectiveRevenuePerUnit : result.finalPrice, lang, currency)}
+            </div>
+          </div>
+        )}
 
-        <div className="space-y-4">
-          {result && (
-            <Card className="p-4 bg-brand-soft border-brand-primary/20 mb-4">
-              <div className="text-sm font-medium text-text-tertiary mb-1">
-                {isBogo ? t('pricing.effectivePrice') : t('pricing.finalPrice')}
-              </div>
-              <div className="text-xl font-bold text-brand-primary">
-                {formatCurrency(isBogo ? result.effectiveRevenuePerUnit : result.finalPrice, lang, currency)}
-              </div>
-            </Card>
-          )}
-
-          <PricingResultSummary result={result} showRecommended={false} />
-          
-          <Button 
-            className="w-full py-3" 
-            onClick={handleSave}
-            disabled={!result}
-          >
-            {t('pricing.saveSimulation')}
-          </Button>
-        </div>
+        <PricingResultSummary result={result} showRecommended={false} />
+        
+        <Button 
+          className="w-full py-3 mt-2" 
+          onClick={handleSave}
+          disabled={!result}
+        >
+          {t('pricing.saveSimulation')}
+        </Button>
       </div>
     </div>
   );

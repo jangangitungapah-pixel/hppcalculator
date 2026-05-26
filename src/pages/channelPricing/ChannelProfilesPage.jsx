@@ -7,7 +7,7 @@ import { ChannelProfileCard } from '../../components/pricing/ChannelProfileCard'
 import { Button } from '../../components/ui/Button';
 import { Toast } from '../../components/ui/Toast';
 import { Card } from '../../components/ui/Card';
-import { Plus, HelpCircle, Store } from 'lucide-react';
+import { Plus, Store } from 'lucide-react';
 import { PageContainer } from '../../components/layout/PageContainer';
 
 export const ChannelProfilesPage = () => {
@@ -30,31 +30,40 @@ export const ChannelProfilesPage = () => {
   };
 
   const handleEdit = (profile) => {
-    // In a full implementation, this would open a modal to edit the profile
     showToast('Fitur edit akan segera hadir', 'info');
   };
 
   return (
-    <PageContainer maxWidth="max-w-4xl">
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <p className="text-text-secondary text-sm">
-            Kelola profil biaya untuk berbagai channel penjualan Anda.
-          </p>
-          <Button variant="primary" size="sm" className="flex items-center gap-2">
-            <Plus className="w-4 h-4" />
-            <span className="hidden sm:inline">Tambah Profil</span>
-          </Button>
+    <PageContainer maxWidth="max-w-5xl">
+      <div className="pricing-page space-y-6">
+        {/* Page Hero */}
+        <div className="pricing-hero">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h1 className="text-2xl font-bold text-text-primary">Profil Channel Penjualan</h1>
+              <p className="text-sm text-text-secondary mt-1">
+                Kelola profil biaya layanan, komisi marketplace, dan pengemasan untuk setiap channel.
+              </p>
+            </div>
+            <Button 
+              variant="primary" 
+              size="sm" 
+              leftIcon={<Plus className="w-4 h-4" />}
+              onClick={() => showToast('Fitur tambah profil mandiri akan segera hadir', 'info')}
+            >
+              Tambah Profil
+            </Button>
+          </div>
         </div>
 
         {!hasProfiles ? (
-          <Card className="p-8 text-center bg-white border-dashed">
+          <div className="pricing-empty-state">
             <div className="w-16 h-16 bg-brand-soft rounded-full flex items-center justify-center mx-auto mb-4">
               <Store className="w-8 h-8 text-brand-primary" />
             </div>
             <h3 className="text-lg font-bold text-text-primary mb-2">Belum ada profil channel</h3>
-            <p className="text-text-tertiary mb-6 max-w-md mx-auto">
-              Muat profil bawaan (preset) untuk mulai menghitung harga jual di berbagai channel seperti GoFood, GrabFood, atau Reseller.
+            <p className="text-text-tertiary mb-6 max-w-sm mx-auto text-sm">
+              Muat profil bawaan (preset) untuk mulai menghitung harga jual di berbagai channel seperti GoFood, GrabFood, atau ShopeeFood.
             </p>
             <Button onClick={() => {
               loadPresetChannelProfiles();
@@ -62,10 +71,10 @@ export const ChannelProfilesPage = () => {
             }}>
               Muat Preset Channel
             </Button>
-          </Card>
+          </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {channelProfiles.map(profile => (
                 <ChannelProfileCard 
                   key={profile.id} 

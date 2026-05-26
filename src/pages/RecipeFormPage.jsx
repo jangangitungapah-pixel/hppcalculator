@@ -209,12 +209,15 @@ export const RecipeFormPage = () => {
   return (
     <PageContainer maxWidth="max-w-3xl">
       <div className="mb-6 flex items-center gap-4">
-        <button 
+        <Button 
+          variant="ghost" 
+          size="icon" 
           onClick={() => navigate('/recipes')}
-          className="p-2 rounded-full hover:bg-surface-muted transition-colors"
+          aria-label={t('common.back', 'Kembali')}
+          className="-ml-2"
         >
           <ArrowLeft className="w-5 h-5 text-text-secondary" />
-        </button>
+        </Button>
         <h1 className="text-2xl font-bold text-text-primary">
           {isEdit ? t('recipes.editRecipe') : t('recipes.createRecipe')}
         </h1>
@@ -340,12 +343,15 @@ export const RecipeFormPage = () => {
                         <option key={u.value} value={u.value}>{u.label}</option>
                       ))}
                     </select>
-                    <button 
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
                       onClick={() => removeIngredient(index)}
-                      className="p-2 text-text-secondary hover:text-status-loss hover:bg-status-loss/10 rounded-lg transition-colors"
+                      aria-label="Hapus Bahan"
+                      className="text-text-secondary hover:text-status-loss"
                     >
                       <Trash2 className="w-5 h-5" />
-                    </button>
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -391,12 +397,15 @@ export const RecipeFormPage = () => {
                         onChange={(e) => updateExtraCost(index, 'amount', e.target.value)}
                       />
                     </div>
-                    <button 
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
                       onClick={() => removeExtraCost(index)}
-                      className="p-2 text-text-secondary hover:text-status-loss hover:bg-status-loss/10 rounded-lg transition-colors"
+                      aria-label="Hapus Biaya Tambahan"
+                      className="text-text-secondary hover:text-status-loss"
                     >
                       <Trash2 className="w-5 h-5" />
-                    </button>
+                    </Button>
                   </div>
                 </div>
               ))}

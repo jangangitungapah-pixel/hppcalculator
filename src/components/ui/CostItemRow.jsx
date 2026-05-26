@@ -2,6 +2,7 @@ import React from 'react';
 import { Input } from './Input';
 import { Select } from './Select';
 import { Trash2 } from 'lucide-react';
+import { Button } from './Button';
 
 export const CostItemRow = ({ 
   item, 
@@ -63,15 +64,17 @@ export const CostItemRow = ({
         
         <div className="w-10 flex justify-end shrink-0">
           {canRemove && (
-            <button 
+            <Button 
               type="button"
+              variant="ghost"
+              size="icon"
               onClick={() => onRemove(index)}
-              className="p-2 text-text-muted opacity-0 group-hover:opacity-100 focus:opacity-100 hover:text-status-loss hover:bg-status-lossBg rounded-lg transition-all"
+              className="text-text-muted opacity-0 group-hover:opacity-100 focus:opacity-100 hover:text-status-loss hover:bg-status-lossBg transition-all w-8 h-8 rounded-lg"
               title={t('calculator.removeCost')}
               aria-label={t('calculator.removeCost')}
             >
               <Trash2 className="w-4 h-4" />
-            </button>
+            </Button>
           )}
         </div>
       </div>

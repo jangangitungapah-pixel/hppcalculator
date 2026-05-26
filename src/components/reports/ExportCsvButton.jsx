@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Download } from 'lucide-react';
 import { useLanguage } from '../../hooks/useLanguage';
 import { useToast } from '../../hooks/useToast';
+import { Button } from '../ui/Button';
 
 export const ExportCsvButton = ({ onExport, disabled }) => {
   const { t } = useLanguage();
@@ -23,18 +24,15 @@ export const ExportCsvButton = ({ onExport, disabled }) => {
   };
 
   return (
-    <button
+    <Button
+      variant="outline"
+      size="sm"
       onClick={handleExport}
-      disabled={disabled || isExporting}
-      className={`
-        flex items-center gap-2 px-3 py-1.5 text-xs font-semibold rounded-md transition-colors
-        ${disabled || isExporting
-          ? 'bg-surface-muted text-text-tertiary cursor-not-allowed'
-          : 'bg-white border border-border text-text-secondary hover:text-brand-primary hover:border-brand-primary/30 shadow-sm'}
-      `}
+      disabled={disabled}
+      loading={isExporting}
+      leftIcon={<Download className="w-4 h-4" />}
     >
-      <Download className={`w-4 h-4 ${isExporting ? 'animate-pulse' : ''}`} />
-      <span>{isExporting ? '...' : t('reports.exportCsv')}</span>
-    </button>
+      {t('reports.exportCsv')}
+    </Button>
   );
 };

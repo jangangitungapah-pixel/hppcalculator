@@ -59,34 +59,42 @@ export const CostItemsSection = ({
         {/* Quick Cost templates */}
         <div className="cost-template-chips">
           <span className="text-xs font-bold text-text-secondary self-center mr-1">Shortcut:</span>
-          <button 
+          <Button 
             type="button" 
-            className="cost-template-chip"
+            variant="soft"
+            size="xs"
+            className="rounded-lg text-text-secondary hover:text-brand-primary"
             onClick={() => onAddWithCategory('Bahan', t('calculator.costDefaultIngredients', 'Biaya Bahan'))}
           >
             + Bahan Baku
-          </button>
-          <button 
+          </Button>
+          <Button 
             type="button" 
-            className="cost-template-chip"
+            variant="soft"
+            size="xs"
+            className="rounded-lg text-text-secondary hover:text-brand-primary"
             onClick={() => onAddWithCategory('Kemasan', t('calculator.costDefaultPackaging', 'Biaya Kemasan'))}
           >
             + Kemasan
-          </button>
-          <button 
+          </Button>
+          <Button 
             type="button" 
-            className="cost-template-chip"
+            variant="soft"
+            size="xs"
+            className="rounded-lg text-text-secondary hover:text-brand-primary"
             onClick={() => onAddWithCategory('Tenaga Kerja', t('calculator.costDefaultLabor', 'Biaya Tenaga Kerja'))}
           >
             + Tenaga Kerja
-          </button>
-          <button 
+          </Button>
+          <Button 
             type="button" 
-            className="cost-template-chip"
+            variant="soft"
+            size="xs"
+            className="rounded-lg text-text-secondary hover:text-brand-primary"
             onClick={() => onAddWithCategory('Operasional', t('calculator.costDefaultOperational', 'Biaya Operasional'))}
           >
             + Operasional
-          </button>
+          </Button>
         </div>
       </div>
     </div>

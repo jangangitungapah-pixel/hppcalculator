@@ -14,12 +14,14 @@ export const ReportTabs = ({ activeTab, onChange }) => {
 
   return (
     <div className="w-full overflow-x-auto hide-scrollbar border-b border-border mb-6">
-      <div className="flex px-1 min-w-max">
+      <div className="flex px-1 min-w-max" role="tablist" aria-label="Laporan Tabs">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
           return (
             <button
               key={tab.id}
+              role="tab"
+              aria-selected={isActive}
               onClick={() => onChange(tab.id)}
               className={`
                 px-4 py-3 text-sm font-semibold whitespace-nowrap transition-colors relative

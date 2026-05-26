@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card } from '../ui/Card';
+import { Button } from '../ui/Button';
 import { useLanguage } from '../../hooks/useLanguage';
 import { AlertCircle, ArrowUpCircle, Tag, Store, Settings, ArrowRight } from 'lucide-react';
 
@@ -54,12 +55,15 @@ export const RecommendationCard = ({ recommendation }) => {
       </div>
       
       {actionRoute && (
-        <button 
+        <Button 
+          variant="ghost"
+          size="sm"
           onClick={() => navigate(actionRoute)}
-          className={`shrink-0 w-full sm:w-auto mt-2 sm:mt-0 px-3 py-2 rounded-lg text-xs font-bold flex items-center justify-center sm:justify-start gap-1 transition-colors ${styles.btn}`}
+          className={`shrink-0 w-full sm:w-auto mt-2 sm:mt-0 font-bold ${styles.btn}`}
+          rightIcon={<ArrowRight className="w-3 h-3" />}
         >
-          {actionLabel} <ArrowRight className="w-3 h-3" />
-        </button>
+          {actionLabel}
+        </Button>
       )}
     </Card>
   );

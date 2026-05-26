@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../hooks/useLanguage';
 import { Sparkles, ChevronRight } from 'lucide-react';
 import { FadeIn } from '../motion/FadeIn';
+import { Button } from '../ui/Button';
 
 export const DashboardTipsCard = ({ hasAnyData }) => {
   const { t } = useLanguage();
@@ -20,13 +21,15 @@ export const DashboardTipsCard = ({ hasAnyData }) => {
           <p className="dashboard-tip-message">
             {t('dashboard.beginnerTip')}
           </p>
-          <div 
-            className="dashboard-tip-action"
+          <Button
+            variant="link"
+            size="sm"
             onClick={() => navigate(hasAnyData ? '/reports' : '/calculator')}
+            className="dashboard-tip-action p-0 h-auto border-none inline-flex items-center text-xs font-bold text-brand-primary"
+            rightIcon={<ChevronRight className="w-3.5 h-3.5" />}
           >
-            <span>{hasAnyData ? 'Lihat Laporan Bisnis' : 'Mulai Hitung HPP'}</span>
-            <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
-          </div>
+            {hasAnyData ? 'Lihat Laporan Bisnis' : 'Mulai Hitung HPP'}
+          </Button>
         </div>
       </div>
     </FadeIn>

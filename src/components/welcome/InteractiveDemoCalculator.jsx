@@ -254,20 +254,13 @@ export const InteractiveDemoCalculator = () => {
         <button
           onClick={handleOpenInFullCalculator}
           aria-label={t('welcome.demoSaveDraft')}
-          className="group relative w-full inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-2xl text-sm font-extrabold text-white bg-gradient-to-r from-[#FF6A00] to-[#FF8C42] border border-[#FF6A00]/30 shadow-md shadow-brand-primary/20 hover:shadow-lg hover:shadow-brand-primary/30 hover:scale-[1.015] active:scale-[0.985] transition-all duration-300 overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/60 focus-visible:ring-offset-2 cursor-pointer tracking-wide"
+          className="instant-calculator-primary-cta"
         >
-          {/* Shimmer overlay */}
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-          />
-          <span className="relative z-10 flex items-center gap-2">
-            {t('welcome.demoSaveDraft')}
-            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" />
-          </span>
+          <span>{t('welcome.demoSaveDraft')}</span>
+          <ArrowRight className="instant-calculator-primary-cta-icon shrink-0" />
         </button>
-        <p className="text-center text-[10px] text-text-muted font-medium leading-snug px-2">
-          {t('welcome.demoOpenHint', 'Semua data dari widget ini akan langsung terisi di kalkulator penuh.')}
+        <p className="instant-calculator-hint">
+          {t('welcome.demoOpenHint')}
         </p>
       </div>
     </div>

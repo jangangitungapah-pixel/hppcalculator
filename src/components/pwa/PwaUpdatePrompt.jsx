@@ -16,7 +16,7 @@ export const PwaUpdatePrompt = () => {
         message: t('pwa.updateAvailableBody'),
         action: {
           label: t('pwa.refresh'),
-          onClick: () => applyUpdate()
+          onClick: () => applyUpdate(true)
         },
         duration: 30000 // keep it longer so user sees it
       });

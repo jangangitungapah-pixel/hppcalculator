@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BarChart3, ChevronRight } from 'lucide-react';
 import { FadeIn } from '../motion/FadeIn';
+import { Button } from '../ui/Button';
 
 export const DashboardBusinessPulse = ({ summary }) => {
   const navigate = useNavigate();
@@ -76,12 +77,15 @@ export const DashboardBusinessPulse = ({ summary }) => {
               <span>Rugi ({summary.lossCount || 0})</span>
             </div>
           </div>
-          <button 
-            onClick={() => navigate('/reports')} 
-            className="text-xs text-brand-primary font-bold hover:text-brand-primary-hover flex items-center gap-1 cursor-pointer bg-transparent border-none p-0"
+          <Button 
+            variant="link"
+            size="sm"
+            className="text-xs font-bold"
+            onClick={() => navigate('/reports')}
+            iconRight={<ChevronRight className="w-3.5 h-3.5" />}
           >
-            Laporan Detail <ChevronRight className="w-3.5 h-3.5" />
-          </button>
+            Laporan Detail
+          </Button>
         </div>
       </div>
     </FadeIn>
