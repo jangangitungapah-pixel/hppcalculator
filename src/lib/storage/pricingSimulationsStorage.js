@@ -52,6 +52,18 @@ export const deleteAllPricingSimulations = () => {
 };
 
 export const loadDemoPricingSimulations = (demoSimulations) => {
-  const simulations = getPricingSimulations();
-  savePricingSimulations([...simulations, ...demoSimulations]);
+  const current = getPricingSimulations();
+  const userSimulations = current.filter(s => s.source !== 'demo');
+  const newDemo = demoSimulations.map(s => ({
+    ...s,
+    source: 'demo'
+  }));
+  savePricingSimulations([...newDemo, ...userSimulations]);
+};
+
+export const clearDemoPricingSimulations = () => {
+  const current = getPricingSimulations();
+  const userSimulations = current.filter(s => s.source !== 'demo');
+  savePricingSimulations(userSimulations);
+  return userSimulations;
 };

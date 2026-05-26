@@ -68,6 +68,13 @@ export const loadDemoRecipes = (demoRecipes, ingredients = []) => {
   return updated;
 };
 
+export const clearDemoRecipes = () => {
+  const current = getRecipes();
+  const userRecipes = current.filter(r => r.source !== 'demo');
+  setScopedJson(STORAGE_KEYS.RECIPES, userRecipes);
+  return userRecipes;
+};
+
 export const hasRecipes = () => {
   return getRecipes().length > 0;
 };

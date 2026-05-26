@@ -4,6 +4,7 @@ import { Plus, Search, ArchiveRestore, BookOpen } from 'lucide-react';
 import { PageContainer } from '../components/layout/PageContainer';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
+import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { useLanguage } from '../hooks/useLanguage';
 import { useRecipes } from '../hooks/useRecipes';
 import { useIngredients } from '../hooks/useIngredients';
@@ -18,14 +19,25 @@ export const RecipesPage = () => {
   const navigate = useNavigate();
   const { recipes, loadDemoRecipes } = useRecipes();
   const { ingredients } = useIngredients();
-  const { settings } = useAppData();
+  const { settings, loadDemoBusinessLibrary } = useAppData();
   const { addToast } = useToast();
   
   const [searchQuery, setSearchQuery] = useState('');
+  const [showDependencyDialog, setShowDependencyDialog] = useState(false);
 
   const handleLoadDemo = () => {
-    loadDemoRecipes(demoRecipes, demoIngredients);
-    addToast({ type: 'success', title: t('toasts.demoRecipesLoaded') });
+    if (ingredients.length === 0) {
+      setShowDependencyDialog(true);
+    } else {
+      loadDemoRecipes(demoRecipes, demoIngredients);
+      addToast({ type: 'success', title: t('toasts.demoRecipesLoaded') });
+    }
+  };
+
+  const handleConfirmLoadBusinessLibrary = () => {
+    loadDemoBusinessLibrary();
+    addToast({ type: 'success', title: t('toasts.demoLoadedTitle') });
+    setShowDependencyDialog(false);
   };
 
   const filteredRecipes = recipes.filter(r => 
@@ -123,6 +135,13 @@ export const RecipesPage = () => {
           <p className="text-text-secondary max-w-md mx-auto mb-8">
             {t('recipes.emptyBody')}
           </p>
+          
+          {ingredients.length === 0 && (
+            <div className="mb-8 p-4 bg-amber-50 border border-amber-200 text-amber-800 rounded-xl text-sm max-w-md text-left mx-auto">
+              <span className="font-semibold">{t('recipes.dependencyWarningTitle')}:</span> {t('recipes.dependencyWarningBody')}
+            </div>
+          )}
+
           <div className="flex flex-col sm:flex-row gap-4">
             <Button onClick={() => {
               if (ingredients.length === 0) {
@@ -142,6 +161,16 @@ export const RecipesPage = () => {
           </div>
         </div>
       )}
+
+      <ConfirmDialog
+        open={showDependencyDialog}
+        onCancel={() => setShowDependencyDialog(false)}
+        onConfirm={handleConfirmLoadBusinessLibrary}
+        title={t('recipes.dependencyWarningTitle')}
+        description={t('recipes.dependencyWarningBody')}
+        confirmLabel={t('common.confirm')}
+        cancelLabel={t('common.cancel')}
+      />
     </PageContainer>
   );
 };

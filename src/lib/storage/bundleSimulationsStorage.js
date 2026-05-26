@@ -66,3 +66,10 @@ export const deleteBundleSimulation = (id) => {
 export const deleteAllBundleSimulations = () => {
   saveBundleSimulations([]);
 };
+
+export const clearDemoBundleSimulations = () => {
+  const current = getBundleSimulations();
+  const userSimulations = current.filter(s => s.source !== 'demo');
+  saveBundleSimulations(userSimulations);
+  return userSimulations;
+};

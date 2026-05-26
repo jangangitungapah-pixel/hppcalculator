@@ -67,6 +67,13 @@ export const loadDemoIngredients = (demoIngredients) => {
   return updated;
 };
 
+export const clearDemoIngredients = () => {
+  const current = getIngredients();
+  const userIngredients = current.filter(ing => ing.source !== 'demo');
+  setScopedJson(STORAGE_KEYS.INGREDIENTS, userIngredients);
+  return userIngredients;
+};
+
 export const hasIngredients = () => {
   return getIngredients().length > 0;
 };

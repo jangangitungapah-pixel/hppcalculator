@@ -67,6 +67,13 @@ export const loadDemoProducts = (demoProducts) => {
   return updated;
 };
 
+export const clearDemoProducts = () => {
+  const current = getProducts();
+  const userProducts = current.filter(p => p.source !== 'demo');
+  setScopedJson(STORAGE_KEYS.PRODUCTS, userProducts);
+  return userProducts;
+};
+
 export const hasProducts = () => {
   return getProducts().length > 0;
 };

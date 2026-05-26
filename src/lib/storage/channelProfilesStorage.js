@@ -74,17 +74,21 @@ export const loadPresetChannelProfiles = () => {
 };
 
 export const loadDemoChannelProfiles = (demoProfiles) => {
-  const profiles = getChannelProfiles();
+  const current = getChannelProfiles();
+  const userProfiles = current.filter(p => p.source !== 'demo');
   
-  // Combine, avoiding strict duplicates by name just in case
-  const existingNames = profiles.map(p => p.name);
-  const newDemo = demoProfiles.filter(d => !existingNames.includes(d.name)).map(d => ({
+  const newDemo = demoProfiles.map(d => ({
     ...d,
-    id: crypto.randomUUID(),
+    id: d.id || crypto.randomUUID(),
     source: 'demo'
   }));
   
-  if (newDemo.length > 0) {
-    saveChannelProfiles([...profiles, ...newDemo]);
-  }
+  saveChannelProfiles([...newDemo, ...userProfiles]);
+};
+
+export const clearDemoChannelProfiles = () => {
+  const current = getChannelProfiles();
+  const userProfiles = current.filter(p => p.source !== 'demo');
+  saveChannelProfiles(userProfiles);
+  return userProfiles;
 };

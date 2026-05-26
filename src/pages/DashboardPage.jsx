@@ -23,7 +23,7 @@ import { DashboardNewProductCta } from '../components/dashboard/DashboardNewProd
 export const DashboardPage = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
-  const { loadDemoData } = useAppData();
+  const { loadCompleteDemoWorkspace } = useAppData();
   const { 
     summary,
     recommendations,
@@ -33,7 +33,7 @@ export const DashboardPage = () => {
   const { addToast } = useToast();
 
   const handleLoadDemo = () => {
-    loadDemoData();
+    loadCompleteDemoWorkspace();
     addToast({
       type: 'success',
       title: t('toasts.demoLoadedTitle'),

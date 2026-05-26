@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useCallback } from 'react';
 import * as storage from '../lib/storage';
 import { mockCalculations } from '../data/mockCalculations';
+import * as demoService from '../lib/demo/demoDataService';
 
 export const AppDataContext = createContext(null);
 
@@ -66,9 +67,37 @@ export const AppDataProvider = ({ children }) => {
   }, [refreshData]);
 
   const loadDemoData = useCallback(() => {
-    storage.loadDemoCalculations(mockCalculations);
+    demoService.loadCompleteDemoWorkspace();
     refreshData();
   }, [refreshData]);
+
+  const loadDemoCalculationsOnly = useCallback(() => {
+    demoService.loadDemoCalculationsOnly();
+    refreshData();
+  }, [refreshData]);
+
+  const loadDemoBusinessLibrary = useCallback(() => {
+    demoService.loadDemoBusinessLibrary();
+    refreshData();
+  }, [refreshData]);
+
+  const loadCompleteDemoWorkspace = useCallback(() => {
+    demoService.loadCompleteDemoWorkspace();
+    refreshData();
+  }, [refreshData]);
+
+  const clearDemoDataOnly = useCallback(() => {
+    demoService.clearDemoDataOnly();
+    refreshData();
+  }, [refreshData]);
+
+  const getDemoDataSummary = useCallback(() => {
+    return demoService.getDemoDataSummary();
+  }, []);
+
+  const hasDemoData = useCallback(() => {
+    return demoService.hasDemoData();
+  }, []);
 
   const updateSettings = useCallback((partialSettings) => {
     storage.updateSettings(partialSettings);
@@ -266,6 +295,12 @@ export const AppDataProvider = ({ children }) => {
     deleteCalculation,
     deleteAllCalculations,
     loadDemoData,
+    loadDemoCalculationsOnly,
+    loadDemoBusinessLibrary,
+    loadCompleteDemoWorkspace,
+    clearDemoDataOnly,
+    getDemoDataSummary,
+    hasDemoData,
     updateSettings,
     resetSettings,
     saveDraft,

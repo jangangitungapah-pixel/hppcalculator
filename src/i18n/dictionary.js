@@ -138,7 +138,10 @@ export const dictionary = {
       importDataFuture: "Impor Data (Akan Datang)",
       deleteAllData: "Hapus Semua Data",
       deleteAllDataConfirmTitle: "Hapus Semua Data?",
-      deleteAllDataConfirmBody: "Peringatan: Semua perhitungan dan riwayat akan dihapus secara permanen!"
+      deleteAllDataConfirmBody: "Peringatan: Semua perhitungan dan riwayat akan dihapus secara permanen!",
+      clearDemoData: "Bersihkan Data Demo",
+      clearDemoDataConfirmTitle: "Bersihkan Data Demo?",
+      clearDemoDataConfirmBody: "Semua data dengan label Demo (Bahan baku, resep, produk, kalkulasi, profil, simulasi) akan dihapus secara permanen. Data buatan Anda sendiri TIDAK akan dihapus."
     },
     toasts: {
       calculationSavedTitle: "Tersimpan!",
@@ -162,6 +165,7 @@ export const dictionary = {
       demoRecipesLoaded: "Demo Resep Dimuat",
       sentToCalculator: "Dikirim ke Kalkulator Cepat",
       scaleApplied: "Skala Diterapkan",
+      demoClearedToast: "Semua data demo telah dibersihkan."
     },
     errors: {
       requiredProductName: "Nama produk wajib diisi.",
@@ -220,6 +224,8 @@ export const dictionary = {
       sellableQuantity: "Jumlah Bisa Dijual",
       suggestedPrices: "Rekomendasi Harga Jual",
       loadDemoRecipes: "Muat Resep Demo",
+      dependencyWarningTitle: "Bahan Baku Kosong",
+      dependencyWarningBody: "Resep demo membutuhkan data bahan baku agar HPP terhitung dengan benar. Muat seluruh Library Bisnis Demo (Bahan Baku + Resep + Produk)?",
       emptyTitle: "Belum Ada Resep",
       emptyBody: "Buat resep dari bahan bakumu untuk mengetahui modal pastinya.",
       sendToCalculator: "Kirim ke Hitung Cepat",
@@ -243,6 +249,8 @@ export const dictionary = {
       sendToCalculator: "Kirim ke Hitung Cepat",
       deleteConfirmTitle: "Hapus Produk?",
       deleteConfirmBody: "Produk ini akan dihapus permanen.",
+      dependencyWarningTitle: "Resep Kosong",
+      dependencyWarningBody: "Produk demo membutuhkan data resep agar HPP terhitung dengan benar. Muat seluruh Library Bisnis Demo (Bahan Baku + Resep + Produk)?",
     },
     units: {
       gram: "Gram (g)",
@@ -714,7 +722,10 @@ export const dictionary = {
       importDataFuture: "Import Data (Coming Soon)",
       deleteAllData: "Delete All Data",
       deleteAllDataConfirmTitle: "Delete All Data?",
-      deleteAllDataConfirmBody: "Warning: All calculations and history will be permanently deleted!"
+      deleteAllDataConfirmBody: "Warning: All calculations and history will be permanently deleted!",
+      clearDemoData: "Clear Demo Data Only",
+      clearDemoDataConfirmTitle: "Clear Demo Data Only?",
+      clearDemoDataConfirmBody: "All data labeled as Demo (Ingredients, recipes, products, calculations, profiles, simulations) will be permanently deleted. Your own created data will NOT be deleted."
     },
     toasts: {
       calculationSavedTitle: "Saved!",
@@ -738,6 +749,7 @@ export const dictionary = {
       demoRecipesLoaded: "Demo Recipes Loaded",
       sentToCalculator: "Sent to Quick Calculator",
       scaleApplied: "Scale Applied",
+      demoClearedToast: "All demo data has been cleared."
     },
     errors: {
       requiredProductName: "Product name is required.",
@@ -796,6 +808,8 @@ export const dictionary = {
       sellableQuantity: "Sellable Quantity",
       suggestedPrices: "Suggested Selling Prices",
       loadDemoRecipes: "Load Demo Recipes",
+      dependencyWarningTitle: "No Ingredients Found",
+      dependencyWarningBody: "Demo recipes require ingredients to calculate cost accurately. Load the entire Demo Business Library (Ingredients + Recipes + Products)?",
       emptyTitle: "No Recipes Yet",
       emptyBody: "Create recipes from your ingredients to know the exact cost.",
       sendToCalculator: "Send to Quick Calculator",
@@ -819,6 +833,8 @@ export const dictionary = {
       sendToCalculator: "Send to Quick Calculator",
       deleteConfirmTitle: "Delete Product?",
       deleteConfirmBody: "This product will be permanently deleted.",
+      dependencyWarningTitle: "No Recipes Found",
+      dependencyWarningBody: "Demo products require recipes to calculate cost accurately. Load the entire Demo Business Library (Ingredients + Recipes + Products)?",
     },
     units: {
       gram: "Gram (g)",

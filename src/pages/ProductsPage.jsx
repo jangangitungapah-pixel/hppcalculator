@@ -16,15 +16,26 @@ export const ProductsPage = () => {
   const { t, language } = useLanguage();
   const navigate = useNavigate();
   const { products, loadDemoProducts, deleteProduct } = useProducts();
-  const { settings, saveDraft } = useAppData();
+  const { settings, saveDraft, recipes, loadDemoBusinessLibrary } = useAppData();
   const { addToast } = useToast();
   
   const [searchQuery, setSearchQuery] = useState('');
   const [deleteId, setDeleteId] = useState(null);
+  const [showDependencyDialog, setShowDependencyDialog] = useState(false);
 
   const handleLoadDemo = () => {
-    loadDemoProducts(demoProducts);
+    if (recipes.length === 0) {
+      setShowDependencyDialog(true);
+    } else {
+      loadDemoProducts(demoProducts);
+      addToast({ type: 'success', title: t('toasts.demoLoadedTitle') });
+    }
+  };
+
+  const handleConfirmLoadBusinessLibrary = () => {
+    loadDemoBusinessLibrary();
     addToast({ type: 'success', title: t('toasts.demoLoadedTitle') });
+    setShowDependencyDialog(false);
   };
 
   const handleSendToCalculator = (e, product) => {
@@ -172,10 +183,21 @@ export const ProductsPage = () => {
           <p className="text-text-secondary max-w-md mx-auto mb-8">
             {t('products.emptyBody')}
           </p>
+          
+          {recipes.length === 0 && (
+            <div className="mb-8 p-4 bg-amber-50 border border-amber-200 text-amber-800 rounded-xl text-sm max-w-md text-left mx-auto">
+              <span className="font-semibold">{t('products.dependencyWarningTitle')}:</span> {t('products.dependencyWarningBody')}
+            </div>
+          )}
+
           <div className="flex flex-col sm:flex-row gap-4">
             <Button onClick={() => navigate('/recipes')}>
               <Package className="w-4 h-4 mr-2" />
               {t('products.createFromRecipe')}
+            </Button>
+            <Button variant="secondary" onClick={handleLoadDemo}>
+              <ArchiveRestore className="w-4 h-4 mr-2" />
+              Load Demo
             </Button>
           </div>
         </div>
@@ -190,6 +212,16 @@ export const ProductsPage = () => {
         confirmLabel={t('common.delete')}
         cancelLabel={t('common.cancel')}
         variant="danger"
+      />
+
+      <ConfirmDialog
+        open={showDependencyDialog}
+        onCancel={() => setShowDependencyDialog(false)}
+        onConfirm={handleConfirmLoadBusinessLibrary}
+        title={t('products.dependencyWarningTitle')}
+        description={t('products.dependencyWarningBody')}
+        confirmLabel={t('common.confirm')}
+        cancelLabel={t('common.cancel')}
       />
     </PageContainer>
   );

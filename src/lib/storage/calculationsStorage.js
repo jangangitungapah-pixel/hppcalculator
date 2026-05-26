@@ -52,7 +52,8 @@ export const deleteAllCalculations = () => {
 };
 
 export const loadDemoCalculations = (mockCalculations) => {
-  const calculations = getSavedCalculations();
+  const current = getSavedCalculations();
+  const userCalculations = current.filter(c => c.source !== 'demo');
   
   // Convert mockCalculations to SavedCalculation format
   const demoCalculations = mockCalculations.map(mock => {
@@ -102,16 +103,20 @@ export const loadDemoCalculations = (mockCalculations) => {
     };
   });
 
-  // Merge avoiding exact ID duplicates
-  const existingIds = new Set(calculations.map(c => c.id));
-  const newDemos = demoCalculations.filter(d => !existingIds.has(d.id));
-  
-  const updatedCalculations = [...newDemos, ...calculations];
+  const updatedCalculations = [...demoCalculations, ...userCalculations];
   
   // Sort by date descending
   updatedCalculations.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   
-  return setScopedJson(STORAGE_KEYS.calculations, updatedCalculations);
+  setScopedJson(STORAGE_KEYS.calculations, updatedCalculations);
+  return updatedCalculations;
+};
+
+export const clearDemoCalculations = () => {
+  const current = getSavedCalculations();
+  const userCalculations = current.filter(c => c.source !== 'demo');
+  setScopedJson(STORAGE_KEYS.calculations, userCalculations);
+  return userCalculations;
 };
 
 export const getCalculationStats = () => {
