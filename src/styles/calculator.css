@@ -1,0 +1,645 @@
+/* 
+  HPP Calculator Page Premium Overhaul Styles
+  Uses design variables from design-tokens.css
+*/
+
+.calculator-shell {
+  min-height: calc(100vh - 120px);
+  background-color: var(--color-background-warm);
+}
+
+.calculator-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .calculator-grid {
+    grid-template-columns: 1.4fr 0.9fr;
+  }
+}
+
+.calculator-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.calculator-side {
+  position: sticky;
+  top: 6.5rem;
+  z-index: 10;
+}
+
+/* 1. Calculator Hero */
+.calculator-hero {
+  position: relative;
+  background: linear-gradient(135deg, var(--color-primary-softer) 0%, #FFF2EA 100%);
+  border: 1px solid rgba(255, 106, 0, 0.12);
+  border-radius: var(--radius-2xl);
+  padding: 2rem;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.calculator-hero-content {
+  position: relative;
+  z-index: 10;
+  max-width: 36rem;
+}
+
+.calculator-hero-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-accent-espresso);
+  letter-spacing: -0.025em;
+  margin-bottom: 0.5rem;
+}
+
+.calculator-hero-title span {
+  color: var(--color-primary);
+}
+
+.calculator-hero-subtitle {
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.calculator-hero-visual {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 8rem;
+  height: 8rem;
+  flex-shrink: 0;
+}
+
+.calculator-hero-orb {
+  position: absolute;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, rgba(255, 106, 0, 0.15) 0%, rgba(255, 126, 103, 0.05) 100%);
+  width: 100%;
+  height: 100%;
+  animation: pulse-glow-calc 4s ease-in-out infinite alternate;
+}
+
+@keyframes pulse-glow-calc {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  100% { transform: scale(1.05); opacity: 1; }
+}
+
+.calculator-hero-icon-wrapper {
+  position: relative;
+  z-index: 2;
+  width: 4rem;
+  height: 4rem;
+  border-radius: var(--radius-xl);
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  border: 1px solid rgba(255, 106, 0, 0.10);
+}
+
+.calculator-hero-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.calculator-hero-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-xs);
+  transition: all var(--duration-fast);
+}
+
+.calculator-hero-pill:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  transform: translateY(-1px);
+}
+
+.calculator-hero-pill::before {
+  content: '';
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary);
+}
+
+.calculator-hero-pill.green::before {
+  background-color: var(--color-secondary);
+}
+
+.calculator-hero-pill.gold::before {
+  background-color: var(--color-accent-gold);
+}
+
+
+/* 2. Step-Based Form Cards */
+.calculator-step-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--duration-normal) var(--ease-premium);
+}
+
+.calculator-step-card:hover {
+  border-color: rgba(255, 106, 0, 0.12);
+  box-shadow: var(--shadow-md);
+}
+
+.calculator-step-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.calculator-step-number {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--color-primary-soft) 0%, rgba(255, 106, 0, 0.12) 100%);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1rem;
+  shrink-0: 0;
+  box-shadow: var(--shadow-xs);
+}
+
+.calculator-step-title-block {
+  flex: 1;
+}
+
+.calculator-step-title {
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: var(--color-accent-espresso);
+  letter-spacing: -0.015em;
+  margin-bottom: 0.25rem;
+}
+
+.calculator-step-helper {
+  font-size: 0.825rem;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+
+/* 3. Cost Rows Overhaul */
+.cost-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.cost-item-row {
+  background-color: var(--color-surface-cream);
+  border: 1.5px solid var(--color-border-soft);
+  border-radius: var(--radius-xl);
+  padding: 0.875rem 1.25rem;
+  transition: all var(--duration-normal) var(--ease-premium);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  position: relative;
+}
+
+.cost-item-row:hover {
+  border-color: rgba(255, 106, 0, 0.2);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+  background-color: var(--color-surface);
+}
+
+@media (min-width: 640px) {
+  .cost-item-row {
+    grid-template-columns: 2fr 1.5fr 1.5fr auto;
+    gap: 1rem;
+    align-items: center;
+    padding-right: 0.5rem;
+  }
+}
+
+.cost-item-field-wrap {
+  width: 100%;
+}
+
+.cost-item-amount-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cost-item-delete {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  transition: all var(--duration-fast);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.cost-item-delete:hover {
+  background-color: var(--color-status-loss-bg);
+  color: var(--color-status-loss);
+}
+
+/* Quick templates chips */
+.cost-template-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--color-border);
+}
+
+.cost-template-chip {
+  background-color: var(--color-background-soft);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-premium);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.cost-template-chip:hover {
+  background-color: var(--color-primary-soft);
+  border-color: var(--color-primary-hover);
+  color: var(--color-primary-active);
+  transform: translateY(-1px);
+}
+
+
+/* 4. Empty Cost State */
+.calculator-empty-cost {
+  padding: 2rem 1.5rem;
+  text-align: center;
+  border: 2px dashed var(--color-border-strong);
+  border-radius: var(--radius-xl);
+  background-color: var(--color-surface-cream);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.calculator-empty-cost-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-full);
+  background-color: var(--color-background-soft);
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.875rem;
+}
+
+
+/* 5. Production Output */
+.production-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .production-grid {
+    grid-template-columns: 1.8fr 1.2fr;
+  }
+}
+
+.production-mini-card {
+  background-color: var(--color-surface-cream);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-xl);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sellable-preview {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1rem;
+  padding: 0.875rem 1.25rem;
+  background-color: var(--color-secondary-soft);
+  border: 1px solid rgba(0, 166, 80, 0.15);
+  border-radius: var(--radius-xl);
+  color: var(--color-secondary-hover);
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+
+/* 6. Selling Price & Warnings */
+.selling-price-card {
+  background-color: var(--color-surface);
+}
+
+.selling-price-hint {
+  font-size: 0.825rem;
+  line-height: 1.4;
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-lg);
+}
+
+.selling-price-hint.loss {
+  background-color: var(--color-status-loss-bg);
+  border: 1px solid rgba(224, 62, 62, 0.15);
+  color: var(--color-status-loss);
+}
+
+.selling-price-hint.low {
+  background-color: var(--color-status-low-bg);
+  border: 1px solid rgba(245, 166, 35, 0.15);
+  color: var(--color-accent-gold);
+}
+
+.selling-price-hint.good {
+  background-color: var(--color-status-good-bg);
+  border: 1px solid rgba(0, 166, 80, 0.15);
+  color: var(--color-secondary);
+}
+
+
+/* 7. Desktop Sticky Result Panel */
+.calculator-result-panel {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-3xl);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-xl);
+  transition: all var(--duration-normal) var(--ease-premium);
+}
+
+.calculator-result-panel:hover {
+  box-shadow: var(--shadow-floating);
+}
+
+.calculator-result-empty {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  min-height: 350px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.calculator-result-hero {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent-coral) 100%);
+  color: var(--color-text-inverse);
+  padding: 1.75rem 1.25rem;
+  border-radius: var(--radius-2xl);
+  text-align: center;
+  box-shadow: var(--shadow-glow-primary);
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.calculator-result-hero.loss {
+  background: linear-gradient(135deg, var(--color-status-loss) 0%, #FF5A5A 100%);
+  box-shadow: 0 0 20px rgba(224, 62, 62, 0.2);
+}
+
+.calculator-result-hero.low {
+  background: linear-gradient(135deg, var(--color-accent-gold) 0%, #FFB638 100%);
+  box-shadow: 0 0 20px rgba(245, 166, 35, 0.2);
+}
+
+.calculator-result-hero.good {
+  background: linear-gradient(135deg, var(--color-secondary) 0%, #29C673 100%);
+  box-shadow: var(--shadow-glow-success);
+}
+
+.calculator-result-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.05) 0, rgba(255, 255, 255, 0.05) 10px, transparent 10px, transparent 20px);
+  pointer-events: none;
+}
+
+.calculator-result-number {
+  font-size: 2.75rem;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  margin-top: 0.25rem;
+}
+
+.calculator-result-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.875rem;
+  margin-bottom: 1.5rem;
+}
+
+.calculator-suggested-prices {
+  margin-bottom: 1.5rem;
+}
+
+.calculator-suggested-price-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.875rem 1rem;
+  border-radius: var(--radius-xl);
+  border: 1.5px solid var(--color-border-soft);
+  background-color: var(--color-surface-cream);
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+  transition: all var(--duration-fast);
+}
+
+.calculator-suggested-price-card:hover {
+  border-color: rgba(255, 106, 0, 0.2);
+  transform: translateX(2px);
+}
+
+.calculator-suggested-price-card.ideal {
+  background-color: var(--color-status-okay-bg);
+  border-color: rgba(2, 136, 209, 0.12);
+  color: var(--color-status-okay);
+}
+
+.calculator-suggested-price-card.ideal:hover {
+  border-color: rgba(2, 136, 209, 0.3);
+}
+
+.calculator-suggested-price-card.premium {
+  background-color: var(--color-status-good-bg);
+  border-color: rgba(0, 166, 80, 0.12);
+  color: var(--color-secondary-hover);
+}
+
+.calculator-suggested-price-card.premium:hover {
+  border-color: rgba(0, 166, 80, 0.3);
+}
+
+
+/* 8. Desktop Form Actions */
+.calculator-form-actions {
+  display: flex;
+  gap: 0.875rem;
+  margin-top: 1.5rem;
+}
+
+.calculator-primary-action {
+  flex: 2;
+}
+
+.calculator-secondary-action {
+  flex: 1;
+}
+
+
+/* 9. Mobile Sticky Bottom CTA / Summary Bar */
+.calculator-mobile-cta {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  background-color: var(--color-surface-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--color-border);
+  padding: 0.875rem 1rem calc(0.875rem + env(safe-area-inset-bottom));
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.04);
+}
+
+.calculator-mobile-cta-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.calculator-mobile-summary {
+  display: flex;
+  flex-direction: column;
+}
+
+.calculator-mobile-summary-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.05em;
+}
+
+.calculator-mobile-summary-val {
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+
+/* 10. Help Cards ACCORDION */
+.calculator-help-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.calculator-help-item {
+  border-bottom: 1px solid var(--color-border-soft);
+  padding: 0.75rem 0;
+}
+
+.calculator-help-item:last-child {
+  border-bottom: none;
+}
+
+.calculator-help-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--color-accent-espresso);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.calculator-help-text {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  line-height: 1.45;
+}
+
+
+/* 11. Draft Banner */
+.calculator-draft-banner {
+  background-color: var(--color-status-low-bg);
+  border: 1px solid rgba(245, 166, 35, 0.18);
+  color: var(--color-accent-gold);
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-xl);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.calculator-draft-banner-text {
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}

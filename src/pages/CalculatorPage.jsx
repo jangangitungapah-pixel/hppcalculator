@@ -5,19 +5,24 @@ import { useMediaQuery } from '../hooks/useMediaQuery';
 import { useAppData } from '../hooks/useAppData';
 import { useToast } from '../hooks/useToast';
 import { PageContainer } from '../components/layout/PageContainer';
-import { Input } from '../components/ui/Input';
-import { Select } from '../components/ui/Select';
-import { Button } from '../components/ui/Button';
-import { Card } from '../components/ui/Card';
-import { CostItemRow } from '../components/ui/CostItemRow';
-import { ResultCard } from '../components/ui/ResultCard';
-import { Badge } from '../components/ui/Badge';
-import { calculateQuickHpp, validateQuickCalculationInput, formatCurrency, formatPercent } from '../lib/calculations';
-import { createCalculationInputFromForm, createFormFromSavedCalculation } from '../lib/data/calculationMapper';
-import { AlertTriangle, Plus, Calculator, ChevronRight, Sparkles } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
 import { StaggerContainer } from '../components/motion/StaggerContainer';
-import { FadeIn } from '../components/motion/FadeIn';
-import { AnimatedNumber } from '../components/motion/AnimatedNumber';
+
+// Import subcomponents
+import { CalculatorHero } from '../components/calculator/CalculatorHero';
+import { CalculatorStepCard } from '../components/calculator/CalculatorStepCard';
+import { ProductInfoSection } from '../components/calculator/ProductInfoSection';
+import { CostItemsSection } from '../components/calculator/CostItemsSection';
+import { ProductionOutputSection } from '../components/calculator/ProductionOutputSection';
+import { SellingPriceSection } from '../components/calculator/SellingPriceSection';
+import { CalculatorResultPreview } from '../components/calculator/CalculatorResultPreview';
+import { CalculatorMobileCta } from '../components/calculator/CalculatorMobileCta';
+import { CalculatorHelpCard } from '../components/calculator/CalculatorHelpCard';
+import { CalculatorFormActions } from '../components/calculator/CalculatorFormActions';
+import { CalculatorDraftBanner } from '../components/calculator/CalculatorDraftBanner';
+
+import { calculateQuickHpp, validateQuickCalculationInput } from '../lib/calculations';
+import { createCalculationInputFromForm, createFormFromSavedCalculation } from '../lib/data/calculationMapper';
 
 const emptyCostItem = () => ({
   id: Math.random().toString(36).substring(7),
@@ -31,7 +36,7 @@ const defaultForm = {
   costItems: [
     { id: '1', name: 'Biaya Bahan', category: 'Bahan', amount: '' },
     { id: '2', name: 'Biaya Kemasan', category: 'Kemasan', amount: '' },
-    { id: '3', name: 'Biaya Tenaga Kerja', category: 'TenagaKerja', amount: '' },
+    { id: '3', name: 'Biaya Tenaga Kerja', category: 'Tenaga Kerja', amount: '' },
     { id: '4', name: 'Biaya Operasional', category: 'Operasional', amount: '' },
   ],
   outputQuantity: '',
@@ -41,7 +46,7 @@ const defaultForm = {
 };
 
 export const CalculatorPage = () => {
-  const { t, lang } = useLanguage();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
   const isDesktop = useMediaQuery('(min-width: 1024px)');
@@ -53,6 +58,7 @@ export const CalculatorPage = () => {
   const [validationErrors, setValidationErrors] = useState(null);
   const [result, setResult] = useState(null);
   const [hasCalculatedOnce, setHasCalculatedOnce] = useState(false);
+  const [showDraftBanner, setShowDraftBanner] = useState(false);
   
   const isInitialMount = useRef(true);
   const debounceTimer = useRef(null);
@@ -64,18 +70,20 @@ export const CalculatorPage = () => {
         // Hydrate from "Use Again"
         const restoredForm = createFormFromSavedCalculation({ input: location.state.useAgainForm });
         if (restoredForm) setForm(restoredForm);
+        isInitialMount.current = false;
       } else if (calculatorDraft && calculatorDraft.form) {
-        // Hydrate from draft
-        setForm(calculatorDraft.form);
-        addToast({ type: 'info', title: t('toasts.draftRestoredTitle'), duration: 2000 });
+        // Show draft banner instead of auto-restoring silently
+        setShowDraftBanner(true);
+        isInitialMount.current = false;
+      } else {
+        isInitialMount.current = false;
       }
-      isInitialMount.current = false;
     }
-  }, [location.state, calculatorDraft, addToast, t]);
+  }, [location.state, calculatorDraft]);
 
   // Autosave draft on form change (debounced)
   useEffect(() => {
-    if (isInitialMount.current) return;
+    if (isInitialMount.current || showDraftBanner) return;
     
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
     debounceTimer.current = setTimeout(() => {
@@ -83,7 +91,7 @@ export const CalculatorPage = () => {
     }, 1000);
 
     return () => clearTimeout(debounceTimer.current);
-  }, [form, saveDraft]);
+  }, [form, saveDraft, showDraftBanner]);
 
   // Auto-validate form when calculating or if has calculated once
   useEffect(() => {
@@ -106,6 +114,16 @@ export const CalculatorPage = () => {
     setForm(prev => ({ ...prev, costItems: [...prev.costItems, emptyCostItem()] }));
   };
 
+  const addCostItemWithCategory = (category, defaultName) => {
+    const newItem = {
+      id: Math.random().toString(36).substring(7),
+      name: defaultName || '',
+      category: category,
+      amount: ''
+    };
+    setForm(prev => ({ ...prev, costItems: [...prev.costItems, newItem] }));
+  };
+
   const removeCostItem = (index) => {
     if (form.costItems.length > 1) {
       const newItems = [...form.costItems];
@@ -120,6 +138,20 @@ export const CalculatorPage = () => {
     setValidationErrors(null);
     setHasCalculatedOnce(false);
     clearDraft();
+    addToast({ type: 'info', title: t('toasts.draftClearedTitle'), duration: 2000 });
+  };
+
+  const handleRestoreDraft = () => {
+    if (calculatorDraft && calculatorDraft.form) {
+      setForm(calculatorDraft.form);
+      addToast({ type: 'info', title: t('toasts.draftRestoredTitle'), duration: 2000 });
+    }
+    setShowDraftBanner(false);
+  };
+
+  const handleClearDraftBanner = () => {
+    clearDraft();
+    setShowDraftBanner(false);
     addToast({ type: 'info', title: t('toasts.draftClearedTitle'), duration: 2000 });
   };
 
@@ -167,295 +199,140 @@ export const CalculatorPage = () => {
     navigate('/history/' + saved.id);
   };
 
-  const unitOptions = [
-    { value: 'pcs', label: 'Pcs' },
-    { value: 'porsi', label: 'Porsi' },
-    { value: 'cup', label: 'Cup' },
-    { value: 'box', label: 'Box' },
-    { value: 'custom', label: 'Lainnya' },
-  ];
-
   return (
     <PageContainer maxWidth="max-w-[1280px]">
-      <div className="page-header">
-        <Badge variant="neutral" className="mb-3 bg-brand-soft text-brand-primary border-none">
-          {lang === 'en' ? 'Quick HPP Calculator' : 'Kalkulator Cepat'}
-        </Badge>
-        <h1 className="page-title text-3xl md:text-4xl">{t('calculator.pageTitle')}</h1>
-        <p className="page-subtitle text-lg">{t('calculator.pageSubtitle')}</p>
+      <div className="calculator-shell pb-24 lg:pb-8">
         
-        <div className="mt-6 flex flex-wrap items-center gap-2 text-sm text-text-secondary">
-          <div className="px-3 py-1.5 bg-surface border border-border/60 rounded-full font-medium text-text-primary shadow-sm">1. Isi Biaya</div>
-          <ChevronRight className="w-4 h-4 opacity-50" />
-          <div className="px-3 py-1.5 bg-surface border border-border/60 rounded-full font-medium text-text-primary shadow-sm">2. Hasil Produksi</div>
-          <ChevronRight className="w-4 h-4 opacity-50" />
-          <div className="px-3 py-1.5 bg-surface border border-border/60 rounded-full font-medium text-text-primary shadow-sm">3. Harga Jual</div>
-          <ChevronRight className="w-4 h-4 opacity-50" />
-          <div className="px-3 py-1.5 bg-brand-primary text-white rounded-full font-bold shadow-glow-primary flex items-center gap-1.5">
-            <Sparkles className="w-4 h-4" /> Lihat Untung
-          </div>
-        </div>
-      </div>
+        {/* Banner Hero */}
+        <CalculatorHero />
 
-      <StaggerContainer className="split-layout items-start">
-        {/* Left Column: Form */}
-        <div className="content-stack w-full lg:max-w-3xl">
-          
-          {/* Validation Help Alert */}
-          {validationErrors && Object.keys(validationErrors).length > 0 && !hasCalculatedOnce && (
-            <div className="p-4 bg-status-lossBg border border-status-loss/20 rounded-lg flex items-start gap-3">
-              <AlertTriangle className="w-5 h-5 text-status-loss shrink-0 mt-0.5" />
-              <div>
-                <h4 className="font-semibold text-status-loss text-sm">{t('calculator.validationHelpTitle')}</h4>
-                <ul className="list-disc list-inside text-sm text-status-loss mt-1">
-                  {Object.values(validationErrors).map((err, i) => (
-                    <li key={i}>{err}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          )}
-
-          {/* 1. Product Info */}
-          <FadeIn>
-            <Card className="p-6 lg:p-8 bg-surface rounded-3xl shadow-sm border border-border/50 transition-premium hover:shadow-md">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-8 h-8 rounded-full bg-brand-soft text-brand-primary flex items-center justify-center font-bold text-sm shadow-sm">1</div>
-                <h2 className="text-xl font-bold text-text-primary tracking-tight">{t('calculator.productInfo')}</h2>
-              </div>
-              <div>
-                <Input 
-                  label={t('calculator.productName')}
-                  placeholder={t('calculator.productNamePlaceholder')}
-                  value={form.productName}
-                  onChange={(e) => updateField('productName', e.target.value)}
-                  error={validationErrors?.productName}
-                  className="text-lg font-semibold h-12"
-                />
-              </div>
-            </Card>
-          </FadeIn>
-
-          {/* 2. Cost Items */}
-          <FadeIn>
-            <Card className="p-6 lg:p-8 bg-surface rounded-3xl shadow-sm border border-border/50 transition-premium hover:shadow-md">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-8 h-8 rounded-full bg-brand-soft text-brand-primary flex items-center justify-center font-bold text-sm shadow-sm">2</div>
-                <h2 className="text-xl font-bold text-text-primary tracking-tight">{t('calculator.costItems')}</h2>
-              </div>
-              
-              <div className="hidden sm:flex text-xs font-bold text-text-muted uppercase tracking-wider px-2 pb-2 mb-2 border-b border-border/60">
-                <div className="flex-[2] pl-3">Nama Biaya</div>
-                <div className="flex-[1.5] pl-3">Kategori</div>
-                <div className="flex-[1.5] pl-3">Nominal</div>
-                <div className="w-10"></div>
-              </div>
-
-              <div className="space-y-2 sm:space-y-0">
-                {form.costItems.map((item, i) => (
-                  <CostItemRow 
-                    key={item.id}
-                    item={item}
-                    index={i}
-                    onChange={updateCostItem}
-                    onRemove={removeCostItem}
-                    canRemove={form.costItems.length > 1}
-                    t={t}
-                  />
-                ))}
-              </div>
-              
-              {validationErrors?.costItems && (
-                <p className="text-sm text-status-loss mt-3">{validationErrors.costItems}</p>
-              )}
-
-              <Button 
-                variant="ghost" 
-                onClick={addCostItem} 
-                className="w-full mt-4 border border-dashed border-border hover:bg-surface-muted/50 text-text-secondary"
-              >
-                {t('calculator.addCost')}
-              </Button>
-            </Card>
-          </FadeIn>
-
-          {/* 3. Production Output */}
-          <FadeIn>
-            <Card className="p-6 lg:p-8 bg-surface rounded-3xl shadow-sm border border-border/50 transition-premium hover:shadow-md">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-8 h-8 rounded-full bg-brand-soft text-brand-primary flex items-center justify-center font-bold text-sm shadow-sm">3</div>
-                <h2 className="text-xl font-bold text-text-primary tracking-tight">{t('calculator.productionOutput')}</h2>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="flex gap-2 items-start">
-                  <Input 
-                    type="number"
-                    min="1"
-                    label={t('calculator.outputQuantity')}
-                    placeholder="0"
-                    value={form.outputQuantity}
-                    onChange={(e) => updateField('outputQuantity', e.target.value)}
-                    containerClassName="flex-1"
-                    error={validationErrors?.outputQuantity}
-                  />
-                  <Select 
-                    label={t('calculator.sellingUnit')}
-                    options={unitOptions}
-                    value={form.sellingUnit}
-                    onChange={(e) => updateField('sellingUnit', e.target.value)}
-                    containerClassName="w-[100px] shrink-0"
-                  />
-                </div>
-                <div>
-                  <Input 
-                    type="number"
-                    min="0"
-                    label={t('calculator.failedQuantity')}
-                    placeholder="0"
-                    value={form.failedQuantity}
-                    onChange={(e) => updateField('failedQuantity', e.target.value)}
-                    error={validationErrors?.failedQuantity}
-                  />
-                </div>
-              </div>
-            </Card>
-          </FadeIn>
-
-          {/* 4. Selling Price */}
-          <FadeIn>
-            <Card className="p-6 lg:p-8 bg-surface rounded-3xl shadow-sm border border-border/50 transition-premium hover:shadow-md">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-8 h-8 rounded-full bg-brand-soft text-brand-primary flex items-center justify-center font-bold text-sm shadow-sm">4</div>
-                <h2 className="text-xl font-bold text-text-primary tracking-tight">{t('calculator.sellingPrice')}</h2>
-              </div>
-              <div>
-                <Input 
-                  type="number"
-                  min="0"
-                  prefix="Rp"
-                  label={t('calculator.sellingPrice')}
-                  placeholder="0"
-                  value={form.sellingPrice}
-                  onChange={(e) => updateField('sellingPrice', e.target.value)}
-                  error={validationErrors?.sellingPrice}
-                />
-              </div>
-            </Card>
-          </FadeIn>
-
-          {/* Mobile Calculate Button */}
-          <div className="lg:hidden mt-8 mb-4 flex gap-3">
-            <Button variant="secondary" className="flex-1" onClick={resetForm}>
-              {t('calculator.resetButton')}
-            </Button>
-            <Button className="flex-[2]" onClick={() => handleCalculate(false)}>
-              {t('calculator.calculateButton')}
-            </Button>
-          </div>
-        </div>
-
-        {/* Right Column: Desktop Result Panel */}
-        {isDesktop && (
-          <FadeIn className="sticky-panel hidden lg:block w-full">
-            {result ? (
-              <Card className="p-6 border-brand-primary/20 shadow-floating bg-surface">
-                <div className="flex justify-between items-start mb-6">
-                  <h3 className="text-xl font-bold">{t('result.resultTitle')}</h3>
-                  <Badge variant={result.profitStatus.key}>{t(`result.status.${result.profitStatus.key}`)}</Badge>
-                </div>
-
-                <div className="mb-6 bg-gradient-to-br from-brand-primary to-accent-coral p-5 rounded-2xl text-center shadow-glow-primary relative overflow-hidden">
-                  <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4xNSkiLz48L3N2Zz4=')] opacity-30"></div>
-                  <div className="relative z-10">
-                    <div className="text-sm font-semibold opacity-90 text-white/90 mb-1 uppercase tracking-wider">{t('result.hppPerUnit')}</div>
-                    <AnimatedNumber 
-                      value={result.hppPerUnit} 
-                      isCurrency={true}
-                      className="text-5xl md:text-6xl font-black text-white tracking-tight drop-shadow-md"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  <ResultCard 
-                    label={t('result.profitPerUnit')} 
-                    value={<AnimatedNumber value={result.profitPerUnit} isCurrency={true} />}
-                    tone={result.profitPerUnit > 0 ? 'good' : result.profitPerUnit < 0 ? 'loss' : 'neutral'}
-                  />
-                  <ResultCard 
-                    label={t('result.margin')} 
-                    value={<AnimatedNumber value={result.marginPercent} suffix="%" />}
-                  />
-                </div>
-                
-                {result.warnings && result.warnings.length > 0 && (
-                  <div className="flex flex-col gap-2 mb-6">
-                    {result.warnings.map((warn, i) => (
-                      <div key={i} className="flex items-start gap-2 text-sm text-status-low bg-status-lowBg p-2 rounded-md border border-status-low/20">
-                        <AlertTriangle className="w-4 h-4 shrink-0" />
-                        <p className="text-xs">{lang === 'en' ? warn.messageEn || warn.message : warn.messageId || warn.message}</p>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                <div className="space-y-4 mb-6">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-text-secondary">{t('result.totalProductionCost')}</span>
-                    <AnimatedNumber value={result.totalProductionCost} isCurrency={true} className="font-semibold" />
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-text-secondary">{t('result.totalProfit')}</span>
-                    <AnimatedNumber 
-                      value={result.totalProfit} 
-                      isCurrency={true} 
-                      className={`font-semibold ${result.totalProfit < 0 ? 'text-status-loss' : 'text-status-good'}`} 
-                    />
-                  </div>
-                </div>
-
-                <div className="mb-6">
-                  <h4 className="text-sm font-bold text-text-primary mb-3">{t('result.suggestedPrices')}</h4>
-                  <div className="flex flex-col gap-2">
-                    <div className="flex justify-between items-center p-2.5 rounded-lg bg-surface-muted border border-border text-sm transition-premium hover:border-brand-soft">
-                      <span className="text-text-secondary font-medium">{t('result.safePrice')} (15%)</span>
-                      <AnimatedNumber value={result.suggestedPrices?.safe?.price || 0} isCurrency={true} className="font-bold" />
-                    </div>
-                    <div className="flex justify-between items-center p-2.5 rounded-lg bg-status-okayBg border border-status-okay/20 text-status-okay text-sm transition-premium hover:border-status-okay/40">
-                      <span className="font-medium">{t('result.idealPrice')} (30%)</span>
-                      <AnimatedNumber value={result.suggestedPrices?.ideal?.price || 0} isCurrency={true} className="font-bold" />
-                    </div>
-                    <div className="flex justify-between items-center p-2.5 rounded-lg bg-status-goodBg border border-status-good/20 text-status-good text-sm transition-premium hover:border-status-good/40">
-                      <span className="font-medium">{t('result.premiumPrice')} (50%)</span>
-                      <AnimatedNumber value={result.suggestedPrices?.premium?.price || 0} isCurrency={true} className="font-bold" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-3 pt-6 border-t border-border">
-                  <Button className="w-full" onClick={handleSaveCalculation}>
-                    {t('result.saveCalculation')}
-                  </Button>
-                  <Button variant="secondary" className="w-full border-border bg-surface-muted text-text-primary hover:bg-border/30" onClick={resetForm}>
-                    {t('calculator.resetButton')}
-                  </Button>
-                </div>
-              </Card>
-            ) : (
-              <Card className="p-8 text-center bg-surface-muted/50 border border-dashed border-border h-full min-h-[400px] flex flex-col items-center justify-center rounded-3xl">
-                <div className="w-20 h-20 bg-brand-soft rounded-full flex items-center justify-center mb-6 text-brand-primary shadow-sm shadow-glow-primary">
-                  <Calculator className="w-10 h-10" />
-                </div>
-                <h3 className="font-semibold text-lg mb-2">{t('calculator.resultPlaceholderTitle')}</h3>
-                <p className="text-text-secondary text-sm">{t('calculator.resultPlaceholderBody')}</p>
-                <Button className="mt-6 w-full" onClick={() => handleCalculate(false)}>
-                  {t('calculator.calculateButton')}
-                </Button>
-              </Card>
-            )}
-          </FadeIn>
+        {/* Restore Unsaved Draft Banner */}
+        {showDraftBanner && (
+          <CalculatorDraftBanner 
+            onRestore={handleRestoreDraft}
+            onClear={handleClearDraftBanner}
+            t={t}
+          />
         )}
-      </StaggerContainer>
+
+        <StaggerContainer className="calculator-grid">
+          {/* Left Column: Form Blocks */}
+          <div className="calculator-main">
+            
+            {/* Friendly Validation Errors summary */}
+            {validationErrors && Object.keys(validationErrors).length > 0 && !hasCalculatedOnce && (
+              <div className="p-4.5 bg-status-lossBg border border-status-loss/20 rounded-2xl flex items-start gap-3 shadow-xs">
+                <AlertTriangle className="w-5 h-5 text-status-loss shrink-0 mt-0.5" />
+                <div>
+                  <h4 className="font-extrabold text-status-loss text-sm">{t('calculator.validationHelpTitle', 'Ada yang belum lengkap')}</h4>
+                  <ul className="list-disc list-inside text-xs text-status-loss/90 mt-1.5 space-y-1.5 font-bold">
+                    {Object.values(validationErrors).map((err, i) => (
+                      <li key={i}>{err}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+
+            {/* Step 1: Product Name */}
+            <CalculatorStepCard
+              stepNumber="1"
+              title={t('calculator.productInfo', 'Info Produk')}
+              helperText="Beri nama produk agar hasil hitung mudah dicari di riwayat."
+            >
+              <ProductInfoSection 
+                productName={form.productName}
+                onChange={updateField}
+                error={validationErrors?.productName}
+                t={t}
+              />
+            </CalculatorStepCard>
+
+            {/* Step 2: Production Costs */}
+            <CalculatorStepCard
+              stepNumber="2"
+              title={t('calculator.costItems', 'Biaya Produksi')}
+              helperText="Masukkan semua biaya yang dipakai untuk satu batch produksi."
+            >
+              <CostItemsSection 
+                costItems={form.costItems}
+                onUpdate={updateCostItem}
+                onRemove={removeCostItem}
+                onAdd={addCostItem}
+                onAddWithCategory={addCostItemWithCategory}
+                error={validationErrors?.costItems}
+                t={t}
+              />
+            </CalculatorStepCard>
+
+            {/* Step 3: Production Output */}
+            <CalculatorStepCard
+              stepNumber="3"
+              title={t('calculator.productionOutput', 'Hasil Produksi')}
+              helperText="Berapa produk yang berhasil dijual setelah dikurangi produk gagal/rusak?"
+            >
+              <ProductionOutputSection 
+                outputQuantity={form.outputQuantity}
+                failedQuantity={form.failedQuantity}
+                sellingUnit={form.sellingUnit}
+                onFieldChange={updateField}
+                errors={validationErrors}
+                t={t}
+              />
+            </CalculatorStepCard>
+
+            {/* Step 4: Selling Price */}
+            <CalculatorStepCard
+              stepNumber="4"
+              title={t('calculator.sellingPrice', 'Harga Jual')}
+              helperText="Masukkan harga jual yang kamu rencanakan untuk menghitung margin keuntungan."
+            >
+              <SellingPriceSection 
+                sellingPrice={form.sellingPrice}
+                onFieldChange={updateField}
+                error={validationErrors?.sellingPrice}
+                result={result}
+                t={t}
+              />
+            </CalculatorStepCard>
+
+            {/* Form Action buttons for desktop layout */}
+            <CalculatorFormActions 
+              result={result}
+              onCalculate={() => handleCalculate(false)}
+              onSave={handleSaveCalculation}
+              onReset={resetForm}
+              t={t}
+            />
+
+            {/* Beginner Quick Guide Accents */}
+            <CalculatorHelpCard t={t} />
+
+          </div>
+
+          {/* Right Column: Desktop Sticky Result Preview */}
+          <div className="calculator-side hidden lg:block">
+            <CalculatorResultPreview 
+              form={form}
+              result={result}
+              onCalculate={() => handleCalculate(false)}
+              onSave={handleSaveCalculation}
+              onReset={resetForm}
+              t={t}
+            />
+          </div>
+        </StaggerContainer>
+
+        {/* Mobile Fixed Sticky Footer */}
+        <CalculatorMobileCta 
+          form={form}
+          result={result}
+          onCalculate={() => handleCalculate(false)}
+          onReset={resetForm}
+          t={t}
+        />
+
+      </div>
     </PageContainer>
   );
 };
