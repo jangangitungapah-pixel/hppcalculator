@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useLanguage } from '../../hooks/useLanguage';
-import { LayoutDashboard, Calculator, History, Settings, BookOpen, Package, Apple, TrendingUp, BarChart3 } from 'lucide-react';
+import { LayoutDashboard, Calculator, BookOpen, Package, Apple, MoreHorizontal } from 'lucide-react';
 import { cn } from '../../lib/ui/cn';
 
 export const BottomNav = () => {
@@ -19,10 +19,7 @@ export const BottomNav = () => {
     { to: '/ingredients', icon: <Apple className="w-[22px] h-[22px]" />, label: t('nav.ingredients') },
     { to: '/recipes', icon: <BookOpen className="w-[22px] h-[22px]" />, label: t('nav.recipes') },
     { to: '/products', icon: <Package className="w-[22px] h-[22px]" />, label: t('nav.products') },
-    { to: '/channel-pricing', icon: <TrendingUp className="w-[22px] h-[22px]" />, label: "Simulasi" },
-    { to: '/reports', icon: <BarChart3 className="w-[22px] h-[22px]" />, label: t('nav.reports') },
-    { to: '/history', icon: <History className="w-[22px] h-[22px]" />, label: t('nav.history') },
-    { to: '/settings', icon: <Settings className="w-[22px] h-[22px]" />, label: t('nav.settings') },
+    { to: '/settings', icon: <MoreHorizontal className="w-[22px] h-[22px]" />, label: 'More' },
   ];
 
   return (

@@ -15,13 +15,13 @@ import { useToast } from '../hooks/useToast';
 export const IngredientFormPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { t, language } = useLanguage();
+  const { t, lang } = useLanguage();
   const { settings } = useAppData();
   const { getIngredientById, saveIngredient, updateIngredient } = useIngredients();
   const { addToast } = useToast();
   
   const isEdit = Boolean(id && id !== 'new');
-  const unitOptions = getLocalizedUnitOptions(language);
+  const unitOptions = getLocalizedUnitOptions(lang);
 
   const [form, setForm] = useState({
     name: '',
@@ -179,7 +179,7 @@ export const IngredientFormPage = () => {
           <div className="text-sm">
             <p className="text-text-secondary font-medium">{t('ingredients.costPerBaseUnit')}</p>
             <p className="font-bold text-brand-primary text-lg">
-              {formatCurrency(previewCost, language, settings.currency)} 
+              {formatCurrency(previewCost, lang, settings.currency)} 
               <span className="text-sm font-medium text-text-secondary"> / {previewBaseUnit}</span>
             </p>
           </div>

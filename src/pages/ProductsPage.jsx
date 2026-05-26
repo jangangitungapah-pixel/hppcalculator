@@ -13,7 +13,7 @@ import { demoProducts } from '../data/demoProducts';
 import { useToast } from '../hooks/useToast';
 
 export const ProductsPage = () => {
-  const { t, language } = useLanguage();
+  const { t, lang } = useLanguage();
   const navigate = useNavigate();
   const { products, loadDemoProducts, deleteProduct } = useProducts();
   const { settings, saveDraft, recipes, loadDemoBusinessLibrary } = useAppData();
@@ -138,18 +138,18 @@ export const ProductsPage = () => {
                   <div className="grid grid-cols-2 gap-2 mb-4 text-sm">
                     <div className="bg-surface-muted/50 p-2 rounded-lg">
                       <p className="text-text-secondary text-[10px] uppercase font-bold">HPP /{product.sellingUnit}</p>
-                      <p className="font-semibold text-text-primary mt-0.5">{formatCurrency(hpp, language, settings.currency)}</p>
+                      <p className="font-semibold text-text-primary mt-0.5">{formatCurrency(hpp, lang, settings.currency)}</p>
                     </div>
                     <div className="bg-brand-soft/30 p-2 rounded-lg border border-brand-soft/50">
                       <p className="text-brand-primary text-[10px] uppercase font-bold">Harga Jual Target</p>
-                      <p className="font-bold text-brand-primary mt-0.5">{formatCurrency(targetPrice, language, settings.currency)}</p>
+                      <p className="font-bold text-brand-primary mt-0.5">{formatCurrency(targetPrice, lang, settings.currency)}</p>
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between mb-4 text-xs font-semibold">
                     <span className="text-text-secondary">Estimasi Profit:</span>
                     <span className={profit > 0 ? 'text-status-win' : 'text-status-loss'}>
-                      {formatCurrency(profit, language, settings.currency)} ({margin.toFixed(1)}%)
+                      {formatCurrency(profit, lang, settings.currency)} ({margin.toFixed(1)}%)
                     </span>
                   </div>
                   

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../hooks/useLanguage';
 import { usePricingSimulations } from '../../hooks/usePricingSimulations';
-import { AppHeader } from '../../components/layout/AppHeader';
+
 import { SimulationCard } from '../../components/pricing/SimulationCard';
 import { Button } from '../../components/ui/Button';
 import { Toast } from '../../components/ui/Toast';
@@ -51,7 +51,6 @@ export const PricingSimulationsPage = () => {
 
   return (
     <div className="min-h-screen bg-bg-primary flex flex-col pb-20">
-      <AppHeader title={t('pricing.simulationsTitle')} onBack={() => navigate('/')} />
 
       <main className="flex-1 p-4 max-w-4xl mx-auto w-full space-y-6">
         <div className="flex justify-between items-center">

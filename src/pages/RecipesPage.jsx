@@ -15,7 +15,7 @@ import { demoIngredients } from '../data/demoIngredients';
 import { useToast } from '../hooks/useToast';
 
 export const RecipesPage = () => {
-  const { t, language } = useLanguage();
+  const { t, lang } = useLanguage();
   const navigate = useNavigate();
   const { recipes, loadDemoRecipes } = useRecipes();
   const { ingredients } = useIngredients();

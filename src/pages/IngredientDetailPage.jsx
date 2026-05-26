@@ -14,7 +14,7 @@ import { useToast } from '../hooks/useToast';
 export const IngredientDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { t, language } = useLanguage();
+  const { t, lang } = useLanguage();
   const { settings } = useAppData();
   const { getIngredientById, deleteIngredient } = useIngredients();
   const { addToast } = useToast();
@@ -42,7 +42,7 @@ export const IngredientDetailPage = () => {
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString(language === 'id' ? 'id-ID' : 'en-US', {
+    return new Date(dateString).toLocaleDateString(lang === 'id' ? 'id-ID' : 'en-US', {
       day: 'numeric', month: 'long', year: 'numeric'
     });
   };
@@ -94,17 +94,17 @@ export const IngredientDetailPage = () => {
             <div className="bg-surface-muted/50 p-4 rounded-2xl border border-border/50">
               <p className="text-xs text-text-secondary font-medium uppercase tracking-wider mb-1">Harga Beli</p>
               <p className="text-xl font-bold text-text-primary">
-                {formatCurrency(ingredient.purchasePrice, language, settings.currency)}
+                {formatCurrency(ingredient.purchasePrice, lang, settings.currency)}
               </p>
               <p className="text-sm text-text-secondary mt-1">
-                untuk {formatQuantityWithUnit(ingredient.purchaseQuantity, ingredient.purchaseUnit, language)}
+                untuk {formatQuantityWithUnit(ingredient.purchaseQuantity, ingredient.purchaseUnit, lang)}
               </p>
             </div>
             
             <div className="bg-brand-soft/30 p-4 rounded-2xl border border-brand-soft">
               <p className="text-xs text-brand-primary/80 font-medium uppercase tracking-wider mb-1">Cost per Base Unit</p>
               <p className="text-xl font-bold text-brand-primary">
-                {formatCurrency(ingredient.costPerBaseUnit, language, settings.currency)}
+                {formatCurrency(ingredient.costPerBaseUnit, lang, settings.currency)}
               </p>
               <p className="text-sm text-brand-primary/70 mt-1">
                 per {ingredient.baseUnit}

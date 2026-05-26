@@ -15,7 +15,7 @@ import { useToast } from '../hooks/useToast';
 export const RecipeDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { t, language } = useLanguage();
+  const { t, lang } = useLanguage();
   const { settings, saveDraft } = useAppData();
   const { getRecipeById, deleteRecipe, updateRecipe } = useRecipes();
   const { saveProduct } = useProducts();
@@ -75,7 +75,7 @@ export const RecipeDetailPage = () => {
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString(language === 'id' ? 'id-ID' : 'en-US', {
+    return new Date(dateString).toLocaleDateString(lang === 'id' ? 'id-ID' : 'en-US', {
       day: 'numeric', month: 'long', year: 'numeric'
     });
   };
@@ -154,7 +154,7 @@ export const RecipeDetailPage = () => {
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold text-text-primary">{t('recipes.ingredients')}</h3>
               <span className="text-sm font-bold text-text-primary bg-surface-muted px-3 py-1 rounded-lg">
-                {formatCurrency(result.totalIngredientCost || 0, language, settings.currency)}
+                {formatCurrency(result.totalIngredientCost || 0, lang, settings.currency)}
               </span>
             </div>
             
@@ -181,7 +181,7 @@ export const RecipeDetailPage = () => {
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold text-text-primary">{t('recipes.extraCosts')}</h3>
                 <span className="text-sm font-bold text-text-primary bg-surface-muted px-3 py-1 rounded-lg">
-                  {formatCurrency(result.totalExtraCost || 0, language, settings.currency)}
+                  {formatCurrency(result.totalExtraCost || 0, lang, settings.currency)}
                 </span>
               </div>
               
@@ -192,7 +192,7 @@ export const RecipeDetailPage = () => {
                       <p className="font-semibold text-text-primary">{cost.name}</p>
                     </div>
                     <p className="font-medium text-text-primary">
-                      {formatCurrency(cost.amount, language, settings.currency)}
+                      {formatCurrency(cost.amount, lang, settings.currency)}
                     </p>
                   </div>
                 ))}
@@ -211,14 +211,14 @@ export const RecipeDetailPage = () => {
             <div className="mb-4 relative z-10">
               <p className="text-xs text-text-secondary mb-1">Total Modal (Bahan + Ekstra)</p>
               <p className="text-2xl font-bold text-text-primary">
-                {formatCurrency(result.totalRecipeCost || 0, language, settings.currency)}
+                {formatCurrency(result.totalRecipeCost || 0, lang, settings.currency)}
               </p>
             </div>
             
             <div className="bg-brand-primary text-white p-4 rounded-2xl relative z-10">
               <p className="text-xs text-white/80 font-medium mb-1">HPP per {recipe.outputUnit}</p>
               <p className="text-3xl font-bold">
-                {formatCurrency(result.hppPerUnit || 0, language, settings.currency)}
+                {formatCurrency(result.hppPerUnit || 0, lang, settings.currency)}
               </p>
             </div>
           </div>
@@ -256,7 +256,7 @@ export const RecipeDetailPage = () => {
                     <p className="font-semibold text-status-win text-sm">Aman (15%)</p>
                   </div>
                   <p className="font-bold text-text-primary">
-                    {formatCurrency(result.suggestedPrices.safe?.price, language, settings.currency)}
+                    {formatCurrency(result.suggestedPrices.safe?.price, lang, settings.currency)}
                   </p>
                 </div>
                 <div className="flex justify-between items-center p-3 rounded-xl bg-brand-soft/50 border border-brand-soft">
@@ -264,7 +264,7 @@ export const RecipeDetailPage = () => {
                     <p className="font-semibold text-brand-primary text-sm">Ideal (30%)</p>
                   </div>
                   <p className="font-bold text-text-primary">
-                    {formatCurrency(result.suggestedPrices.ideal?.price, language, settings.currency)}
+                    {formatCurrency(result.suggestedPrices.ideal?.price, lang, settings.currency)}
                   </p>
                 </div>
                 <div className="flex justify-between items-center p-3 rounded-xl bg-[#8b5cf6]/10 border border-[#8b5cf6]/20">
@@ -272,7 +272,7 @@ export const RecipeDetailPage = () => {
                     <p className="font-semibold text-[#8b5cf6] text-sm">Premium (50%)</p>
                   </div>
                   <p className="font-bold text-text-primary">
-                    {formatCurrency(result.suggestedPrices.premium?.price, language, settings.currency)}
+                    {formatCurrency(result.suggestedPrices.premium?.price, lang, settings.currency)}
                   </p>
                 </div>
               </div>

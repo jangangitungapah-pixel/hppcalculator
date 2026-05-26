@@ -14,7 +14,7 @@ import { useToast } from '../hooks/useToast';
 export const ProductDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { t, language } = useLanguage();
+  const { t, lang } = useLanguage();
   const { settings, saveDraft } = useAppData();
   const { getProductById, deleteProduct, updateProduct } = useProducts();
   const { addToast } = useToast();
@@ -74,7 +74,7 @@ export const ProductDetailPage = () => {
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString(language === 'id' ? 'id-ID' : 'en-US', {
+    return new Date(dateString).toLocaleDateString(lang === 'id' ? 'id-ID' : 'en-US', {
       day: 'numeric', month: 'long', year: 'numeric'
     });
   };
@@ -129,7 +129,7 @@ export const ProductDetailPage = () => {
               <div className="bg-surface-muted/30 p-6 rounded-2xl border border-border/50 flex flex-col justify-center">
                 <p className="text-sm text-text-secondary font-medium mb-1">HPP per {product.sellingUnit}</p>
                 <p className="text-3xl font-bold text-text-primary">
-                  {formatCurrency(hpp, language, settings.currency)}
+                  {formatCurrency(hpp, lang, settings.currency)}
                 </p>
                 <p className="text-xs text-text-secondary mt-2 border-t border-border/50 pt-2">
                   Harga Pokok Produksi ini didapatkan secara otomatis dari resep.
@@ -164,7 +164,7 @@ export const ProductDetailPage = () => {
                   </div>
                 ) : (
                   <p className="text-3xl font-bold text-brand-primary mt-1">
-                    {formatCurrency(currentPrice, language, settings.currency)}
+                    {formatCurrency(currentPrice, lang, settings.currency)}
                   </p>
                 )}
                 
@@ -180,7 +180,7 @@ export const ProductDetailPage = () => {
               <div className="bg-surface-muted/30 p-4 rounded-xl border border-border/50 text-center">
                 <p className="text-xs text-text-secondary uppercase tracking-wider mb-1">Profit Kotor</p>
                 <p className={`text-xl font-bold ${profit > 0 ? 'text-status-win' : 'text-status-loss'}`}>
-                  {formatCurrency(profit, language, settings.currency)}
+                  {formatCurrency(profit, lang, settings.currency)}
                 </p>
               </div>
               <div className="bg-surface-muted/30 p-4 rounded-xl border border-border/50 text-center">

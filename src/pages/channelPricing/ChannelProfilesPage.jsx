@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../hooks/useLanguage';
 import { useChannelProfiles } from '../../hooks/useChannelProfiles';
-import { AppHeader } from '../../components/layout/AppHeader';
+
 import { ChannelProfileCard } from '../../components/pricing/ChannelProfileCard';
 import { Button } from '../../components/ui/Button';
 import { Toast } from '../../components/ui/Toast';
@@ -35,7 +35,6 @@ export const ChannelProfilesPage = () => {
 
   return (
     <div className="min-h-screen bg-bg-primary flex flex-col pb-20">
-      <AppHeader title={t('pricing.profilesTitle')} onBack={() => navigate('/')} />
 
       <main className="flex-1 p-4 max-w-4xl mx-auto w-full space-y-6">
         <div className="flex justify-between items-center">

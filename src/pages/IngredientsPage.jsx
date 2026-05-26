@@ -15,7 +15,7 @@ import { demoIngredients } from '../data/demoIngredients';
 import { useToast } from '../hooks/useToast';
 
 export const IngredientsPage = () => {
-  const { t, language } = useLanguage();
+  const { t, lang } = useLanguage();
   const navigate = useNavigate();
   const { ingredients, loadDemoIngredients } = useIngredients();
   const { settings } = useAppData();
@@ -86,14 +86,14 @@ export const IngredientsPage = () => {
                   <div className="flex justify-between items-center mb-1">
                     <span className="text-sm text-text-secondary font-medium">Harga Beli</span>
                     <span className="font-semibold text-text-primary tabular-nums">
-                      {formatCurrency(ing.purchasePrice, language, settings.currency)} <span className="text-text-muted text-xs font-normal">/ {ing.purchaseQuantity} {ing.purchaseUnit}</span>
+                      {formatCurrency(ing.purchasePrice, lang, settings.currency)} <span className="text-text-muted text-xs font-normal">/ {ing.purchaseQuantity} {ing.purchaseUnit}</span>
                     </span>
                   </div>
                   
                   <div className="flex justify-between items-center bg-brand-soft/20 group-hover:bg-brand-soft/40 transition-colors p-3 rounded-xl mt-4 border border-brand-primary/10">
                     <span className="text-xs text-text-secondary font-bold uppercase tracking-wider">Harga per {ing.baseUnit}</span>
                     <span className="font-extrabold text-brand-primary tabular-nums text-lg">
-                      {formatCurrency(ing.costPerBaseUnit, language, settings.currency)}
+                      {formatCurrency(ing.costPerBaseUnit, lang, settings.currency)}
                     </span>
                   </div>
                 </Card>

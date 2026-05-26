@@ -19,10 +19,14 @@ export const AppShell = () => {
     if (pathname.startsWith('/recipes')) return t('nav.recipes') || 'Resep';
     if (pathname.startsWith('/products')) return t('nav.products') || 'Produk/Menu';
     if (pathname.startsWith('/channel-pricing')) return 'Simulasi Harga';
+    if (pathname.startsWith('/channel-profiles')) return 'Profil Channel';
+    if (pathname.startsWith('/simulations')) return 'Riwayat Simulasi';
     if (pathname.startsWith('/reports')) return t('nav.reports') || 'Laporan';
     if (pathname.startsWith('/data-backup')) return t('nav.dataBackup') || 'Data & Backup';
-    if (pathname.startsWith('/history')) return t('nav.history') || 'Riwayat';
+    if (pathname.startsWith('/history')) return t('nav.history') || 'Riwayat HPP';
     if (pathname.startsWith('/settings')) return t('nav.settings') || 'Pengaturan';
+    if (pathname.startsWith('/account')) return 'Akun Saya';
+    if (pathname.startsWith('/sync')) return 'Sinkronisasi';
     return '';
   };
 

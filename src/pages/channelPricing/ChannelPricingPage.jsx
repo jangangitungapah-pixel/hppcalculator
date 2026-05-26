@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useLanguage } from '../../hooks/useLanguage';
 import { useChannelPricing } from '../../hooks/useChannelPricing';
 import { usePricingSimulations } from '../../hooks/usePricingSimulations';
-import { AppHeader } from '../../components/layout/AppHeader';
+
 import { ChannelTabs } from '../../components/pricing/ChannelTabs';
 import { ProductSourcePicker } from '../../components/pricing/ProductSourcePicker';
 import { MarketplacePricingForm } from '../../components/pricing/MarketplacePricingForm';
@@ -56,7 +56,7 @@ export const ChannelPricingPage = () => {
       
       // Navigate to simulations list after a brief delay
       setTimeout(() => {
-        navigate('/pricing-simulations');
+        navigate('/simulations');
       }, 1500);
     } catch (err) {
       showToast('Gagal menyimpan simulasi', 'error');
@@ -82,7 +82,6 @@ export const ChannelPricingPage = () => {
 
   return (
     <div className="min-h-screen bg-bg-primary flex flex-col pb-20">
-      <AppHeader title={t('pricing.title')} onBack={() => navigate('/')} />
 
       <main className="flex-1 p-4 max-w-4xl mx-auto w-full">
         {activeTab !== 'bundle' && (

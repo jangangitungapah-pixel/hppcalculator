@@ -16,7 +16,7 @@ import { useAppData } from '../hooks/useAppData';
 export const RecipeFormPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { t, language } = useLanguage();
+  const { t, lang } = useLanguage();
   const { settings } = useAppData();
   const { getRecipeById, saveRecipe, updateRecipe } = useRecipes();
   const { ingredients } = useIngredients();
