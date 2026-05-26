@@ -1,6 +1,7 @@
 import { SYNC_RECORD_TYPES_TO_MODULE, SYNC_RECORD_TYPES } from './syncTypes';
 import { mapSyncRecordToLocal } from './syncMapper';
 import { getScopedJson, setScopedJson } from '../storage/localStorageClient';
+import { getActiveStorageScope } from '../storage/storageScope';
 
 export const mergeModuleRecords = (localRecords, incomingRecords) => {
   const localMap = new Map(localRecords.map(r => [r.id, r]));
@@ -22,8 +23,14 @@ export const mergeModuleRecords = (localRecords, incomingRecords) => {
   return Array.from(localMap.values());
 };
 
-export const applyCloudRecordsToLocalStorage = (resolvedToLocalRecords) => {
+export const applyCloudRecordsToLocalStorage = (resolvedToLocalRecords, { expectedUid } = {}) => {
   if (!resolvedToLocalRecords || resolvedToLocalRecords.length === 0) return false;
+
+  const scope = getActiveStorageScope();
+  if (scope.type !== 'user' || !scope.uid || scope.uid !== expectedUid) {
+    console.warn(`[Sync] applyCloudRecordsToLocalStorage aborted: scope mismatch. Active scope:`, scope, `Expected uid:`, expectedUid);
+    return false;
+  }
 
   let hasChanges = false;
 

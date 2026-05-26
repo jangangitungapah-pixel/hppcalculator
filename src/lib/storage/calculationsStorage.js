@@ -48,7 +48,7 @@ export const deleteCalculation = (id) => {
 };
 
 export const deleteAllCalculations = () => {
-  return removeItem(STORAGE_KEYS.calculations);
+  return removeScopedItem(STORAGE_KEYS.calculations);
 };
 
 export const loadDemoCalculations = (mockCalculations) => {

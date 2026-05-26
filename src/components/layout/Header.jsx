@@ -39,13 +39,23 @@ export const Header = ({ title }) => {
             Premium MVP
           </span>
           <Link to="/sync" className={cn("px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-full border shadow-sm flex items-center transition-colors", 
-            syncStatus === 'synced' ? "bg-success-50 text-success-700 border-success-200" :
-            syncStatus === 'syncing' ? "bg-brand-primary/10 text-brand-primary border-brand-primary/20" :
-            syncStatus === 'error' ? "bg-error-50 text-error-700 border-error-200" :
-            syncStatus === 'offline' ? "bg-warning-50 text-warning-700 border-warning-200" :
+            syncStatus === 'synced' ? "bg-success-50 text-success-700 border-success-200 hover:bg-success-100" :
+            syncStatus === 'syncing' ? "bg-brand-primary/10 text-brand-primary border-brand-primary/20 hover:bg-brand-primary/20" :
+            syncStatus === 'error' ? "bg-error-50 text-error-700 border-error-200 hover:bg-error-100" :
+            syncStatus === 'offline' ? "bg-warning-50 text-warning-700 border-warning-200 hover:bg-warning-100" :
+            syncStatus === 'local_unapproved' ? "bg-warning-50 text-warning-700 border-warning-200 hover:bg-warning-100" :
+            syncStatus === 'ready' ? "bg-brand-primary/10 text-brand-primary border-brand-primary/20 hover:bg-brand-primary/20" :
             "bg-surface-alt text-text-tertiary border-border hover:bg-surface-muted"
           )}>
-            {syncStatus === 'syncing' ? 'Syncing...' : syncStatus}
+            {
+              syncStatus === 'syncing' ? 'Syncing' :
+              syncStatus === 'synced' ? 'Synced' :
+              syncStatus === 'error' ? 'Sync Error' :
+              syncStatus === 'offline' ? 'Offline' :
+              syncStatus === 'local_unapproved' ? 'Local akun' :
+              syncStatus === 'ready' ? 'Siap Sync' :
+              'Local'
+            }
           </Link>
           <OfflineBadge />
           <LanguageSwitch />

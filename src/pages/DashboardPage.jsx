@@ -8,23 +8,24 @@ import { useDataBackup } from '../hooks/useDataBackup';
 import { BackupReminderBanner } from '../components/backup/BackupReminderBanner';
 import { InstallAppBanner } from '../components/pwa/InstallAppBanner';
 import { PageContainer } from '../components/layout/PageContainer';
-import { SummaryCard } from '../components/ui/SummaryCard';
-import { Card } from '../components/ui/Card';
-import { Button } from '../components/ui/Button';
-import { Badge } from '../components/ui/Badge';
-import { EmptyState } from '../components/ui/EmptyState';
-import { formatCurrency, formatPercent } from '../lib/calculations';
-import { Box, TrendingUp, CheckCircle, Database, Calculator, Store, Users, ShoppingBag, BarChart3, ChevronRight, AlertTriangle, Sparkles, BookOpen } from 'lucide-react';
-import { AnimatedNumber } from '../components/motion/AnimatedNumber';
-import { StaggerContainer } from '../components/motion/StaggerContainer';
-import { FadeIn } from '../components/motion/FadeIn';
+
+// Dashboard Subcomponents
+import { DashboardHero } from '../components/dashboard/DashboardHero';
+import { DashboardMetricGrid } from '../components/dashboard/DashboardMetricGrid';
+import { DashboardEmptyState } from '../components/dashboard/DashboardEmptyState';
+import { DashboardQuickActions } from '../components/dashboard/DashboardQuickActions';
+import { DashboardRecentCalculations } from '../components/dashboard/DashboardRecentCalculations';
+import { DashboardRecommendations } from '../components/dashboard/DashboardRecommendations';
+import { DashboardTipsCard } from '../components/dashboard/DashboardTipsCard';
+import { DashboardBusinessPulse } from '../components/dashboard/DashboardBusinessPulse';
+import { DashboardNewProductCta } from '../components/dashboard/DashboardNewProductCta';
 
 export const DashboardPage = () => {
-  const { t, lang } = useLanguage();
+  const { t } = useLanguage();
   const navigate = useNavigate();
-  const { settings, stats, loadDemoData, calculations } = useAppData();
+  const { loadDemoData } = useAppData();
   const { 
-    summary: reportSummary,
+    summary,
     recommendations,
     hasAnyData 
   } = useReports();
@@ -40,307 +41,40 @@ export const DashboardPage = () => {
     });
   };
 
-  const summary = reportSummary;
-
-  // Time-based greeting
-  const hour = new Date().getHours();
-  let greetingPrefix = 'Selamat Pagi';
-  if (hour >= 11 && hour < 15) greetingPrefix = 'Selamat Siang';
-  else if (hour >= 15 && hour < 18) greetingPrefix = 'Selamat Sore';
-  else if (hour >= 18) greetingPrefix = 'Selamat Malam';
-
   return (
     <PageContainer>
-      {storageHealth?.backupReminder?.shouldShow && (
-        <BackupReminderBanner 
-          reminder={storageHealth.backupReminder}
-          onExport={() => navigate('/data-backup')}
-        />
-      )}
-      
-      <InstallAppBanner />
+      <div className="dashboard-shell-container">
+        {storageHealth?.backupReminder?.shouldShow && (
+          <BackupReminderBanner 
+            reminder={storageHealth.backupReminder}
+            onExport={() => navigate('/data-backup')}
+          />
+        )}
+        
+        <InstallAppBanner />
 
-      <div className="page-header mb-8 flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-extrabold text-text-primary tracking-tight mb-1">
-            {greetingPrefix}, <span className="text-brand-primary">F&B Owner!</span>
-          </h1>
-          <p className="text-text-secondary text-sm font-medium">
-            Ringkasan performa bisnismu hari ini.
-          </p>
-        </div>
-        <div className="hidden md:flex w-12 h-12 bg-surface-muted rounded-full items-center justify-center border border-border shadow-sm">
-          <Store className="w-5 h-5 text-text-secondary" />
-        </div>
-      </div>
+        {/* Hero Banner Component */}
+        <DashboardHero hasAnyData={hasAnyData} />
 
-      {hasAnyData && (
-        <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <FadeIn>
-            <SummaryCard 
-              title={t('dashboard.summaryProducts')} 
-              value={<AnimatedNumber value={summary.dataCoverage.calculations} />} 
-              icon={Box} 
-              tone="neutral" 
-            />
-          </FadeIn>
-          <FadeIn>
-            <SummaryCard 
-              title={t('dashboard.summaryAverageMargin')} 
-              value={<AnimatedNumber value={summary.averageMargin} suffix="%" />} 
-              icon={TrendingUp} 
-              tone={summary.averageMargin >= 25 ? 'good' : 'loss'} 
-            />
-          </FadeIn>
-          <FadeIn>
-            <SummaryCard 
-              title={t('dashboard.summaryHealthyMenus')} 
-              value={<AnimatedNumber value={summary.healthyCount} />} 
-              icon={CheckCircle} 
-              tone="good" 
-            />
-          </FadeIn>
-          <FadeIn>
-            <Card 
-              variant="clickable"
-              className="p-5 h-full flex flex-col justify-between bg-gradient-to-br from-brand-soft/50 to-surface border-brand-primary/20"
-              onClick={() => navigate('/reports')}
-            >
-              <div className="flex justify-between items-start mb-2">
-                <h3 className="text-xs font-bold tracking-wider uppercase text-brand-primary/80">{t('nav.reports')}</h3>
-                <BarChart3 className="w-5 h-5 text-brand-primary opacity-80" />
-              </div>
-              <div>
-                <div className="text-lg font-bold mb-1 text-text-primary flex items-center justify-between">
-                  Buka Laporan
-                  <ChevronRight className="w-5 h-5 text-brand-primary" />
-                </div>
-                <div className="text-xs text-text-secondary font-medium">
-                  {summary.lossCount > 0 ? (
-                    <span className="text-status-loss flex items-center gap-1"><AlertTriangle className="w-3.5 h-3.5"/> {summary.lossCount} Item Rugi</span>
-                  ) : (
-                    <span>Lihat insight bisnismu</span>
-                  )}
-                </div>
-              </div>
-            </Card>
-          </FadeIn>
-        </StaggerContainer>
-      )}
-
-      {!hasAnyData ? (
-        <FadeIn className="space-y-6 mb-8">
-          <Card className="p-8 md:p-10 bg-gradient-to-br from-surface to-[var(--color-primary-softer)] border border-brand-primary/10 relative overflow-hidden shadow-soft-glow">
-            <div className="absolute top-0 right-0 opacity-10 w-64 h-64 translate-x-1/3 -translate-y-1/3 bg-brand-primary rounded-full blur-3xl pointer-events-none"></div>
-            <div className="relative z-10 flex flex-col items-center text-center">
-              <div className="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-6 text-brand-primary">
-                <Sparkles className="w-8 h-8" />
-              </div>
-              <h2 className="text-2xl font-bold text-text-primary mb-3">Selamat datang di {t('app.name')}!</h2>
-              <p className="text-text-secondary max-w-md mx-auto mb-8 leading-relaxed">
-                Aplikasi ini membantumu menghitung HPP, mengelola resep, dan menentukan harga jual yang aman agar bisnismu selalu untung.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-4">
-                <Button size="lg" onClick={() => navigate('/calculator')} className="w-full sm:w-auto min-w-[200px]">
-                  {t('dashboard.startCalculating')}
-                </Button>
-                <Button size="lg" variant="secondary" onClick={handleLoadDemo} className="w-full sm:w-auto min-w-[200px]">
-                  {t('dashboard.loadDemoData')}
-                </Button>
-              </div>
-            </div>
-          </Card>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card variant="clickable" className="p-6 bg-surface border-border/50 group hover:border-brand-primary/30 transition-all duration-300 shadow-sm hover:shadow-md" onClick={() => navigate('/calculator')}>
-              <div className="w-12 h-12 bg-surface-muted text-text-secondary rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-brand-soft group-hover:text-brand-primary transition-all duration-300">
-                <Calculator className="w-6 h-6" />
-              </div>
-              <h3 className="font-bold text-text-primary mb-1 tracking-tight">Hitung HPP</h3>
-              <p className="text-sm text-text-secondary">Hitung modal dan harga jual per produk.</p>
-            </Card>
-            <Card variant="clickable" className="p-6 bg-surface border-border/50 group hover:border-brand-primary/30 transition-all duration-300 shadow-sm hover:shadow-md" onClick={() => navigate('/recipes')}>
-              <div className="w-12 h-12 bg-surface-muted text-text-secondary rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-brand-soft group-hover:text-brand-primary transition-all duration-300">
-                <BookOpen className="w-6 h-6" />
-              </div>
-              <h3 className="font-bold text-text-primary mb-1 tracking-tight">Buat Resep</h3>
-              <p className="text-sm text-text-secondary">Simpan resep rahasia bisnismu.</p>
-            </Card>
-            <Card variant="clickable" className="p-6 bg-surface border-border/50 group hover:border-brand-primary/30 transition-all duration-300 shadow-sm hover:shadow-md" onClick={() => navigate('/channel-pricing')}>
-              <div className="w-12 h-12 bg-surface-muted text-text-secondary rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-brand-soft group-hover:text-brand-primary transition-all duration-300">
-                <Store className="w-6 h-6" />
-              </div>
-              <h3 className="font-bold text-text-primary mb-1 tracking-tight">Simulasi Harga</h3>
-              <p className="text-sm text-text-secondary">Atur harga untuk GoFood, GrabFood, dll.</p>
-            </Card>
+        {!hasAnyData ? (
+          <div className="space-y-6">
+            <DashboardEmptyState onLoadDemo={handleLoadDemo} />
+            <DashboardQuickActions />
           </div>
-        </FadeIn>
-      ) : (
-        <>
-          <Card className="p-6 md:p-8 mb-10 bg-gradient-to-r from-brand-primary to-accent-coral text-white border-none shadow-floating relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-8 opacity-10 transform translate-x-4 -translate-y-4">
-              <Calculator className="w-32 h-32" />
-            </div>
-            <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-6">
-              <div>
-                <h2 className="text-2xl font-bold mb-2">Punya produk baru?</h2>
-                <p className="text-white/90 text-sm md:text-base max-w-md leading-relaxed">Hitung HPP dan temukan harga jual yang tepat agar bisnismu tetap untung.</p>
-              </div>
-              <Button 
-                variant="secondary"
-                size="lg"
-                className="bg-white text-brand-primary border-none hover:bg-white/95 hover:text-brand-primary-hover hover:scale-105 shadow-md hover:shadow-lg transition-all whitespace-nowrap w-full sm:w-auto px-8 font-bold"
-                onClick={() => navigate('/calculator')}
-              >
-                {t('dashboard.mainCta')}
-              </Button>
-            </div>
-          </Card>
-
-          <div className="mb-5 flex justify-between items-end">
-            <div>
-              <h2 className="text-xl font-bold text-text-primary tracking-tight">{t('dashboard.recentCalculations')}</h2>
-              <p className="text-sm text-text-secondary mt-1">Perhitungan terakhir yang kamu simpan</p>
-            </div>
-            <Button variant="ghost" size="sm" onClick={() => navigate('/history')} className="hidden sm:inline-flex text-brand-primary font-bold hover:bg-brand-soft">
-              {t('dashboard.viewAll')} <ChevronRight className="w-4 h-4 ml-1" />
-            </Button>
+        ) : (
+          <div className="space-y-6">
+            <DashboardMetricGrid summary={summary} />
+            <DashboardBusinessPulse summary={summary} />
+            <DashboardNewProductCta />
+            <DashboardRecentCalculations />
+            <DashboardQuickActions />
+            <DashboardRecommendations recommendations={recommendations} />
           </div>
+        )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
-            {stats.recentCalculations.slice(0, 3).map((item) => (
-              <Card 
-                key={item.id} 
-                variant="clickable"
-                className="p-0 flex flex-col border-border/50 bg-surface overflow-hidden group hover:shadow-md transition-all duration-300" 
-                onClick={() => navigate(`/history/${item.id}`)}
-              >
-                <div className={`h-1 w-full ${item.result.profitStatus.key === 'loss' ? 'bg-status-loss' : item.result.profitStatus.key === 'low' ? 'bg-status-low' : item.result.profitStatus.key === 'okay' ? 'bg-status-okay' : 'bg-status-good'}`}></div>
-                <div className="p-5 flex-1 flex flex-col">
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="font-bold text-text-primary truncate pr-2 text-lg group-hover:text-brand-primary transition-colors tracking-tight">{item.productName}</div>
-                    <Badge variant={item.result.profitStatus.key} className="shrink-0">
-                      {t(`result.status.${item.result.profitStatus.key}`)}
-                    </Badge>
-                  </div>
-                  
-                  <div className="flex justify-between items-end mt-auto pt-4 border-t border-border/50">
-                    <div>
-                      <div className="text-[10px] font-bold text-text-tertiary uppercase tracking-wider mb-1">Harga Jual</div>
-                      <div className="font-semibold text-text-primary tabular-nums">
-                        {formatCurrency(item.result.sellingPrice, lang, settings.currency)}
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-[10px] font-bold text-text-tertiary uppercase tracking-wider mb-1">Margin</div>
-                      <div className="font-bold text-brand-primary tabular-nums">
-                        {formatPercent(item.result.marginPercent, lang)}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-
-          <div className="mt-8 mb-4">
-            <h2 className="text-lg font-bold text-text-primary tracking-tight">Akses Cepat</h2>
-            <p className="text-sm text-text-secondary">Pintasan ke fitur utama Modalin</p>
-          </div>
-          
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
-            <Card 
-              className="p-5 flex flex-col items-center justify-center text-center cursor-pointer border-border/60 hover:border-brand-primary/50 transition-all duration-300 bg-surface group hover:shadow-md"
-              onClick={() => navigate('/channel-pricing')}
-            >
-              <div className="w-12 h-12 bg-surface-muted rounded-2xl flex items-center justify-center mb-3 group-hover:bg-brand-soft transition-colors duration-300">
-                <Calculator className="w-6 h-6 text-text-secondary group-hover:text-brand-primary transition-colors" />
-              </div>
-              <h3 className="font-semibold text-sm text-text-primary">Simulasi Harga</h3>
-            </Card>
-            
-            <Card 
-              className="p-5 flex flex-col items-center justify-center text-center cursor-pointer border-border/60 hover:border-brand-primary/50 transition-all duration-300 bg-surface group hover:shadow-md"
-              onClick={() => navigate('/pricing-simulations')}
-            >
-              <div className="w-12 h-12 bg-surface-muted rounded-2xl flex items-center justify-center mb-3 group-hover:bg-brand-soft transition-colors duration-300">
-                <ShoppingBag className="w-6 h-6 text-text-secondary group-hover:text-brand-primary transition-colors" />
-              </div>
-              <h3 className="font-semibold text-sm text-text-primary">Riwayat Simulasi</h3>
-            </Card>
-            
-            <Card 
-              className="p-5 flex flex-col items-center justify-center text-center cursor-pointer border-border/60 hover:border-brand-primary/50 transition-all duration-300 bg-surface group hover:shadow-md"
-              onClick={() => navigate('/channel-profiles')}
-            >
-              <div className="w-12 h-12 bg-surface-muted rounded-2xl flex items-center justify-center mb-3 group-hover:bg-brand-soft transition-colors duration-300">
-                <Store className="w-6 h-6 text-text-secondary group-hover:text-brand-primary transition-colors" />
-              </div>
-              <h3 className="font-semibold text-sm text-text-primary">Profil Channel</h3>
-            </Card>
-
-            <Card 
-              className="p-5 flex flex-col items-center justify-center text-center cursor-pointer border-border/60 hover:border-brand-primary/50 transition-all duration-300 bg-surface group hover:shadow-md"
-              onClick={() => navigate('/ingredients')}
-            >
-              <div className="w-12 h-12 bg-surface-muted rounded-2xl flex items-center justify-center mb-3 group-hover:bg-brand-soft transition-colors duration-300">
-                <Box className="w-6 h-6 text-text-secondary group-hover:text-brand-primary transition-colors" />
-              </div>
-              <h3 className="font-semibold text-sm text-text-primary">Bahan Baku</h3>
-            </Card>
-            
-            <Card 
-              className="p-5 flex flex-col items-center justify-center text-center cursor-pointer border-border/60 hover:border-brand-primary/50 transition-all duration-300 bg-surface group hover:shadow-md sm:col-span-4 lg:col-span-1"
-              onClick={() => navigate('/reports')}
-            >
-              <div className="w-12 h-12 bg-surface-muted rounded-2xl flex items-center justify-center mb-3 group-hover:bg-brand-soft transition-colors duration-300">
-                <BarChart3 className="w-6 h-6 text-text-secondary group-hover:text-brand-primary transition-colors" />
-              </div>
-              <h3 className="font-semibold text-sm text-text-primary">Laporan Bisnis</h3>
-            </Card>
-          </div>
-
-          {/* Top Recommendations Preview */}
-          {recommendations && recommendations.length > 0 && (
-            <div className="mb-8">
-              <div className="flex justify-between items-end mb-4">
-                <h2 className="text-lg font-bold text-text-primary">Rekomendasi Bisnis</h2>
-                <Button variant="ghost" size="sm" onClick={() => navigate('/reports')}>
-                  {t('dashboard.viewAll')}
-                </Button>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {recommendations.slice(0, 2).map(rec => (
-                  <Card key={rec.id} className="p-4 border-l-4 border-l-status-warning bg-white">
-                    <h4 className="font-bold text-sm mb-1">{rec.titleId || rec.titleEn}</h4>
-                    <p className="text-xs text-text-secondary">{rec.messageId || rec.messageEn}</p>
-                    <button 
-                      className="text-xs text-brand-primary font-semibold mt-2 flex items-center"
-                      onClick={() => rec.actionRoute ? navigate(rec.actionRoute) : navigate('/reports')}
-                    >
-                      {rec.actionLabelId || 'Lihat'} <ChevronRight className="w-3 h-3 ml-1" />
-                    </button>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          )}
-        </>
-      )}
-
-      <div className="mt-8 p-5 bg-gradient-to-r from-[var(--color-status-low-bg)] to-white border border-status-low/20 rounded-2xl flex items-start gap-4 shadow-sm">
-        <div className="w-10 h-10 bg-status-low/10 rounded-full flex items-center justify-center text-status-low shrink-0 mt-0.5">
-          <Sparkles className="w-5 h-5" />
-        </div>
-        <div>
-          <h4 className="font-bold text-text-primary text-sm mb-1">Tips Pemula</h4>
-          <p className="text-text-secondary text-sm leading-relaxed">
-            {t('dashboard.beginnerTip')}
-          </p>
-        </div>
+        {/* Tips Component */}
+        <DashboardTipsCard hasAnyData={hasAnyData} />
       </div>
     </PageContainer>
   );
 };
-

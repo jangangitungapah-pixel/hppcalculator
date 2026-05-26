@@ -46,3 +46,41 @@
     color: var(--color-text-secondary);
   }
 }
+
+/* Dashboard Mobile Overrides */
+@media (max-width: 640px) {
+  .dashboard-hero {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.25rem 1.5rem;
+    gap: 1rem;
+  }
+
+  .dashboard-hero-title {
+    font-size: 1.5rem;
+  }
+
+  .dashboard-hero-subtitle {
+    margin-bottom: 0.75rem;
+  }
+
+  .dashboard-status-pill-container {
+    justify-content: center;
+  }
+
+  .dashboard-empty-card {
+    padding: 1.5rem;
+  }
+
+  .dashboard-empty-title {
+    font-size: 1.35rem;
+  }
+
+  .dashboard-new-product-cta {
+    padding: 1.5rem;
+  }
+
+  .dashboard-new-product-title {
+    font-size: 1.25rem;
+  }
+}

@@ -51,6 +51,15 @@ describe('storageScope', () => {
     expect(scoped).toBe('modalin:v1:user:user_123:ingredients');
   });
 
+  it('should format keys differently for user A and user B', () => {
+    const baseKey = 'modalin:v1:ingredients';
+    const keyA = getScopedStorageKey(baseKey, { type: 'user', uid: 'user_A' });
+    const keyB = getScopedStorageKey(baseKey, { type: 'user', uid: 'user_B' });
+    expect(keyA).not.toBe(keyB);
+    expect(keyA).toBe('modalin:v1:user:user_A:ingredients');
+    expect(keyB).toBe('modalin:v1:user:user_B:ingredients');
+  });
+
   it('should not double scope keys', () => {
     const alreadyGuestScoped = 'modalin:v1:guest:ingredients';
     const scoped1 = getScopedStorageKey(alreadyGuestScoped);

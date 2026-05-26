@@ -11,3 +11,4 @@ export * from './productsStorage';
 export * from './channelProfilesStorage';
 export * from './pricingSimulationsStorage';
 export * from './bundleSimulationsStorage';
+export * from './scopeDataInspection';

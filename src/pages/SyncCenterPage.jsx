@@ -8,9 +8,10 @@ import { Button } from '../components/ui/Button';
 import { Alert } from '../components/ui/Alert';
 import { Cloud, WifiOff, UploadCloud, DownloadCloud, RefreshCw, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { FadeIn } from '../components/motion/FadeIn';
+import { getActiveScopeBusinessDataCounts } from '../lib/storage/scopeDataInspection';
 
 export const SyncCenterPage = () => {
-  const { isGuest, isFirebaseReady } = useAuth();
+  const { isGuest, isFirebaseReady, isAuthenticated } = useAuth();
   const { 
     syncStatus, 
     lastSyncAt, 
@@ -19,6 +20,7 @@ export const SyncCenterPage = () => {
     pushLocalToCloud, 
     pullCloudToLocal,
     showInitialPrompt,
+    initialPromptMode,
     promptInitialSync,
     dismissInitialSyncPrompt,
     autoSyncEnabled,
@@ -47,7 +49,7 @@ export const SyncCenterPage = () => {
           <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 text-brand-primary">
             <Cloud className="w-8 h-8" />
           </div>
-          <h2 className="text-xl font-bold mb-2">Cloud Sync Belum Aktif</h2>
+          <h2 className="text-xl font-bold mb-2">Mode lokal aktif. Login untuk sinkronisasi cloud.</h2>
           <p className="text-text-secondary mb-6 max-w-sm mx-auto">
             Masuk ke akun Anda untuk mulai mencadangkan data secara otomatis ke cloud dan mengaksesnya dari perangkat lain.
           </p>
@@ -56,6 +58,9 @@ export const SyncCenterPage = () => {
       </PageContainer>
     );
   }
+
+  const activeCounts = getActiveScopeBusinessDataCounts();
+  const hasNoData = activeCounts.total === 0;
 
   return (
     <PageContainer maxWidth="max-w-2xl">
@@ -68,15 +73,31 @@ export const SyncCenterPage = () => {
         {showInitialPrompt && (
           <FadeIn>
             <Card className="p-6 border-brand-primary bg-brand-primary/5">
-              <h3 className="text-lg font-bold text-brand-primary mb-2">Sinkronkan Data Lokal?</h3>
+              <h3 className="text-lg font-bold text-brand-primary mb-2">
+                {initialPromptMode === 'import_guest_data' 
+                  ? 'Kamu punya data Guest yang belum masuk akun ini.' 
+                  : 'Kamu punya data lokal di akun ini yang belum disinkronkan.'}
+              </h3>
               <p className="text-sm text-text-secondary mb-4">
-                Kami mendeteksi Anda memiliki data bisnis di perangkat ini. Apakah Anda ingin mengunggahnya ke cloud sekarang?
+                {initialPromptMode === 'import_guest_data'
+                  ? 'Kamu punya data lokal sebagai Guest. Mau salin ke akun ini dan sinkronkan ke cloud?'
+                  : 'Kamu punya data lokal di akun ini. Mau sinkronkan ke cloud?'}
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
-                <Button onClick={promptInitialSync}>Ya, Unggah ke Cloud</Button>
+                <Button onClick={promptInitialSync}>
+                  {initialPromptMode === 'import_guest_data' ? 'Salin Guest ke Akun & Sync' : 'Upload ke Cloud'}
+                </Button>
                 <Button variant="outline" onClick={dismissInitialSyncPrompt}>Nanti Saja</Button>
               </div>
             </Card>
+          </FadeIn>
+        )}
+
+        {isAuthenticated && hasNoData && (
+          <FadeIn>
+            <Alert type="info">
+              Belum ada data untuk disinkronkan. Data baru akan otomatis disiapkan untuk cloud sync.
+            </Alert>
           </FadeIn>
         )}
 
@@ -92,6 +113,7 @@ export const SyncCenterPage = () => {
               <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
                 syncStatus === 'synced' ? 'bg-success-50 text-success-600' :
                 syncStatus === 'error' ? 'bg-error-50 text-error-600' :
+                syncStatus === 'local_unapproved' ? 'bg-warning-50 text-warning-600' :
                 'bg-brand-primary/10 text-brand-primary'
               }`}>
                 {syncStatus === 'synced' ? <CheckCircle2 className="w-6 h-6" /> :
@@ -99,12 +121,15 @@ export const SyncCenterPage = () => {
                  <RefreshCw className={`w-6 h-6 ${isSyncing ? 'animate-spin' : ''}`} />}
               </div>
               <div>
-                <h3 className="font-bold text-lg capitalize">{
-                  syncStatus === 'synced' ? 'Tersinkron' :
-                  syncStatus === 'syncing' ? 'Menyinkronkan...' :
-                  syncStatus === 'error' ? 'Gagal Sinkron' :
-                  syncStatus === 'offline' ? 'Menunggu Koneksi' : 'Siap Sinkron'
-                }</h3>
+                <h3 className="font-bold text-lg">
+                  {
+                    syncStatus === 'synced' ? 'Data akun ini tersinkron' :
+                    syncStatus === 'syncing' ? 'Menyinkronkan...' :
+                    syncStatus === 'error' ? 'Gagal Sinkron' :
+                    syncStatus === 'offline' ? 'Menunggu Koneksi' :
+                    syncStatus === 'local_unapproved' ? 'Belum Disetujui' : 'Siap Sinkron'
+                  }
+                </h3>
                 <p className="text-xs text-text-secondary mt-0.5">
                   Terakhir: {lastSyncAt ? new Date(lastSyncAt).toLocaleString('id-ID') : 'Belum pernah'}
                 </p>
