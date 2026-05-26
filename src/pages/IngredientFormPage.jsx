@@ -126,10 +126,14 @@ export const IngredientFormPage = () => {
             value={form.category}
             onChange={(e) => updateField('category', e.target.value)}
           >
-            <option value="ingredient">Bahan Utama</option>
-            <option value="spice">Bumbu / Rempah</option>
-            <option value="topping">Topping</option>
+            <option value="ingredient">Bahan Pokok</option>
+            <option value="protein">Protein</option>
+            <option value="sayur_buah">Sayur / Buah</option>
+            <option value="spice">Bumbu</option>
+            <option value="dairy">Dairy</option>
             <option value="packaging">Kemasan</option>
+            <option value="topping">Topping</option>
+            <option value="operasional">Operasional</option>
             <option value="other">Lainnya</option>
           </select>
         </div>

@@ -10,14 +10,12 @@ import { useRecipes } from '../hooks/useRecipes';
 import { useIngredients } from '../hooks/useIngredients';
 import { useAppData } from '../hooks/useAppData';
 import { formatCurrency } from '../lib/calculations';
-import { demoRecipes } from '../data/demoRecipes';
-import { demoIngredients } from '../data/demoIngredients';
 import { useToast } from '../hooks/useToast';
 
 export const RecipesPage = () => {
   const { t, lang } = useLanguage();
   const navigate = useNavigate();
-  const { recipes, loadDemoRecipes } = useRecipes();
+  const { recipes } = useRecipes();
   const { ingredients } = useIngredients();
   const { settings, loadDemoBusinessLibrary } = useAppData();
   const { addToast } = useToast();
@@ -29,14 +27,14 @@ export const RecipesPage = () => {
     if (ingredients.length === 0) {
       setShowDependencyDialog(true);
     } else {
-      loadDemoRecipes(demoRecipes, demoIngredients);
-      addToast({ type: 'success', title: t('toasts.demoRecipesLoaded') });
+      loadDemoBusinessLibrary();
+      addToast({ type: 'success', title: 'Data demo resep dan bahan berhasil dimuat.' });
     }
   };
 
   const handleConfirmLoadBusinessLibrary = () => {
     loadDemoBusinessLibrary();
-    addToast({ type: 'success', title: t('toasts.demoLoadedTitle') });
+    addToast({ type: 'success', title: 'Data demo resep dan bahan berhasil dimuat.' });
     setShowDependencyDialog(false);
   };
 
@@ -105,14 +103,14 @@ export const RecipesPage = () => {
                 <div className="flex justify-between items-center mb-2 text-sm">
                   <span className="text-text-secondary">Total Modal</span>
                   <span className="font-medium text-text-primary">
-                    {formatCurrency(recipe.resultSnapshot?.totalRecipeCost || 0, language, settings.currency)}
+                    {formatCurrency(recipe.resultSnapshot?.totalRecipeCost || 0, lang, settings.currency)}
                   </span>
                 </div>
 
                 <div className="flex justify-between items-center bg-brand-soft/30 p-2 rounded-lg mt-3">
                   <span className="text-xs text-text-secondary font-medium">HPP per {recipe.outputUnit}</span>
                   <span className="font-bold text-brand-primary">
-                    {formatCurrency(recipe.resultSnapshot?.hppPerUnit || 0, language, settings.currency)}
+                    {formatCurrency(recipe.resultSnapshot?.hppPerUnit || 0, lang, settings.currency)}
                   </span>
                 </div>
               </div>

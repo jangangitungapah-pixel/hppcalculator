@@ -1,14 +1,7 @@
 import React from 'react';
-import CountUpComponent, { CountUp as NamedCountUp } from 'react-countup';
+import CountUp from 'react-countup';
 import { useLanguage } from '../../hooks/useLanguage';
 import { useAppData } from '../../hooks/useAppData';
-
-// Robust resolver for CommonJS/ESM default and named exports
-const CountUp = NamedCountUp || (
-  typeof CountUpComponent === 'object' && CountUpComponent.default 
-    ? CountUpComponent.default 
-    : CountUpComponent
-);
 
 export const AnimatedNumber = ({ 
   value, 

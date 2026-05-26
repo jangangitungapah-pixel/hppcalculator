@@ -78,7 +78,6 @@ function App() {
           <Route path="/simulations" element={<PricingSimulationsPage />} />
           <Route path="/reports" element={<ReportsPage />} />
           <Route path="/data-backup" element={<DataBackupPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
           <Route path="/account" element={<AccountPage />} />
           <Route path="/sync" element={<SyncCenterPage />} />
           <Route path="/offline" element={<OfflinePage />} />

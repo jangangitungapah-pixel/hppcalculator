@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Calculator } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { FadeIn } from '../motion/FadeIn';
 
@@ -21,23 +21,26 @@ export const DashboardEmptyState = ({ onLoadDemo }) => {
               Hitung modal, tentukan harga jual, lalu simpan hasilnya untuk dipantau.
             </p>
             
-            <div className="dashboard-empty-actions">
+            <div className="dashboard-empty-actions flex items-center gap-4 mt-6">
               <Button 
                 onClick={() => navigate('/calculator')} 
-                className="w-full sm:w-auto"
+                variant="primary"
+                className="tooltip-container rounded-full w-14 h-14 p-0 flex items-center justify-center shadow-lg shadow-glow-primary hover:scale-110 active:scale-95 transition-all duration-300"
               >
-                Hitung HPP Sekarang
+                <Calculator className="w-6 h-6" />
+                <span className="tooltip-box">Hitung HPP Sekarang</span>
               </Button>
               <Button 
                 variant="secondary" 
                 onClick={onLoadDemo} 
-                className="w-full sm:w-auto"
+                className="tooltip-container rounded-full w-14 h-14 p-0 flex items-center justify-center shadow-md hover:scale-110 active:scale-95 transition-all duration-300"
               >
-                Coba Data Demo
+                <Sparkles className="w-6 h-6 text-brand-primary" />
+                <span className="tooltip-box">Coba Data Demo</span>
               </Button>
             </div>
             
-            <p className="text-xs text-text-muted mt-4 font-medium">
+            <p className="text-xs text-text-muted mt-6 font-medium">
               Bisa dipakai tanpa login. Cloud sync opsional.
             </p>
           </div>

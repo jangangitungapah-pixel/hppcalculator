@@ -12,6 +12,7 @@ import { PromoPricingForm } from '../../components/pricing/PromoPricingForm';
 import { BundlePricingForm } from '../../components/pricing/BundlePricingForm';
 import { ConsignmentPricingForm } from '../../components/pricing/ConsignmentPricingForm';
 import { Toast } from '../../components/ui/Toast';
+import { PageContainer } from '../../components/layout/PageContainer';
 
 export const ChannelPricingPage = () => {
   const { t } = useLanguage();
@@ -81,24 +82,21 @@ export const ChannelPricingPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-bg-primary flex flex-col pb-20">
-
-      <main className="flex-1 p-4 max-w-4xl mx-auto w-full">
-        {activeTab !== 'bundle' && (
-          <div className="mb-6">
-            <ProductSourcePicker 
-              value={sourceData} 
-              onChange={setSourceData} 
-            />
-          </div>
-        )}
-
-        <ChannelTabs activeTab={activeTab} onChange={setActiveTab} />
-
-        <div className="mt-4">
-          {renderActiveForm()}
+    <PageContainer maxWidth="max-w-4xl">
+      {activeTab !== 'bundle' && (
+        <div className="mb-6">
+          <ProductSourcePicker 
+            value={sourceData} 
+            onChange={setSourceData} 
+          />
         </div>
-      </main>
+      )}
+
+      <ChannelTabs activeTab={activeTab} onChange={setActiveTab} />
+
+      <div className="mt-4">
+        {renderActiveForm()}
+      </div>
 
       {toast && (
         <Toast
@@ -107,6 +105,6 @@ export const ChannelPricingPage = () => {
           onClose={() => setToast(null)}
         />
       )}
-    </div>
+    </PageContainer>
   );
 };

@@ -1,136 +1,194 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Search, ArchiveRestore, PackageSearch } from 'lucide-react';
 import { PageContainer } from '../components/layout/PageContainer';
-import { Card } from '../components/ui/Card';
-import { Button } from '../components/ui/Button';
-import { Input } from '../components/ui/Input';
-import { StaggerContainer } from '../components/motion/StaggerContainer';
-import { FadeIn } from '../components/motion/FadeIn';
+import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { useLanguage } from '../hooks/useLanguage';
 import { useIngredients } from '../hooks/useIngredients';
-import { formatCurrency } from '../lib/calculations';
 import { useAppData } from '../hooks/useAppData';
-import { demoIngredients } from '../data/demoIngredients';
 import { useToast } from '../hooks/useToast';
+import { demoIngredients } from '../data/demoIngredients';
+
+// Import new subcomponents
+import { IngredientsHero } from '../components/ingredients/IngredientsHero';
+import { IngredientStatsGrid } from '../components/ingredients/IngredientStatsGrid';
+import { IngredientsToolbar } from '../components/ingredients/IngredientsToolbar';
+import { IngredientCard } from '../components/ingredients/IngredientCard';
+import { IngredientListView } from '../components/ingredients/IngredientListView';
+import { IngredientEmptyState } from '../components/ingredients/IngredientEmptyState';
+import { IngredientDemoBanner } from '../components/ingredients/IngredientDemoBanner';
+import { StaggerContainer } from '../components/motion/StaggerContainer';
+import { FadeIn } from '../components/motion/FadeIn';
 
 export const IngredientsPage = () => {
   const { t, lang } = useLanguage();
   const navigate = useNavigate();
-  const { ingredients, loadDemoIngredients } = useIngredients();
+  const { ingredients, loadDemoIngredients, deleteIngredient } = useIngredients();
   const { settings } = useAppData();
   const { addToast } = useToast();
-  
+
+  // Local toolbar states
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedSource, setSelectedSource] = useState('all');
+  const [sortBy, setSortBy] = useState('newest');
+  const [viewMode, setViewMode] = useState('grid');
+
+  // Deletion modal state
+  const [deleteId, setDeleteId] = useState(null);
 
   const handleLoadDemo = () => {
     loadDemoIngredients(demoIngredients);
-    addToast({ type: 'success', title: t('toasts.demoIngredientsLoaded') });
+    addToast({ type: 'success', title: 'Data demo bahan berhasil dimuat.' });
   };
 
-  const filteredIngredients = ingredients.filter(ing => 
-    ing.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (ing.category && ing.category.toLowerCase().includes(searchQuery.toLowerCase()))
+  const handleDeleteConfirm = () => {
+    if (deleteId) {
+      deleteIngredient(deleteId);
+      addToast({ type: 'success', title: 'Bahan berhasil dihapus' });
+      setDeleteId(null);
+    }
+  };
+
+  // Get unique categories dynamically
+  const uniqueCategories = Array.from(
+    new Set(ingredients.map((ing) => ing.category).filter(Boolean))
   );
+
+  // Filter logic
+  const filteredIngredients = ingredients.filter((ing) => {
+    const matchesSearch =
+      (ing.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (ing.category || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (ing.purchaseUnit || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (ing.baseUnit || '').toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesCategory =
+      selectedCategory === 'all' || ing.category === selectedCategory;
+
+    const matchesSource =
+      selectedSource === 'all' ||
+      (selectedSource === 'demo' && ing.source === 'demo') ||
+      (selectedSource === 'user' && ing.source !== 'demo');
+
+    return matchesSearch && matchesCategory && matchesSource;
+  });
+
+  // Sorting logic
+  const sortedIngredients = [...filteredIngredients].sort((a, b) => {
+    if (sortBy === 'newest') {
+      return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+    }
+    if (sortBy === 'name_asc') {
+      return (a.name || '').localeCompare(b.name || '');
+    }
+    if (sortBy === 'name_desc') {
+      return (b.name || '').localeCompare(a.name || '');
+    }
+    if (sortBy === 'price_desc') {
+      return (b.costPerBaseUnit || 0) - (a.costPerBaseUnit || 0);
+    }
+    if (sortBy === 'price_asc') {
+      return (a.costPerBaseUnit || 0) - (b.costPerBaseUnit || 0);
+    }
+    return 0;
+  });
+
+  const hasIngredients = ingredients.length > 0;
+  const hasDemo = ingredients.some((ing) => ing.source === 'demo');
 
   return (
     <PageContainer>
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-        <div>
-          <h1 className="text-3xl font-extrabold text-text-primary tracking-tight mb-2">{t('ingredients.title')}</h1>
-          <p className="text-text-secondary font-medium">{t('ingredients.subtitle')}</p>
-        </div>
-        <div className="flex gap-3 w-full md:w-auto">
-          {ingredients.length === 0 && (
-            <Button variant="secondary" onClick={handleLoadDemo} className="flex-1 md:flex-none hover:shadow-md hover:scale-[1.02] transition-all">
-              <ArchiveRestore className="w-4 h-4 mr-2" />
-              {t('ingredients.loadDemoIngredients')}
-            </Button>
-          )}
-          <Button variant="primary" onClick={() => navigate('/ingredients/new')} className="flex-1 md:flex-none shadow-glow-primary hover:scale-[1.02] transition-all">
-            {t('ingredients.addIngredient')}
-          </Button>
-        </div>
-      </div>
+      <div className="ingredients-shell">
+        {/* Ingredients Header/Hero */}
+        <IngredientsHero 
+          hasIngredients={hasIngredients}
+          onAddClick={() => navigate('/ingredients/new')}
+          onLoadDemoClick={handleLoadDemo}
+        />
 
-      {ingredients.length > 0 ? (
-        <>
-          <div className="mb-6 relative max-w-md">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-text-secondary" />
-            </div>
-            <Input 
-              type="text" 
-              placeholder="Cari nama bahan atau kategori..." 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
+        {hasIngredients ? (
+          <>
+            {/* Stats Grid */}
+            <IngredientStatsGrid 
+              ingredients={ingredients} 
+              settings={settings} 
+              lang={lang} 
             />
-          </div>
 
-          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredIngredients.map(ing => (
-              <FadeIn key={ing.id}>
-                <Card 
-                  variant="clickable"
-                  onClick={() => navigate(`/ingredients/${ing.id}`)}
-                  className="p-5 flex flex-col justify-between border-border/50 group bg-surface hover:border-brand-primary/40 hover:shadow-md transition-all duration-300"
-                >
-                  <div className="flex justify-between items-start mb-4">
-                    <h3 className="font-bold text-lg text-text-primary line-clamp-1 group-hover:text-brand-primary transition-colors tracking-tight" title={ing.name}>{ing.name}</h3>
-                    {ing.source === 'demo' && (
-                      <span className="text-[10px] uppercase font-bold bg-brand-soft text-brand-primary px-2 py-1 rounded-md shrink-0">Demo</span>
-                    )}
-                  </div>
-                  
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-sm text-text-secondary font-medium">Harga Beli</span>
-                    <span className="font-semibold text-text-primary tabular-nums">
-                      {formatCurrency(ing.purchasePrice, lang, settings.currency)} <span className="text-text-muted text-xs font-normal">/ {ing.purchaseQuantity} {ing.purchaseUnit}</span>
-                    </span>
-                  </div>
-                  
-                  <div className="flex justify-between items-center bg-brand-soft/20 group-hover:bg-brand-soft/40 transition-colors p-3 rounded-xl mt-4 border border-brand-primary/10">
-                    <span className="text-xs text-text-secondary font-bold uppercase tracking-wider">Harga per {ing.baseUnit}</span>
-                    <span className="font-extrabold text-brand-primary tabular-nums text-lg">
-                      {formatCurrency(ing.costPerBaseUnit, lang, settings.currency)}
-                    </span>
-                  </div>
-                </Card>
-              </FadeIn>
-            ))}
-            
-            {filteredIngredients.length === 0 && (
-              <div className="col-span-full py-16 text-center text-text-secondary bg-surface rounded-3xl border border-dashed border-border">
-                <div className="w-16 h-16 bg-surface-muted rounded-full flex items-center justify-center mx-auto mb-4 text-text-muted">
-                  <Search className="w-8 h-8" />
-                </div>
-                <p className="font-medium text-text-primary">Tidak ada bahan baku yang cocok.</p>
-                <p className="text-sm mt-1">Coba kata kunci pencarian yang lain.</p>
+            {/* Show small banner if user has data but no demo data yet */}
+            {!hasDemo && (
+              <IngredientDemoBanner onLoadDemoClick={handleLoadDemo} />
+            )}
+
+            {/* Filter / Search Toolbar */}
+            <IngredientsToolbar
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              selectedCategory={selectedCategory}
+              onCategoryChange={setSelectedCategory}
+              selectedSource={selectedSource}
+              onSourceChange={setSelectedSource}
+              sortBy={sortBy}
+              onSortChange={setSortBy}
+              viewMode={viewMode}
+              onViewModeChange={setViewMode}
+              uniqueCategories={uniqueCategories}
+            />
+
+            {/* Render List or Grid */}
+            {sortedIngredients.length > 0 ? (
+              viewMode === 'grid' ? (
+                <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {sortedIngredients.map((ing) => (
+                    <FadeIn key={ing.id}>
+                      <IngredientCard
+                        ingredient={ing}
+                        onClick={() => navigate(`/ingredients/${ing.id}`)}
+                        onEdit={() => navigate(`/ingredients/${ing.id}/edit`)}
+                        onDelete={() => setDeleteId(ing.id)}
+                        lang={lang}
+                        currency={settings.currency}
+                      />
+                    </FadeIn>
+                  ))}
+                </StaggerContainer>
+              ) : (
+                <IngredientListView
+                  ingredients={sortedIngredients}
+                  onItemClick={(id) => navigate(`/ingredients/${id}`)}
+                  onEdit={(id) => navigate(`/ingredients/${id}/edit`)}
+                  onDelete={(id) => setDeleteId(id)}
+                  lang={lang}
+                  currency={settings.currency}
+                />
+              )
+            ) : (
+              <div className="py-16 text-center text-text-secondary bg-surface rounded-3xl border border-dashed border-border shadow-sm">
+                <p className="font-bold text-text-primary text-base">Tidak ada bahan baku yang cocok.</p>
+                <p className="text-xs text-text-secondary mt-1">Coba kata kunci pencarian atau filter yang lain.</p>
               </div>
             )}
-          </StaggerContainer>
-        </>
-      ) : (
-        <FadeIn className="flex flex-col items-center justify-center py-20 px-4 text-center bg-gradient-to-br from-surface to-brand-soft/20 rounded-3xl border border-dashed border-brand-primary/20 mt-8 shadow-sm">
-          <div className="w-24 h-24 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-6 text-brand-primary">
-            <PackageSearch className="w-12 h-12" />
-          </div>
-          <h2 className="text-2xl font-bold text-text-primary mb-3 tracking-tight">{t('ingredients.emptyTitle')}</h2>
-          <p className="text-text-secondary max-w-md mx-auto mb-8 leading-relaxed font-medium">
-            {t('ingredients.emptyBody')}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-            <Button variant="primary" size="lg" onClick={() => navigate('/ingredients/new')} className="shadow-glow-primary w-full sm:w-auto px-8">
-              {t('ingredients.addIngredient')}
-            </Button>
-            <Button size="lg" variant="secondary" onClick={handleLoadDemo} className="w-full sm:w-auto px-8">
-              <ArchiveRestore className="w-5 h-5 mr-2" />
-              {t('ingredients.loadDemoIngredients')}
-            </Button>
-          </div>
-        </FadeIn>
-      )}
+          </>
+        ) : (
+          /* Empty State */
+          <IngredientEmptyState 
+            onAddClick={() => navigate('/ingredients/new')}
+            onLoadDemoClick={handleLoadDemo}
+          />
+        )}
+      </div>
+
+      {/* Standard Confirm Delete Modal */}
+      <ConfirmDialog
+        open={Boolean(deleteId)}
+        onCancel={() => setDeleteId(null)}
+        onConfirm={handleDeleteConfirm}
+        title="Hapus bahan ini?"
+        description="Bahan yang dihapus tidak akan tersedia lagi untuk resep baru. Resep lama mungkin tetap menyimpan snapshot biaya."
+        confirmLabel="Hapus Bahan"
+        cancelLabel="Batal"
+        variant="danger"
+      />
     </PageContainer>
   );
 };

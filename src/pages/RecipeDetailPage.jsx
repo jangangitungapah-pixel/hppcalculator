@@ -166,7 +166,7 @@ export const RecipeDetailPage = () => {
                     <p className="text-sm text-text-secondary">{ing.usedQuantity} {ing.usedUnit}</p>
                   </div>
                   <p className="font-medium text-text-primary">
-                    {formatCurrency(ing.totalCost, language, settings.currency)}
+                    {formatCurrency(ing.totalCost, lang, settings.currency)}
                   </p>
                 </div>
               ))}

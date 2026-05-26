@@ -1,15 +1,19 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Edit2, Trash2, Calendar, Store, Tag } from 'lucide-react';
+import { ArrowLeft, Edit2, Trash2, Calendar, Store } from 'lucide-react';
 import { PageContainer } from '../components/layout/PageContainer';
 import { Button } from '../components/ui/Button';
 import { useLanguage } from '../hooks/useLanguage';
 import { useIngredients } from '../hooks/useIngredients';
 import { useAppData } from '../hooks/useAppData';
-import { formatCurrency } from '../lib/calculations';
-import { formatQuantityWithUnit } from '../lib/units';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { useToast } from '../hooks/useToast';
+import { IngredientCategoryPill } from '../components/ingredients/IngredientCategoryPill';
+import { 
+  formatIngredientPurchasePrice, 
+  formatIngredientUsagePrice,
+  formatIngredientUnitInfo 
+} from '../lib/ingredients/ingredientFormatters';
 
 export const IngredientDetailPage = () => {
   const { id } = useParams();
@@ -75,14 +79,11 @@ export const IngredientDetailPage = () => {
         <div className="p-6 md:p-8">
           <div className="flex justify-between items-start mb-6">
             <div>
-              <h2 className="text-3xl font-bold text-text-primary mb-2">{ingredient.name}</h2>
+              <h2 className="text-3xl font-bold text-text-primary mb-2 tracking-tight">{ingredient.name}</h2>
               <div className="flex items-center gap-3 flex-wrap text-sm text-text-secondary">
-                <span className="flex items-center gap-1 bg-surface-muted px-2 py-1 rounded-md">
-                  <Tag className="w-4 h-4" />
-                  <span className="capitalize">{ingredient.category}</span>
-                </span>
+                <IngredientCategoryPill category={ingredient.category} />
                 {ingredient.source === 'demo' && (
-                  <span className="bg-brand-soft text-brand-primary px-2 py-1 rounded-md font-semibold uppercase text-xs">
+                  <span className="bg-blue-50 text-blue-600 border border-blue-100 px-2.5 py-1 rounded-lg font-bold uppercase text-[10px] tracking-wider">
                     Demo
                   </span>
                 )}
@@ -91,24 +92,30 @@ export const IngredientDetailPage = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div className="bg-surface-muted/50 p-4 rounded-2xl border border-border/50">
-              <p className="text-xs text-text-secondary font-medium uppercase tracking-wider mb-1">Harga Beli</p>
-              <p className="text-xl font-bold text-text-primary">
-                {formatCurrency(ingredient.purchasePrice, lang, settings.currency)}
+            <div className="bg-surface-muted/30 p-5 rounded-2xl border border-border/50">
+              <p className="text-[10px] text-text-secondary font-bold uppercase tracking-wider mb-1">Harga Beli</p>
+              <p className="text-xl font-extrabold text-text-primary tabular-nums">
+                {formatIngredientPurchasePrice(ingredient, lang, settings.currency)}
               </p>
-              <p className="text-sm text-text-secondary mt-1">
-                untuk {formatQuantityWithUnit(ingredient.purchaseQuantity, ingredient.purchaseUnit, lang)}
+              <p className="text-xs text-text-secondary mt-2 border-t border-border/30 pt-2 font-medium">
+                Pembelian dasar dari supplier/pasar.
               </p>
             </div>
             
-            <div className="bg-brand-soft/30 p-4 rounded-2xl border border-brand-soft">
-              <p className="text-xs text-brand-primary/80 font-medium uppercase tracking-wider mb-1">Cost per Base Unit</p>
-              <p className="text-xl font-bold text-brand-primary">
-                {formatCurrency(ingredient.costPerBaseUnit, lang, settings.currency)}
+            <div className="bg-brand-soft/20 p-5 rounded-2xl border border-brand-soft">
+              <p className="text-[10px] text-brand-primary font-bold uppercase tracking-wider mb-1">Harga Satuan Pakai</p>
+              <p className="text-xl font-extrabold text-brand-primary tabular-nums">
+                {formatIngredientUsagePrice(ingredient, lang, settings.currency)}
               </p>
-              <p className="text-sm text-brand-primary/70 mt-1">
-                per {ingredient.baseUnit}
-              </p>
+              {ingredient.purchaseUnit !== ingredient.baseUnit ? (
+                <p className="text-xs text-brand-primary/80 mt-2 border-t border-brand-soft/50 pt-2 font-medium">
+                  Konversi: {formatIngredientUnitInfo(ingredient)}
+                </p>
+              ) : (
+                <p className="text-xs text-brand-primary/80 mt-2 border-t border-brand-soft/50 pt-2 font-medium">
+                  Satuan beli sama dengan satuan pakai.
+                </p>
+              )}
             </div>
           </div>
 

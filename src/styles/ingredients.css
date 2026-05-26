@@ -1,0 +1,118 @@
+/* ==========================================================================
+   Ingredients Shell & Hero Page Layout
+   ========================================================================== */
+
+.ingredients-shell {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Hero Section */
+.ingredients-hero {
+  position: relative;
+  transition: all var(--animate-duration-normal) var(--ease-premium);
+}
+
+.ingredients-hero-pill {
+  transition: opacity var(--animate-duration-fast) ease;
+}
+
+.ingredients-hero-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* ==========================================================================
+   Stats Cards Layout
+   ========================================================================== */
+
+.ingredients-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .ingredients-stats-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.ingredient-stat-card {
+  transition: all var(--animate-duration-normal) var(--ease-premium);
+}
+
+.ingredient-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+/* ==========================================================================
+   Toolbar (Search, Filter, Sort, View mode)
+   ========================================================================== */
+
+.ingredients-toolbar {
+  transition: border-color var(--animate-duration-fast) ease;
+}
+
+.ingredients-view-toggle button {
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   Ingredients Card Grid & List View
+   ========================================================================== */
+
+/* Visual Accents & Category Tones */
+.ingredient-category-pill {
+  border-width: 1px;
+  letter-spacing: 0.05em;
+}
+
+/* Custom visual cards styles */
+.ingredient-card {
+  transition: all var(--animate-duration-normal) var(--ease-premium);
+}
+
+.ingredient-card:hover {
+  transform: translateY(-4px) scale(1.01);
+}
+
+/* List view row states */
+.ingredient-list-row {
+  transition: all var(--animate-duration-normal) var(--ease-premium);
+}
+
+.ingredient-list-row:hover {
+  transform: translateX(4px);
+  background-color: var(--surface-muted);
+}
+
+/* ==========================================================================
+   Empty State Layout
+   ========================================================================== */
+
+.ingredient-empty-state {
+  animation: floatIn var(--animate-duration-slow) var(--ease-premium);
+}
+
+.ingredient-floating-example {
+  transition: transform var(--animate-duration-normal) var(--ease-premium), box-shadow var(--animate-duration-normal) var(--ease-premium);
+}
+
+.ingredient-floating-example:hover {
+  transform: scale(1.05) rotate(-2deg);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Animations */
+@keyframes floatIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

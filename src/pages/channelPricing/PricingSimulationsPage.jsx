@@ -8,6 +8,7 @@ import { Button } from '../../components/ui/Button';
 import { Toast } from '../../components/ui/Toast';
 import { Card } from '../../components/ui/Card';
 import { Plus, Calculator } from 'lucide-react';
+import { PageContainer } from '../../components/layout/PageContainer';
 
 export const PricingSimulationsPage = () => {
   const { t } = useLanguage();
@@ -50,9 +51,8 @@ export const PricingSimulationsPage = () => {
   ].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
   return (
-    <div className="min-h-screen bg-bg-primary flex flex-col pb-20">
-
-      <main className="flex-1 p-4 max-w-4xl mx-auto w-full space-y-6">
+    <PageContainer maxWidth="max-w-4xl">
+      <div className="space-y-6">
         <div className="flex justify-between items-center">
           <p className="text-text-secondary text-sm">
             Riwayat simulasi harga jual Anda.
@@ -93,7 +93,7 @@ export const PricingSimulationsPage = () => {
             ))}
           </div>
         )}
-      </main>
+      </div>
 
       {toast && (
         <Toast
@@ -102,6 +102,6 @@ export const PricingSimulationsPage = () => {
           onClose={() => setToast(null)}
         />
       )}
-    </div>
+    </PageContainer>
   );
 };

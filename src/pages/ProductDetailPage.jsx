@@ -50,21 +50,28 @@ export const ProductDetailPage = () => {
   };
 
   const handleSendToCalculator = () => {
-    const costItems = [
-      { id: crypto.randomUUID(), name: 'HPP (Dari Resep)', amount: product.hppPerUnitSnapshot, category: 'ingredients' }
-    ];
-    
-    saveDraft({
+    const calculatorForm = {
       productName: product.name,
-      costItems,
+      costItems: [
+        {
+          id: crypto.randomUUID(),
+          name: 'HPP (Dari Resep)',
+          amount: product.hppPerUnitSnapshot,
+          category: 'ingredients'
+        }
+      ],
       outputQuantity: 1,
       failedQuantity: 0,
       sellingUnit: product.sellingUnit,
       sellingPrice: product.targetSellingPrice || 0
-    });
+    };
     
-    addToast({ type: 'success', title: t('toasts.sentToCalculator') });
-    navigate('/calculator');
+    addToast({ type: 'success', title: 'Produk dikirim ke halaman Hitung.' });
+    navigate('/calculator', {
+      state: {
+        useAgainForm: calculatorForm
+      }
+    });
   };
 
   const handleSavePrice = () => {

@@ -470,6 +470,7 @@
   inset: 0;
   z-index: 50;
   background-color: rgba(0, 0, 0, 0.5);
+  -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
@@ -511,9 +512,58 @@
   justify-content: flex-end;
 }
 
+.table-shell {
+  width: 100%;
+  overflow-x: auto;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+}
+
 /* ==================================================
-   LISTS & TABLES
+   TOOLTIPS
    ================================================== */
+.tooltip-container {
+  position: relative;
+  display: inline-flex;
+}
+
+.tooltip-box {
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translate(-50%, 4px) scale(0.95);
+  background-color: var(--color-accent-espresso, #18181B);
+  color: #FFFFFF;
+  padding: 0.5rem 0.875rem;
+  border-radius: var(--radius-lg, 10px);
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 50;
+  text-align: center;
+}
+
+.tooltip-box::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--color-accent-espresso, #18181B) transparent transparent transparent;
+}
+
+.tooltip-container:hover .tooltip-box {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+}
 .data-list {
   display: flex;
   flex-direction: column;
@@ -535,10 +585,3 @@
   box-shadow: var(--shadow-sm);
 }
 
-.table-shell {
-  width: 100%;
-  overflow-x: auto;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-2xl);
-}

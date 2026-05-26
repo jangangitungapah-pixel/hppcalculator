@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useLanguage } from '../../hooks/useLanguage';
-import { LayoutDashboard, Calculator, History, Settings, Sparkles, BookOpen, Package, Apple, TrendingUp, BarChart3, Database, ShieldCheck } from 'lucide-react';
+import { LayoutDashboard, Calculator, History, Settings, Sparkles, BookOpen, Package, Apple, TrendingUp, BarChart3, Database, ShieldCheck, Store, ListChecks, UserCircle, Cloud } from 'lucide-react';
 import { cn } from '../../lib/ui/cn';
 import { motion } from 'framer-motion';
 
@@ -28,6 +28,8 @@ export const SidebarNav = () => {
       label: "Pricing",
       items: [
         { to: '/channel-pricing', icon: <TrendingUp className="w-5 h-5" />, label: "Simulasi Harga" },
+        { to: '/channel-profiles', icon: <Store className="w-5 h-5" />, label: "Profil Channel" },
+        { to: '/simulations', icon: <ListChecks className="w-5 h-5" />, label: "Riwayat Simulasi" },
       ]
     },
     {
@@ -41,6 +43,8 @@ export const SidebarNav = () => {
       label: "Tools & System",
       items: [
         { to: '/data-backup', icon: <Database className="w-5 h-5" />, label: t('nav.dataBackup') || 'Data & Backup' },
+        { to: '/sync', icon: <Cloud className="w-5 h-5" />, label: "Sync Center" },
+        { to: '/account', icon: <UserCircle className="w-5 h-5" />, label: "Akun" },
         { to: '/settings', icon: <Settings className="w-5 h-5" />, label: t('nav.settings') },
       ]
     }
@@ -115,7 +119,7 @@ export const SidebarNav = () => {
             <p className="font-bold text-white text-xs tracking-wider uppercase">Local-first MVP</p>
           </div>
           <p className="text-white/60 text-[11px] leading-relaxed relative z-10 font-medium">
-            Data aman tersimpan di browser Anda. Tidak ada data yang dikirim ke server.
+            Local-first. Cloud sync opsional saat login.
           </p>
         </div>
       </div>

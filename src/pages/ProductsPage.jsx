@@ -9,13 +9,12 @@ import { useLanguage } from '../hooks/useLanguage';
 import { useProducts } from '../hooks/useProducts';
 import { useAppData } from '../hooks/useAppData';
 import { formatCurrency } from '../lib/calculations';
-import { demoProducts } from '../data/demoProducts';
 import { useToast } from '../hooks/useToast';
 
 export const ProductsPage = () => {
   const { t, lang } = useLanguage();
   const navigate = useNavigate();
-  const { products, loadDemoProducts, deleteProduct } = useProducts();
+  const { products, deleteProduct } = useProducts();
   const { settings, saveDraft, recipes, loadDemoBusinessLibrary } = useAppData();
   const { addToast } = useToast();
   
@@ -27,36 +26,42 @@ export const ProductsPage = () => {
     if (recipes.length === 0) {
       setShowDependencyDialog(true);
     } else {
-      loadDemoProducts(demoProducts);
-      addToast({ type: 'success', title: t('toasts.demoLoadedTitle') });
+      loadDemoBusinessLibrary();
+      addToast({ type: 'success', title: 'Data demo produk, resep, dan bahan berhasil dimuat.' });
     }
   };
 
   const handleConfirmLoadBusinessLibrary = () => {
     loadDemoBusinessLibrary();
-    addToast({ type: 'success', title: t('toasts.demoLoadedTitle') });
+    addToast({ type: 'success', title: 'Data demo produk, resep, dan bahan berhasil dimuat.' });
     setShowDependencyDialog(false);
   };
 
   const handleSendToCalculator = (e, product) => {
     e.stopPropagation();
     
-    // We recreate the calculation draft from the product details
-    const costItems = [
-      { id: crypto.randomUUID(), name: 'HPP (Dari Resep)', amount: product.hppPerUnitSnapshot, category: 'ingredients' }
-    ];
-    
-    saveDraft({
+    const calculatorForm = {
       productName: product.name,
-      costItems,
+      costItems: [
+        {
+          id: crypto.randomUUID(),
+          name: 'HPP (Dari Resep)',
+          amount: product.hppPerUnitSnapshot,
+          category: 'ingredients'
+        }
+      ],
       outputQuantity: 1,
       failedQuantity: 0,
       sellingUnit: product.sellingUnit,
       sellingPrice: product.targetSellingPrice || 0
-    });
+    };
     
-    addToast({ type: 'success', title: t('toasts.sentToCalculator') });
-    navigate('/calculator');
+    addToast({ type: 'success', title: 'Produk dikirim ke halaman Hitung.' });
+    navigate('/calculator', {
+      state: {
+        useAgainForm: calculatorForm
+      }
+    });
   };
 
   const handleDelete = () => {

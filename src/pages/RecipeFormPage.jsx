@@ -23,7 +23,7 @@ export const RecipeFormPage = () => {
   const { addToast } = useToast();
   
   const isEdit = Boolean(id && id !== 'new');
-  const unitOptions = getLocalizedUnitOptions(language);
+  const unitOptions = getLocalizedUnitOptions(lang);
 
   const [form, setForm] = useState({
     name: '',

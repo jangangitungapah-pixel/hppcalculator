@@ -8,22 +8,25 @@ import { AuthStorageBridge } from "./components/system/AuthStorageBridge.jsx";
 import { SyncProvider } from "./contexts/SyncContext.jsx";
 import { PwaProvider } from "./contexts/PwaContext.jsx";
 import { PwaUpdatePrompt } from "./components/pwa/PwaUpdatePrompt.jsx";
+import { ErrorBoundary } from "./components/system/ErrorBoundary.jsx";
 import "./styles/index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <ToastProvider>
-      <AppDataProvider>
-        <AuthProvider>
-          <AuthStorageBridge />
-          <SyncProvider>
-            <PwaProvider>
-              <App />
-              <PwaUpdatePrompt />
-            </PwaProvider>
-          </SyncProvider>
-        </AuthProvider>
-      </AppDataProvider>
-    </ToastProvider>
+    <ErrorBoundary>
+      <ToastProvider>
+        <AppDataProvider>
+          <AuthProvider>
+            <AuthStorageBridge />
+            <SyncProvider>
+              <PwaProvider>
+                <App />
+                <PwaUpdatePrompt />
+              </PwaProvider>
+            </SyncProvider>
+          </AuthProvider>
+        </AppDataProvider>
+      </ToastProvider>
+    </ErrorBoundary>
   </React.StrictMode>
 );
