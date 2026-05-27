@@ -3,17 +3,11 @@ import { ChevronRight } from 'lucide-react';
 
 export const DashboardActionCard = ({ title, description, icon: Icon, color = 'orange', onClick }) => {
   return (
-    <div 
+    <button
+      type="button"
       className={`dashboard-action-card ${color} group`}
       onClick={onClick}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          onClick();
-        }
-      }}
+      aria-label={`${title}. ${description}`}
     >
       {Icon && (
         <div className="dashboard-action-icon">
@@ -23,6 +17,6 @@ export const DashboardActionCard = ({ title, description, icon: Icon, color = 'o
       <h4 className="dashboard-action-title">{title}</h4>
       <p className="dashboard-action-description">{description}</p>
       <ChevronRight className="dashboard-action-chevron" />
-    </div>
+    </button>
   );
 };

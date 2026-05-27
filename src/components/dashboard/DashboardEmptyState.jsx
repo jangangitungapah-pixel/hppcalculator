@@ -25,18 +25,18 @@ export const DashboardEmptyState = ({ onLoadDemo }) => {
               <Button 
                 onClick={() => navigate('/calculator')} 
                 variant="primary"
-                className="tooltip-container rounded-full w-14 h-14 p-0 flex items-center justify-center shadow-lg shadow-glow-primary hover:scale-110 active:scale-95 transition-all duration-300"
+                className="dashboard-empty-action-button primary"
               >
                 <Calculator className="w-6 h-6" />
-                <span className="tooltip-box">Hitung HPP Sekarang</span>
+                <span>Hitung HPP</span>
               </Button>
               <Button 
                 variant="secondary" 
                 onClick={onLoadDemo} 
-                className="tooltip-container rounded-full w-14 h-14 p-0 flex items-center justify-center shadow-md hover:scale-110 active:scale-95 transition-all duration-300"
+                className="dashboard-empty-action-button secondary"
               >
                 <Sparkles className="w-6 h-6 text-brand-primary" />
-                <span className="tooltip-box">Coba Data Demo</span>
+                <span>Coba Data Demo</span>
               </Button>
             </div>
             

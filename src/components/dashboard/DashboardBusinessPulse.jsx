@@ -13,6 +13,7 @@ export const DashboardBusinessPulse = ({ summary }) => {
   const healthyPercent = total > 0 ? ((summary.healthyCount || 0) / total) * 100 : 0;
   const lowPercent = total > 0 ? ((summary.lowCount || 0) / total) * 100 : 0;
   const lossPercent = total > 0 ? ((summary.lossCount || 0) / total) * 100 : 0;
+  const formatPercent = (value) => `${Math.round(value)}%`;
 
   // Resolve status text
   let statusText = "Menu Anda memiliki profit margin yang baik.";
@@ -32,12 +33,17 @@ export const DashboardBusinessPulse = ({ summary }) => {
           <span className="business-pulse-status">{statusText}</span>
         </div>
 
-        <div className="business-pulse-bar">
+        <div
+          className="business-pulse-bar"
+          role="img"
+          aria-label={`Komposisi margin: ${summary.healthyCount || 0} margin sehat (${formatPercent(healthyPercent)}), ${summary.lowCount || 0} margin tipis (${formatPercent(lowPercent)}), ${summary.lossCount || 0} rugi (${formatPercent(lossPercent)}).`}
+        >
           {healthyPercent > 0 && (
             <div 
               className="business-pulse-segment healthy" 
               style={{ width: `${healthyPercent}%` }} 
               title={`Healthy: ${summary.healthyCount} items`}
+              aria-hidden="true"
             />
           )}
           {lowPercent > 0 && (
@@ -45,6 +51,7 @@ export const DashboardBusinessPulse = ({ summary }) => {
               className="business-pulse-segment low" 
               style={{ width: `${lowPercent}%` }} 
               title={`Low Margin: ${summary.lowCount} items`}
+              aria-hidden="true"
             />
           )}
           {lossPercent > 0 && (
@@ -52,12 +59,14 @@ export const DashboardBusinessPulse = ({ summary }) => {
               className="business-pulse-segment loss" 
               style={{ width: `${lossPercent}%` }} 
               title={`Loss: ${summary.lossCount} items`}
+              aria-hidden="true"
             />
           )}
           {total === 0 && (
             <div 
               className="w-full h-full bg-border-soft" 
               title="Belum ada data produk"
+              aria-hidden="true"
             />
           )}
         </div>
@@ -66,15 +75,15 @@ export const DashboardBusinessPulse = ({ summary }) => {
           <div className="business-pulse-legends">
             <div className="business-pulse-legend">
               <span className="business-pulse-legend-dot healthy"></span>
-              <span>Margin Sehat ({summary.healthyCount || 0})</span>
+              <span>Margin Sehat ({summary.healthyCount || 0}, {formatPercent(healthyPercent)})</span>
             </div>
             <div className="business-pulse-legend">
               <span className="business-pulse-legend-dot low"></span>
-              <span>Margin Tipis ({summary.lowCount || 0})</span>
+              <span>Margin Tipis ({summary.lowCount || 0}, {formatPercent(lowPercent)})</span>
             </div>
             <div className="business-pulse-legend">
               <span className="business-pulse-legend-dot loss"></span>
-              <span>Rugi ({summary.lossCount || 0})</span>
+              <span>Rugi ({summary.lossCount || 0}, {formatPercent(lossPercent)})</span>
             </div>
           </div>
           <Button 

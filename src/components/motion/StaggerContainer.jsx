@@ -1,14 +1,15 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 export const StaggerContainer = ({ children, delayOrder = 0, staggerDelay = 0.05, className }) => {
+  const shouldReduceMotion = useReducedMotion();
   const containerVariants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
       transition: {
-        staggerChildren: staggerDelay,
-        delayChildren: delayOrder * 0.1,
+        staggerChildren: shouldReduceMotion ? 0 : staggerDelay,
+        delayChildren: shouldReduceMotion ? 0 : delayOrder * 0.1,
       }
     }
   };

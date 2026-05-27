@@ -70,10 +70,11 @@ export const DashboardMetricGrid = ({ summary }) => {
 
       {/* 4. Laporan Shortcut */}
       <FadeIn>
-        <div 
+        <button
+          type="button"
           className="dashboard-metric-card cursor-pointer group" 
           onClick={() => navigate('/reports')}
-          style={{ cursor: 'pointer' }}
+          aria-label={`Buka laporan bisnis. ${summary.lossCount > 0 ? `${summary.lossCount} item rugi perlu dicek.` : 'Lihat insight bisnismu.'}`}
         >
           <div className="dashboard-metric-header">
             <h4 className="dashboard-metric-title">{t('nav.reports')}</h4>
@@ -96,7 +97,7 @@ export const DashboardMetricGrid = ({ summary }) => {
               )}
             </div>
           </div>
-        </div>
+        </button>
       </FadeIn>
     </StaggerContainer>
   );

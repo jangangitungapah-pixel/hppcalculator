@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 const pageVariants = {
   initial: { opacity: 0, y: 15, filter: 'blur(4px)' },
@@ -24,12 +24,21 @@ const pageVariants = {
 };
 
 export const PageTransition = ({ children, className }) => {
+  const shouldReduceMotion = useReducedMotion();
+  const variants = shouldReduceMotion
+    ? {
+        initial: { opacity: 1, y: 0, filter: 'blur(0px)' },
+        animate: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0 } },
+        exit: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0 } }
+      }
+    : pageVariants;
+
   return (
     <motion.div
       initial="initial"
       animate="animate"
       exit="exit"
-      variants={pageVariants}
+      variants={variants}
       className={className}
     >
       {children}

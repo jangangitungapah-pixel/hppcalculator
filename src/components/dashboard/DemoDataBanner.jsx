@@ -25,20 +25,20 @@ export const DemoDataBanner = () => {
 
   return (
     <>
-      <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 mb-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-          <div className="p-3 bg-white rounded-full text-amber-600 shrink-0">
+      <div className="dashboard-demo-banner bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 mb-6">
+        <div className="dashboard-demo-banner-inner flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div className="dashboard-demo-banner-icon p-3 bg-white rounded-full text-amber-600 shrink-0">
             <Info size={24} />
           </div>
-          <div className="flex-1">
+          <div className="dashboard-demo-banner-copy flex-1">
             <h4 className="font-bold text-amber-800 mb-1">
               {t('settings.clearDemoDataConfirmTitle')}
             </h4>
-            <p className="text-sm text-text-secondary">
+            <p className="dashboard-demo-banner-body text-sm text-text-secondary">
               {t('settings.clearDemoDataConfirmBody')}
             </p>
           </div>
-          <div className="shrink-0">
+          <div className="dashboard-demo-banner-action shrink-0">
             <Button 
               variant="outline" 
               size="sm"

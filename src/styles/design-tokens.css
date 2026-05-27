@@ -1,18 +1,18 @@
 :root {
   /* Brand Colors */
-  --color-primary: #FF6A00;
-  --color-primary-hover: #E65A00;
-  --color-primary-active: #CC4A00;
+  --color-primary: #C2410C;
+  --color-primary-hover: #9A3300;
+  --color-primary-active: #7C2D12;
   --color-primary-soft: #FFF2EA;
   --color-primary-softer: #FFF8F5;
   --color-primary-glow: rgba(255, 106, 0, 0.2);
 
-  --color-secondary: #00A650;
-  --color-secondary-hover: #008B42;
+  --color-secondary: #007A3D;
+  --color-secondary-hover: #006C36;
   --color-secondary-soft: #E5F6ED;
 
   /* Premium Accents */
-  --color-accent-gold: #F5A623;
+  --color-accent-gold: #995F00;
   --color-accent-coral: #FF7E67;
   --color-accent-mint: #2EBF91;
   --color-accent-espresso: #2D231F;
@@ -37,32 +37,32 @@
 
   /* Typography Colors */
   --color-text-primary: #09090B;
-  --color-text-secondary: #71717A;
-  --color-text-muted: #A1A1AA;
+  --color-text-secondary: #52525B;
+  --color-text-muted: #71717A;
   --color-text-soft: #D4D4D8;
   --color-text-tertiary: #52525B;
   --color-text-inverse: #FFFFFF;
 
   /* Status Colors */
-  --color-status-loss: #E03E3E;
+  --color-status-loss: #B91C1C;
   --color-status-loss-bg: #FCE8E8;
-  --color-status-low: #F5A623;
+  --color-status-low: #995F00;
   --color-status-low-bg: #FEF3DF;
-  --color-status-okay: #0288D1;
+  --color-status-okay: #026AA2;
   --color-status-okay-bg: #E1F5FE;
-  --color-status-good: #00A650;
+  --color-status-good: #007A3D;
   --color-status-good-bg: #E5F6ED;
-  --color-status-excellent: #008B42;
+  --color-status-excellent: #006C36;
   --color-status-excellent-bg: #D1EEDB;
 
   /* Semantic Colors */
-  --color-success: #00A650;
+  --color-success: #007A3D;
   --color-success-bg: #E5F6ED;
-  --color-warning: #F5A623;
+  --color-warning: #995F00;
   --color-warning-bg: #FEF3DF;
-  --color-danger: #E03E3E;
+  --color-danger: #B91C1C;
   --color-danger-bg: #FCE8E8;
-  --color-info: #0288D1;
+  --color-info: #026AA2;
   --color-info-bg: #E1F5FE;
 
   /* Border Radius */
