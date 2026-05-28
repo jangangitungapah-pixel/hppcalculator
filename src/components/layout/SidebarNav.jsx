@@ -1,9 +1,9 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { useLanguage } from '../../hooks/useLanguage';
 import { useAuth } from '../../hooks/useAuth';
 import { useSync } from '../../hooks/useSync';
-import { LayoutDashboard, Calculator, History, Settings, Sparkles, BookOpen, Package, Apple, TrendingUp, BarChart3, Database, ShieldCheck, Store, ListChecks, UserCircle, Cloud, PackageSearch, ShoppingBag, Users } from 'lucide-react';
+import { LayoutDashboard, Calculator, History, Settings, Sparkles, BookOpen, Package, Apple, TrendingUp, BarChart3, Database, ShieldCheck, Store, ListChecks, UserCircle, Cloud, PackageSearch, ShoppingBag, Users, ChevronDown } from 'lucide-react';
 import { cn } from '../../lib/ui/cn';
 import { motion } from 'framer-motion';
 
@@ -11,9 +11,11 @@ export const SidebarNav = () => {
   const { t, lang } = useLanguage();
   const { user, isAuthenticated } = useAuth();
   const { syncStatus } = useSync();
+  const { pathname } = useLocation();
 
   const navGroups = [
     {
+      id: 'main',
       label: lang === 'id' ? 'Menu Utama' : 'Main Menu',
       items: [
         { to: '/dashboard', icon: <LayoutDashboard className="w-5 h-5" />, label: t('nav.dashboard') },
@@ -21,6 +23,7 @@ export const SidebarNav = () => {
       ]
     },
     {
+      id: 'costing',
       label: lang === 'id' ? 'Biaya & Resep' : 'Costing',
       items: [
         { to: '/ingredients', icon: <Apple className="w-5 h-5" />, label: t('nav.ingredients') },
@@ -32,6 +35,7 @@ export const SidebarNav = () => {
       ]
     },
     {
+      id: 'pricing',
       label: lang === 'id' ? 'Harga Jual' : 'Pricing',
       items: [
         { to: '/channel-pricing', icon: <TrendingUp className="w-5 h-5" />, label: lang === 'id' ? 'Simulasi Harga' : 'Pricing Simulation' },
@@ -40,6 +44,7 @@ export const SidebarNav = () => {
       ]
     },
     {
+      id: 'business',
       label: lang === 'id' ? 'Bisnis & Laporan' : 'Business',
       items: [
         { to: '/reports', icon: <BarChart3 className="w-5 h-5" />, label: t('nav.reports') || 'Laporan' },
@@ -47,6 +52,7 @@ export const SidebarNav = () => {
       ]
     },
     {
+      id: 'tools',
       label: lang === 'id' ? 'Alat & Sistem' : 'Tools & System',
       items: [
         { to: '/data-backup', icon: <Database className="w-5 h-5" />, label: t('nav.dataBackup') || 'Data & Backup' },
@@ -56,6 +62,50 @@ export const SidebarNav = () => {
       ]
     }
   ];
+
+  // State to track expanded groups
+  const [expandedGroups, setExpandedGroups] = React.useState(() => {
+    try {
+      const saved = localStorage.getItem('modalin:sidebar:expanded');
+      if (saved) {
+        return JSON.parse(saved);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    // Default: main and costing open, others closed
+    return { main: true, costing: true, pricing: false, business: false, tools: false };
+  });
+
+  // Persist expanded state
+  React.useEffect(() => {
+    try {
+      localStorage.setItem('modalin:sidebar:expanded', JSON.stringify(expandedGroups));
+    } catch (e) {
+      console.error(e);
+    }
+  }, [expandedGroups]);
+
+  // Auto-expand group if it contains the active route
+  React.useEffect(() => {
+    const activeGroupId = navGroups.find(group => 
+      group.items.some(item => item.to === pathname || pathname.startsWith(item.to + '/'))
+    )?.id;
+
+    if (activeGroupId && !expandedGroups[activeGroupId]) {
+      setExpandedGroups(prev => ({
+        ...prev,
+        [activeGroupId]: true
+      }));
+    }
+  }, [pathname]);
+
+  const toggleGroup = (groupId) => {
+    setExpandedGroups(prev => ({
+      ...prev,
+      [groupId]: !prev[groupId]
+    }));
+  };
 
   const getSyncDotColor = () => {
     switch (syncStatus) {
@@ -93,42 +143,68 @@ export const SidebarNav = () => {
       </div>
       
       <nav className="sidebar-nav-container">
-        {navGroups.map((group, idx) => (
-          <div key={idx} className="mb-1.5 last:mb-0">
-            <div className="sidebar-group-label text-white/40">{group.label}</div>
-            <div className="flex flex-col gap-1">
-              {group.items.map((item) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  className={({ isActive }) => cn("relative flex items-center p-1.5 rounded-xl group transition-all duration-200 min-h-11", !isActive && "hover:bg-white/5")}
-                >
-                  {({ isActive }) => (
-                    <>
-                      {isActive && (
-                        <motion.div
-                          layoutId="sidebar-active"
-                          className="absolute inset-0 bg-white shadow-sm rounded-xl border border-black/5"
-                          initial={false}
-                          transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                        />
-                      )}
-                      <div className="relative z-10 flex items-center gap-3 w-full">
-                        <div className={cn(
-                          "flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-300 shrink-0",
-                          isActive ? "text-brand-primary" : "text-white/60 group-hover:text-white"
-                        )}>
-                          <span className={cn("transition-transform duration-300 group-hover:scale-105", isActive && "scale-110")}>
-                            {item.icon}
-                          </span>
-                        </div>
-                        <span className={cn("truncate text-sm font-semibold tracking-wide transition-colors duration-300", isActive ? "text-brand-primary font-bold" : "text-white/70 group-hover:text-white")}>{item.label}</span>
-                      </div>
-                    </>
-                  )}
-                </NavLink>
-              ))}
+        {navGroups.map((group) => (
+          <div key={group.id} className="mb-1.5 last:mb-0">
+            <div 
+              className="sidebar-group-header" 
+              onClick={() => toggleGroup(group.id)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  toggleGroup(group.id);
+                }
+              }}
+              aria-expanded={expandedGroups[group.id]}
+            >
+              <span className="sidebar-group-label text-white/40">{group.label}</span>
+              <ChevronDown className={cn("w-3.5 h-3.5 sidebar-group-chevron", expandedGroups[group.id] && "is-open")} />
             </div>
+
+            <motion.div
+              initial={false}
+              animate={{ 
+                height: expandedGroups[group.id] ? 'auto' : 0,
+                opacity: expandedGroups[group.id] ? 1 : 0
+              }}
+              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              className="overflow-hidden"
+            >
+              <div className="flex flex-col gap-1 py-1">
+                {group.items.map((item) => (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    className={({ isActive }) => cn("relative flex items-center p-1.5 rounded-xl group transition-all duration-200 min-h-11", !isActive && "hover:bg-white/5")}
+                  >
+                    {({ isActive }) => (
+                      <>
+                        {isActive && (
+                          <motion.div
+                            layoutId="sidebar-active"
+                            className="absolute inset-0 bg-white shadow-sm rounded-xl border border-black/5"
+                            initial={false}
+                            transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                          />
+                        )}
+                        <div className="relative z-10 flex items-center gap-3 w-full">
+                          <div className={cn(
+                            "flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-300 shrink-0",
+                            isActive ? "text-brand-primary" : "text-white/60 group-hover:text-white"
+                          )}>
+                            <span className={cn("transition-transform duration-300 group-hover:scale-105", isActive && "scale-110")}>
+                              {item.icon}
+                            </span>
+                          </div>
+                          <span className={cn("truncate text-sm font-semibold tracking-wide transition-colors duration-300", isActive ? "text-brand-primary font-bold" : "text-white/70 group-hover:text-white")}>{item.label}</span>
+                        </div>
+                      </>
+                    )}
+                  </NavLink>
+                ))}
+              </div>
+            </motion.div>
           </div>
         ))}
       </nav>
