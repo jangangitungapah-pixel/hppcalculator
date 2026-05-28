@@ -95,7 +95,7 @@ export const LoginPanel = ({ className, compact = false, onSuccess }) => {
         />
         <div className="flex items-center justify-between gap-3 text-xs">
           <span className="font-semibold text-text-muted">Login opsional, data lokal tetap aman.</span>
-          <Link to="/forgot-password" className="font-extrabold text-brand-primary hover:underline">
+          <Link to="/forgot-password" className="login-panel-inline-link font-extrabold text-brand-primary hover:underline">
             Lupa?
           </Link>
         </div>
@@ -114,7 +114,7 @@ export const LoginPanel = ({ className, compact = false, onSuccess }) => {
 
       <div className="mt-4 text-center text-sm">
         <span className="text-text-secondary">Belum punya akun? </span>
-        <Link to="/register" className="font-extrabold text-brand-primary hover:underline">
+        <Link to="/register" className="login-panel-inline-link font-extrabold text-brand-primary hover:underline">
           Daftar
         </Link>
       </div>

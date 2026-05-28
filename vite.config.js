@@ -3,8 +3,48 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { VitePWA } from "vite-plugin-pwa";
 
+function devServiceWorkerCleanup() {
+  const cleanupWorker = `
+self.addEventListener('install', (event) => {
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil((async () => {
+    const cacheKeys = await caches.keys();
+    await Promise.all(cacheKeys.map((key) => caches.delete(key)));
+    await self.registration.unregister();
+    const clients = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    for (const client of clients) {
+      client.navigate(client.url);
+    }
+  })());
+});
+`;
+
+  return {
+    name: "dev-service-worker-cleanup",
+    apply: "serve",
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        const pathname = req.url?.split("?")[0];
+        if (pathname !== "/sw.js" && pathname !== "/dev-sw.js") {
+          next();
+          return;
+        }
+
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "application/javascript");
+        res.setHeader("Cache-Control", "no-store, max-age=0");
+        res.end(cleanupWorker);
+      });
+    }
+  };
+}
+
 export default defineConfig({
   plugins: [
+    devServiceWorkerCleanup(),
     tailwindcss(), 
     react(),
     VitePWA({
@@ -65,7 +105,7 @@ export default defineConfig({
         ]
       },
       devOptions: {
-        enabled: true,
+        enabled: false,
         type: 'module',
         navigateFallback: 'index.html'
       }

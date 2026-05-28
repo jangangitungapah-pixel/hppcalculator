@@ -304,7 +304,7 @@
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  height: 36px;
+  min-height: 44px;
   padding: 4px;
   background: rgba(255, 255, 255, 0.72);
   border: 1px solid rgba(228, 228, 231, 0.8);
@@ -320,7 +320,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  min-width: 44px;
+  min-height: 44px;
   padding: 0 12px;
   font-size: 0.75rem; /* text-xs */
   font-weight: 800;
@@ -495,16 +496,22 @@
 }
 
 .landing-page main {
+  display: flex;
+  flex-direction: column;
   width: min(100%, 1280px);
   margin: 0 auto;
-  padding: 5.75rem 1rem 2rem;
+  padding: 6.5rem 1rem clamp(8rem, 16vh, 12rem);
+}
+
+.landing-anchor {
+  order: 0;
+  display: block;
+  height: 0;
+  scroll-margin-top: 7rem;
 }
 
 .landing-hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 1rem;
-  align-items: start;
+  display: contents;
 }
 
 .landing-hero-copy,
@@ -517,6 +524,7 @@
 }
 
 .landing-hero-copy {
+  order: 1;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -548,12 +556,12 @@
 }
 
 .landing-hero h1 {
-  max-width: 48rem;
+  max-width: 43rem;
   margin: 1rem 0 0;
   color: var(--color-text-primary);
-  font-size: clamp(2.35rem, 1.68rem + 2.6vw, 5rem);
+  font-size: clamp(2.25rem, 1.62rem + 2.45vw, 4.55rem);
   font-weight: 950;
-  line-height: 0.98;
+  line-height: 1;
   letter-spacing: 0;
 }
 
@@ -617,9 +625,14 @@
 }
 
 .landing-login-stack {
+  order: 3;
   display: grid;
   gap: 0.75rem;
   align-self: center;
+}
+
+.landing-mini-proof-mobile {
+  order: 4;
 }
 
 .landing-mini-proof {
@@ -636,6 +649,10 @@
   box-shadow: var(--shadow-xs);
 }
 
+.landing-mini-proof.landing-mini-proof-desktop {
+  display: none;
+}
+
 .landing-demo-band,
 .landing-feature-section,
 .landing-ops-section,
@@ -644,6 +661,7 @@
 }
 
 .landing-demo-band {
+  order: 2;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
@@ -714,7 +732,26 @@
   justify-self: center;
 }
 
+.landing-demo-calculator {
+  min-width: 0;
+}
+
+.landing-demo-calculator input {
+  min-height: 44px;
+}
+
+.landing-demo-cost-grid {
+  grid-template-columns: 1fr;
+}
+
+.landing-demo-cost-grid label {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+
 .landing-feature-section {
+  order: 5;
   padding: 1rem;
   border: 1px solid color-mix(in srgb, var(--color-primary) 12%, var(--color-border));
   border-radius: var(--radius-3xl);
@@ -790,6 +827,18 @@
   box-shadow: var(--shadow-floating);
 }
 
+.landing-ops-section {
+  order: 6;
+}
+
+.landing-cta-section {
+  order: 7;
+}
+
+#start.landing-cta-section {
+  order: 8;
+}
+
 .landing-ops-panel h2 {
   margin: 0.65rem 0 0;
   color: white;
@@ -825,6 +874,7 @@
 .landing-cta-section {
   display: grid;
   justify-items: center;
+  gap: 1rem;
   padding: 1.35rem 1rem 1.6rem;
   text-align: center;
   border: 1px solid color-mix(in srgb, var(--color-primary) 14%, var(--color-border));
@@ -833,6 +883,48 @@
     linear-gradient(135deg, rgba(255, 247, 237, 0.9), rgba(255, 255, 255, 0.92)),
     var(--color-surface);
   box-shadow: var(--shadow-card);
+}
+
+.landing-faq-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  width: 100%;
+  text-align: left;
+}
+
+.landing-faq-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.45rem 0.7rem;
+  align-items: start;
+  padding: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: var(--shadow-xs);
+}
+
+.landing-faq-card svg {
+  grid-row: span 2;
+  color: var(--color-primary);
+  margin-top: 0.1rem;
+}
+
+.landing-faq-card h3 {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: 0.95rem;
+  font-weight: 950;
+  line-height: 1.25;
+}
+
+.landing-faq-card p {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 0.84rem;
+  font-weight: 650;
+  line-height: 1.5;
 }
 
 .login-panel {
@@ -883,6 +975,22 @@
   font-size: 0.72rem;
   font-weight: 900;
   text-transform: uppercase;
+}
+
+.login-panel-inline-link {
+  display: inline-flex;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.35rem;
+}
+
+.landing-page nav a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  overflow: hidden;
 }
 
 .login-panel-divider::before,
@@ -1078,19 +1186,87 @@
   .landing-highlight-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+
+  .landing-faq-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .landing-demo-cost-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (min-width: 1024px) {
   .landing-page main {
-    padding: 6.4rem 1.5rem 2.5rem;
+    display: block;
+  }
+
+  .landing-page main {
+    padding: 8.35rem 1.5rem clamp(8rem, 16vh, 12rem);
   }
 
   .landing-hero {
+    display: grid;
     grid-template-columns: minmax(0, 1.38fr) minmax(22rem, 0.62fr);
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  .landing-hero-copy,
+  .landing-login-stack,
+  .landing-demo-band,
+  .landing-feature-section,
+  .landing-ops-section,
+  .landing-cta-section,
+  #start.landing-cta-section {
+    order: initial;
   }
 
   .landing-hero-copy {
     padding: 1.75rem;
+    min-height: 100%;
+  }
+
+  .landing-hero h1 {
+    max-width: 38rem;
+    font-size: clamp(3.5rem, 4.4vw, 4.65rem);
+    line-height: 0.98;
+  }
+
+  .landing-hero .landing-lead {
+    max-width: 36rem;
+    font-size: 1.12rem;
+  }
+
+  .landing-hero .landing-actions {
+    margin-top: 1.8rem;
+  }
+
+  .landing-hero-copy .landing-highlight-grid {
+    margin-top: auto;
+    padding-top: 1.65rem;
+  }
+
+  .landing-login-stack {
+    order: initial;
+    align-self: stretch;
+    grid-template-rows: auto 1fr;
+  }
+
+  .landing-login-stack .login-panel {
+    align-self: start;
+  }
+
+  .landing-mini-proof.landing-mini-proof-desktop {
+    align-self: end;
+  }
+
+  .landing-mini-proof-mobile {
+    display: none;
+  }
+
+  .landing-mini-proof.landing-mini-proof-desktop {
+    display: flex;
   }
 
   .landing-demo-band {

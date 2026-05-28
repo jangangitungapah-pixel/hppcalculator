@@ -104,9 +104,9 @@ export const InteractiveDemoCalculator = () => {
   };
 
   return (
-    <div className="bg-surface-glass border border-white/40 backdrop-blur-xl p-5 md:p-6 rounded-3xl shadow-floating relative overflow-hidden flex flex-col gap-5 w-full">
+    <div className="landing-demo-calculator bg-surface-glass border border-white/40 backdrop-blur-xl p-5 md:p-6 rounded-3xl shadow-floating relative overflow-hidden flex flex-col gap-5 w-full">
       {/* Decorative Top Glow */}
-      <div className="absolute -top-10 -right-10 w-24 h-24 bg-brand-primary/10 rounded-full blur-xl pointer-events-none"></div>
+      <div className="absolute -top-10 right-0 w-24 h-24 bg-brand-primary/10 rounded-full blur-xl pointer-events-none"></div>
       
       {/* Widget Header */}
       <div className="flex items-center justify-between border-b border-border/40 pb-3">
@@ -138,7 +138,7 @@ export const InteractiveDemoCalculator = () => {
         </div>
 
         {/* Row 2: Costs split */}
-        <div className="grid grid-cols-3 gap-2">
+        <div className="landing-demo-cost-grid grid grid-cols-3 gap-2">
           <div>
             <label className="text-[10px] font-bold text-text-secondary uppercase tracking-wider mb-1 block truncate">
               {t('calculator.costDefaultIngredients')}

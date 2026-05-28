@@ -20,15 +20,21 @@ Buka **Firebase Console > Firestore Database**:
 - **Penting:** File `.env.local` sengaja diabaikan di `.gitignore` untuk mencegah kebocoran env credential milik dev environment. 
 
 ## 4. Firebase Hosting Deploy
-1. Install Firebase CLI secara global jika belum ada:
-   `npm install -g firebase-tools`
+1. Cek Firebase CLI:
+   `npx -y firebase-tools@latest --version`
 2. Login:
-   `firebase login`
+   `npx -y firebase-tools@latest login`
 3. Pilih project:
-   `firebase use modalinhppsystem`
+   `npx -y firebase-tools@latest use modalinhppsystem`
 4. Build aplikasi:
    `npm run build`
 5. Deploy:
-   `firebase deploy --only firestore:rules,hosting`
+   `npx -y firebase-tools@latest deploy --only firestore:rules,hosting`
+
+Atau jalankan langsung:
+- `npm run deploy:hosting` untuk publish UI saja.
+- `npm run deploy:firebase` untuk publish UI dan Firestore rules.
 
 Firebase Hosting secara native akan melayani halaman fallback `index.html` berdasarkan pengaturan `rewrites` di `firebase.json` untuk SPA.
+
+Catatan penting: jangan menaruh template default Firebase di `public/index.html`. Vite memakai `index.html` di root repo dan Firebase Hosting harus melayani hasil build dari folder `dist`. Template default Firebase memuat `/__/firebase/init.js` dan dapat menampilkan pesan `Error loading the Firebase SDK, check the console.` ketika dibuka di luar konteks yang sesuai.

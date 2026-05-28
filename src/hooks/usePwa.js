@@ -3,6 +3,20 @@ import { useRegisterSW } from 'virtual:pwa-register/react';
 import { shouldShowInstallBanner, dismissInstallBanner } from '../lib/pwa/pwaPrefs';
 
 export function usePwa() {
+  useEffect(() => {
+    if (!import.meta.env.DEV || !('serviceWorker' in navigator)) return;
+
+    navigator.serviceWorker.getRegistrations()
+      .then((registrations) => Promise.all(registrations.map((registration) => registration.unregister())))
+      .catch((error) => console.warn('Failed to unregister dev service workers', error));
+
+    if ('caches' in window) {
+      caches.keys()
+        .then((cacheKeys) => Promise.all(cacheKeys.map((cacheKey) => caches.delete(cacheKey))))
+        .catch((error) => console.warn('Failed to clear dev caches', error));
+    }
+  }, []);
+
   // PWA Service Worker Hook
   const {
     needRefresh: [updateAvailable, setUpdateAvailable],

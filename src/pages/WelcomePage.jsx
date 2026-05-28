@@ -11,7 +11,8 @@ import {
   ShieldCheck,
   ShoppingBag,
   Sparkles,
-  TrendingUp
+  TrendingUp,
+  HelpCircle
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useLanguage } from '../hooks/useLanguage';
@@ -65,12 +66,32 @@ export const WelcomePage = () => {
     { icon: BarChart3, label: 'Laporan bisnis', value: 'Insight dari data tersimpan' }
   ];
 
+  const faqs = [
+    {
+      question: 'Apakah harus login untuk mulai menghitung HPP?',
+      answer: 'Tidak. Kamu bisa langsung memakai kalkulator dan menyimpan data lokal. Login hanya diperlukan kalau ingin backup dan sinkronisasi cloud.'
+    },
+    {
+      question: 'Data lokal saya aman kalau belum masuk akun?',
+      answer: 'Data tetap tersimpan di perangkat yang sama. Untuk perlindungan ekstra dan akses lintas perangkat, gunakan cloud sync setelah login.'
+    },
+    {
+      question: 'Bisa dipakai untuk channel marketplace dan reseller?',
+      answer: 'Bisa. Modalin menyediakan simulasi channel agar biaya admin, promo, reseller, dan bundle bisa dibandingkan sebelum harga dipakai.'
+    },
+    {
+      question: 'Apakah cocok untuk UMKM F&B yang belum punya spreadsheet?',
+      answer: 'Cocok. Alurnya dibuat dari bahan, resep, HPP, sampai keputusan harga jual tanpa perlu menyusun rumus manual.'
+    }
+  ];
+
   return (
     <div className="landing-page">
       <LandingHeader />
 
       <main>
-        <section id="hero" className="landing-hero">
+        <span id="hero" className="landing-anchor" aria-hidden="true" />
+        <section className="landing-hero" aria-label="Ringkasan Modalin">
           <div className="landing-hero-copy">
             <div className="landing-kicker">
               <Sparkles className="w-4 h-4" />
@@ -115,12 +136,17 @@ export const WelcomePage = () => {
 
           <div className="landing-login-stack">
             <LoginPanel compact />
-            <div className="landing-mini-proof">
+            <div className="landing-mini-proof landing-mini-proof-desktop">
               <CheckCircle2 className="w-4 h-4" />
               Login opsional. Mulai lokal dulu, sinkronkan kapan saja.
             </div>
           </div>
         </section>
+
+        <div className="landing-mini-proof landing-mini-proof-mobile">
+          <CheckCircle2 className="w-4 h-4" />
+          Login opsional. Mulai lokal dulu, sinkronkan kapan saja.
+        </div>
 
         <section id="demo" className="landing-demo-band">
           <div className="landing-section-copy">
@@ -177,6 +203,24 @@ export const WelcomePage = () => {
         </section>
 
         <section id="faq" className="landing-cta-section">
+          <div className="landing-section-copy is-centered">
+            <span className="landing-section-eyebrow">FAQ</span>
+            <h2>Pertanyaan yang sering muncul.</h2>
+            <p>Jawaban singkat sebelum kamu mulai menghitung atau mengaktifkan cloud sync.</p>
+          </div>
+
+          <div className="landing-faq-grid">
+            {faqs.map((item) => (
+              <article className="landing-faq-card" key={item.question}>
+                <HelpCircle className="w-5 h-5" />
+                <h3>{item.question}</h3>
+                <p>{item.answer}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section id="start" className="landing-cta-section">
           <h2>Siap rapikan harga jual hari ini?</h2>
           <p>Mulai hitung HPP tanpa login, atau masuk agar data bisnis tersinkron ke cloud.</p>
           <div className="landing-actions is-centered">

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../hooks/useLanguage';
 import { LanguageSwitch } from '../ui/LanguageSwitch';
-import { Sparkles, Menu, X, ArrowRight, Home, LayoutGrid, HelpCircle, Laptop } from 'lucide-react';
+import { Sparkles, Menu, X, ArrowRight } from 'lucide-react';
 
 export const LandingHeader = () => {
   const navigate = useNavigate();
@@ -12,6 +12,13 @@ export const LandingHeader = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const menuItems = [
+    { id: 'hero', label: 'Home' },
+    { id: 'demo', label: 'Demo' },
+    { id: 'features', label: 'Workflow' },
+    { id: 'workflow', label: 'Cloud' },
+    { id: 'faq', label: 'FAQ' },
+  ];
 
   // Monitor scroll positioning to update header height/styling
   useEffect(() => {
@@ -27,59 +34,64 @@ export const LandingHeader = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Intersection Observer for scrollspy highlight
-  useEffect(() => {
-    const sections = ['hero', 'features', 'workflow', 'demo', 'faq'];
-    
-    const observerOptions = {
-      root: null,
-      rootMargin: '-40% 0px -50% 0px', // Trigger when section occupies the mid-viewport
-      threshold: 0,
-    };
-
-    const observerCallback = (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActiveSection(entry.target.id);
-        }
-      });
-    };
-
-    const observer = new IntersectionObserver(observerCallback, observerOptions);
-    
-    sections.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-
-    return () => observer.disconnect();
+  const getHeaderOffset = useCallback(() => {
+    const header = document.querySelector('[data-landing-header]');
+    return (header?.getBoundingClientRect().height || 76) + 24;
   }, []);
 
-  // Smooth scroll handler
+  useEffect(() => {
+    let ticking = false;
+
+    const updateActiveSection = () => {
+      ticking = false;
+      const probeLine = getHeaderOffset() + 120;
+      const visibleSections = menuItems
+        .map((item) => {
+          const element = document.getElementById(item.id);
+          if (!element) return null;
+          return {
+            id: item.id,
+            top: element.getBoundingClientRect().top,
+          };
+        })
+        .filter(Boolean);
+
+      const current = visibleSections
+        .filter((section) => section.top <= probeLine)
+        .sort((a, b) => b.top - a.top)[0] || visibleSections[0];
+
+      if (current) setActiveSection(current.id);
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        window.requestAnimationFrame(updateActiveSection);
+      }
+    };
+
+    updateActiveSection();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, [getHeaderOffset]);
+
   const handleNavClick = (e, id) => {
     e.preventDefault();
     const el = document.getElementById(id);
     if (el) {
-      const headerOffset = isScrolled ? 76 : 96;
-      const elementPosition = el.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.scrollY - headerOffset;
-
+      setActiveSection(id);
+      const offsetPosition = el.getBoundingClientRect().top + window.scrollY - getHeaderOffset();
       window.scrollTo({
-        top: offsetPosition,
+        top: Math.max(0, offsetPosition),
         behavior: 'smooth',
       });
-      
       setIsMobileMenuOpen(false);
     }
   };
-
-  const menuItems = [
-    { id: 'hero', label: 'Home' },
-    { id: 'features', label: t('welcome.featuresTitle').split(' ')[0] },
-    { id: 'workflow', label: t('welcome.howItWorksTitle').split(' ')[0] },
-    { id: 'demo', label: 'Demo' },
-    { id: 'faq', label: 'FAQ' },
-  ];
 
   // Mobile menu animation variants
   const drawerVariants = {
@@ -112,7 +124,7 @@ export const LandingHeader = () => {
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 pointer-events-none px-4 sm:px-6">
-      <div className={`mx-auto flex justify-between items-center pointer-events-auto border transition-all duration-500 ease-[var(--ease-premium)] ${
+      <div data-landing-header className={`mx-auto flex justify-between items-center pointer-events-auto border transition-all duration-500 ease-[var(--ease-premium)] ${
         isScrolled 
           ? 'max-w-full w-full mt-0 px-6 py-3 bg-surface-glass border-white/0 border-b-border/60 shadow-md backdrop-blur-md rounded-none' 
           : 'max-w-[1200px] w-[calc(100%-2rem)] mt-4 px-6 py-3.5 bg-white/50 border-white/40 backdrop-blur-lg shadow-floating rounded-2xl'
@@ -129,7 +141,7 @@ export const LandingHeader = () => {
         </div>
 
         {/* Desktop Navigation Links with sliding background pill */}
-        <nav className="hidden md:flex items-center gap-1.5 text-xs font-bold text-text-secondary relative">
+        <nav className="hidden lg:flex items-center gap-1.5 text-xs font-bold text-text-secondary relative">
           {menuItems.map((item) => (
             <a
               key={item.id}
@@ -139,12 +151,13 @@ export const LandingHeader = () => {
                 activeSection === item.id ? 'text-brand-primary font-extrabold' : 'text-text-secondary'
               }`}
             >
-              {item.label}
+              <span className="relative z-10">{item.label}</span>
               {activeSection === item.id && (
                 <motion.div
                   layoutId="activeNavPill"
-                  className="absolute inset-0 bg-brand-primary/8 border border-brand-primary/10 rounded-full -z-10"
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  className="absolute inset-0 bg-brand-primary/8 border border-brand-primary/10 rounded-full"
+                  initial={false}
+                  transition={{ type: "spring", stiffness: 260, damping: 32, mass: 0.8 }}
                 />
               )}
             </a>
@@ -152,7 +165,7 @@ export const LandingHeader = () => {
         </nav>
 
         {/* Desktop Controls */}
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden lg:flex items-center gap-3">
           <LanguageSwitch />
           <button
             onClick={() => navigate('/dashboard')}
@@ -165,13 +178,13 @@ export const LandingHeader = () => {
         </div>
 
         {/* Mobile controls toggle */}
-        <div className="flex md:hidden items-center gap-2.5">
+        <div className="flex lg:hidden items-center gap-2.5">
           <LanguageSwitch />
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-expanded={isMobileMenuOpen}
             aria-label={isMobileMenuOpen ? 'Tutup menu navigasi' : 'Buka menu navigasi'}
-            className="p-2.5 bg-white/70 border border-zinc-200/80 hover:border-brand-primary/40 rounded-xl text-text-primary hover:text-brand-primary transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50 backdrop-blur-sm shadow-sm"
+            className="p-3 bg-white/70 border border-zinc-200/80 hover:border-brand-primary/40 rounded-xl text-text-primary hover:text-brand-primary transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50 backdrop-blur-sm shadow-sm"
           >
             {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -185,7 +198,7 @@ export const LandingHeader = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 top-[65px] bg-zinc-950/20 backdrop-blur-sm z-40 md:hidden pointer-events-auto"
+            className="fixed inset-0 top-[65px] bg-zinc-950/20 backdrop-blur-sm z-40 lg:hidden pointer-events-auto"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             <motion.div
