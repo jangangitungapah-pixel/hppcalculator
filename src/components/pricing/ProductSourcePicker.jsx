@@ -4,7 +4,7 @@ import { useChannelPricing } from '../../hooks/useChannelPricing';
 import { formatCurrency } from '../../lib/calculations';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
-import { Box, FileText, CheckSquare, Edit3 } from 'lucide-react';
+import { Box, FileText, CheckSquare, Edit3, ChevronDown } from 'lucide-react';
 
 export const ProductSourcePicker = ({ value, onChange }) => {
   const { t, lang, settings } = useLanguage();
@@ -36,7 +36,7 @@ export const ProductSourcePicker = ({ value, onChange }) => {
       onChange(selected);
     }
   };
-
+ 
   const getSelectedValue = () => {
     if (!value || value.sourceType === 'manual') return 'manual';
     return `${value.sourceType}_${value.sourceId}`;
@@ -57,58 +57,63 @@ export const ProductSourcePicker = ({ value, onChange }) => {
         {t('pricing.sourcePicker')}
       </label>
       
-      <select
-        value={getSelectedValue()}
-        onChange={handleSelect}
-        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-shadow"
-      >
-        <option value="manual">{t('pricing.manualSource')}</option>
-        
-        {options.products.length > 0 && (
-          <optgroup label={t('pricing.productSource')}>
-            {options.products.map(opt => (
-              <option key={`prod_${opt.sourceId}`} value={`product_${opt.sourceId}`}>
-                {opt.name}
-              </option>
-            ))}
-          </optgroup>
-        )}
-        
-        {options.recipes.length > 0 && (
-          <optgroup label={t('pricing.recipeSource')}>
-            {options.recipes.map(opt => (
-              <option key={`rec_${opt.sourceId}`} value={`recipe_${opt.sourceId}`}>
-                {opt.name}
-              </option>
-            ))}
-          </optgroup>
-        )}
-        
-        {options.calculations.length > 0 && (
-          <optgroup label={t('pricing.savedCalculation')}>
-            {options.calculations.map(opt => (
-              <option key={`calc_${opt.sourceId}`} value={`calculation_${opt.sourceId}`}>
-                {opt.name}
-              </option>
-            ))}
-          </optgroup>
-        )}
-      </select>
+      <div className="relative">
+        <select
+          value={getSelectedValue()}
+          onChange={handleSelect}
+          className="w-full px-4 py-3 bg-white border border-border rounded-xl focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-shadow appearance-none pr-10"
+        >
+          <option value="manual">{t('pricing.manualSource')}</option>
+          
+          {options.products.length > 0 && (
+            <optgroup label={t('pricing.productSource')}>
+              {options.products.map(opt => (
+                <option key={`prod_${opt.sourceId}`} value={`product_${opt.sourceId}`}>
+                  {opt.name}
+                </option>
+              ))}
+            </optgroup>
+          )}
+          
+          {options.recipes.length > 0 && (
+            <optgroup label={t('pricing.recipeSource')}>
+              {options.recipes.map(opt => (
+                <option key={`rec_${opt.sourceId}`} value={`recipe_${opt.sourceId}`}>
+                  {opt.name}
+                </option>
+              ))}
+            </optgroup>
+          )}
+          
+          {options.calculations.length > 0 && (
+            <optgroup label={t('pricing.savedCalculation')}>
+              {options.calculations.map(opt => (
+                <option key={`calc_${opt.sourceId}`} value={`calculation_${opt.sourceId}`}>
+                  {opt.name}
+                </option>
+              ))}
+            </optgroup>
+          )}
+        </select>
+        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-text-muted">
+          <ChevronDown className="w-4 h-4" />
+        </div>
+      </div>
 
       {value && value.sourceType !== 'manual' && (
-        <Card className="p-3 bg-gray-50 border-gray-100">
+        <Card className="p-3.5 bg-surface-muted/50 border border-border-soft rounded-xl">
           <div className="flex justify-between items-start mb-2">
             <div className="font-medium text-text-primary">{value.name}</div>
             {getTypeBadge(value.sourceType)}
           </div>
           <div className="flex gap-4 text-sm">
             <div>
-              <div className="text-text-tertiary text-xs">{t('pricing.hppPerUnit')}</div>
+              <div className="text-text-muted text-xs">{t('pricing.hppPerUnit')}</div>
               <div className="font-semibold">{formatCurrency(value.hppPerUnit, lang, settings?.currency || 'IDR')}</div>
             </div>
             {value.sellingPrice > 0 && (
               <div>
-                <div className="text-text-tertiary text-xs">{t('pricing.currentSellingPrice')}</div>
+                <div className="text-text-muted text-xs">{t('pricing.currentSellingPrice')}</div>
                 <div className="font-medium">{formatCurrency(value.sellingPrice, lang, settings?.currency || 'IDR')}</div>
               </div>
             )}

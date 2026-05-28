@@ -116,8 +116,8 @@ export const ProductDetailPage = () => {
       </div>
 
       <div className="space-y-6">
-        <div className="bg-surface border border-border rounded-3xl shadow-sm overflow-hidden">
-          <div className="p-6 md:p-8">
+        <div className="bg-surface border border-border rounded-2xl shadow-sm overflow-hidden">
+          <div className="p-4 sm:p-6 md:p-8">
             <div className="flex items-start justify-between mb-4">
               <h2 className="text-3xl font-bold text-text-primary">{product.name}</h2>
               {product.source === 'demo' && (
@@ -136,7 +136,7 @@ export const ProductDetailPage = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              <div className="bg-surface-muted/30 p-6 rounded-2xl border border-border/50 flex flex-col justify-center">
+              <div className="bg-surface-muted/30 p-4 sm:p-5 rounded-xl border border-border/50 flex flex-col justify-center">
                 <p className="text-sm text-text-secondary font-medium mb-1">HPP per {product.sellingUnit}</p>
                 <p className="text-3xl font-bold text-text-primary">
                   {formatCurrency(hpp, lang, settings.currency)}
@@ -146,7 +146,7 @@ export const ProductDetailPage = () => {
                 </p>
               </div>
               
-              <div className="bg-brand-soft/20 p-6 rounded-2xl border border-brand-soft flex flex-col">
+              <div className="bg-brand-soft/20 p-4 sm:p-5 rounded-xl border border-brand-soft flex flex-col">
                 <div className="flex justify-between items-center mb-1">
                   <p className="text-sm text-brand-primary font-bold uppercase tracking-wider">Harga Jual Target</p>
                   {!isEditingPrice && (
@@ -189,32 +189,32 @@ export const ProductDetailPage = () => {
             {/* Profit Analysis */}
             <h3 className="font-bold text-text-primary mb-4 text-lg">Analisis Profitabilitas</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-surface-muted/30 p-4 rounded-xl border border-border/50 text-center">
+              <div className="bg-surface-muted/30 p-3 sm:p-4 rounded-xl border border-border/50 text-center">
                 <p className="text-xs text-text-secondary uppercase tracking-wider mb-1">Profit Kotor</p>
-                <p className={`text-xl font-bold ${profit > 0 ? 'text-status-win' : 'text-status-loss'}`}>
+                <p className={`text-xl font-bold ${profit > 0 ? 'text-status-good' : 'text-status-loss'}`}>
                   {formatCurrency(profit, lang, settings.currency)}
                 </p>
               </div>
-              <div className="bg-surface-muted/30 p-4 rounded-xl border border-border/50 text-center">
+              <div className="bg-surface-muted/30 p-3 sm:p-4 rounded-xl border border-border/50 text-center">
                 <p className="text-xs text-text-secondary uppercase tracking-wider mb-1">Margin</p>
-                <p className={`text-xl font-bold ${profit > 0 ? 'text-status-win' : 'text-status-loss'}`}>
+                <p className={`text-xl font-bold ${profit > 0 ? 'text-status-good' : 'text-status-loss'}`}>
                   {margin.toFixed(1)}%
                 </p>
               </div>
-              <div className="bg-surface-muted/30 p-4 rounded-xl border border-border/50 text-center">
+              <div className="bg-surface-muted/30 p-3 sm:p-4 rounded-xl border border-border/50 text-center">
                 <p className="text-xs text-text-secondary uppercase tracking-wider mb-1">Markup</p>
-                <p className={`text-xl font-bold ${profit > 0 ? 'text-status-win' : 'text-status-loss'}`}>
+                <p className={`text-xl font-bold ${profit > 0 ? 'text-status-good' : 'text-status-loss'}`}>
                   {markup.toFixed(1)}%
                 </p>
               </div>
             </div>
 
-            <div className="mt-8">
-              <Button className="w-full py-4 text-lg" onClick={handleSendToCalculator}>
+            <div className="mt-8 flex flex-col items-end">
+              <Button className="w-full sm:w-auto px-8 py-4 text-lg" onClick={handleSendToCalculator}>
                 <Calculator className="w-5 h-5 mr-2" />
                 {t('products.sendToCalculator')}
               </Button>
-              <p className="text-center text-xs text-text-secondary mt-3">
+              <p className="w-full text-center sm:text-right text-xs text-text-secondary mt-3">
                 Kirim HPP produk ini ke Hitung Cepat untuk menambahkan biaya Marketplace atau Reseller.
               </p>
             </div>

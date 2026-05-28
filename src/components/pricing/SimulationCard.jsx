@@ -39,15 +39,15 @@ export const SimulationCard = ({ simulation, onClick, onDelete }) => {
       return (
         <>
           <div className="flex justify-between items-center text-sm mb-1">
-            <span className="text-text-tertiary">Total HPP:</span>
+            <span className="text-text-muted">Total HPP:</span>
             <span className="font-medium text-text-secondary">{formatCurrency(simulation.baseTotalHpp, lang, currency)}</span>
           </div>
           <div className="flex justify-between items-center text-sm mb-1">
-            <span className="text-text-tertiary">Harga Paket:</span>
+            <span className="text-text-muted">Harga Paket:</span>
             <span className="font-medium text-text-primary">{formatCurrency(simulation.finalSellingPrice, lang, currency)}</span>
           </div>
           <div className="flex justify-between items-center text-sm">
-            <span className="text-text-tertiary">Profit:</span>
+            <span className="text-text-muted">Profit:</span>
             <span className={`font-semibold ${simulation.profit >= 0 ? 'text-status-good' : 'text-status-loss'}`}>
               {formatCurrency(simulation.profit, lang, currency)}
             </span>
@@ -63,15 +63,15 @@ export const SimulationCard = ({ simulation, onClick, onDelete }) => {
       return (
         <>
           <div className="flex justify-between items-center text-sm mb-1">
-            <span className="text-text-tertiary">{t('pricing.wholesalePrice')}:</span>
+            <span className="text-text-muted">{t('pricing.wholesalePrice')}:</span>
             <span className="font-medium text-brand-primary">{formatCurrency(result.wholesalePrice, lang, currency)}</span>
           </div>
           <div className="flex justify-between items-center text-sm mb-1">
-            <span className="text-text-tertiary">{t('pricing.resellerSuggestedPrice')}:</span>
+            <span className="text-text-muted">{t('pricing.resellerSuggestedPrice')}:</span>
             <span className="font-medium text-text-primary">{formatCurrency(result.resellerSuggestedPrice, lang, currency)}</span>
           </div>
           <div className="flex justify-between items-center text-sm">
-            <span className="text-text-tertiary">{t('pricing.ownerProfit')}:</span>
+            <span className="text-text-muted">{t('pricing.ownerProfit')}:</span>
             <span className="font-semibold text-status-good">{formatCurrency(result.ownerProfitPerUnit, lang, currency)}</span>
           </div>
         </>
@@ -81,19 +81,19 @@ export const SimulationCard = ({ simulation, onClick, onDelete }) => {
     return (
       <>
         <div className="flex justify-between items-center text-sm mb-1">
-          <span className="text-text-tertiary">HPP:</span>
+          <span className="text-text-muted">HPP:</span>
           <span className="font-medium text-text-secondary">{formatCurrency(simulation.baseHpp, lang, currency)}</span>
         </div>
         <div className="flex justify-between items-center text-sm mb-1">
-          <span className="text-text-tertiary">Harga Jual:</span>
+          <span className="text-text-muted">Harga Jual:</span>
           <span className="font-medium text-text-primary">
             {formatCurrency(result.finalPrice || simulation.baseSellingPrice, lang, currency)}
           </span>
         </div>
         <div className="flex justify-between items-center text-sm">
-          <span className="text-text-tertiary">Profit:</span>
+          <span className="text-text-muted">Profit:</span>
           <div className="flex gap-2 items-center">
-            <span className="text-xs font-medium bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">
+            <span className="text-xs font-medium bg-surface-muted text-text-secondary px-1.5 py-0.5 rounded">
               {formatPercent(result.marginPercent || 0, lang)}
             </span>
             <span className={`font-semibold ${result.profit >= 0 ? 'text-status-good' : 'text-status-loss'}`}>
@@ -107,12 +107,13 @@ export const SimulationCard = ({ simulation, onClick, onDelete }) => {
 
   return (
     <Card 
-      className="p-4 flex flex-col h-full bg-white border-gray-200 hover:border-brand-primary/50 transition-colors cursor-pointer group"
+      variant="clickable"
+      className="p-4 flex flex-col h-full group"
       onClick={() => onClick && onClick(simulation)}
     >
       <div className="flex justify-between items-start mb-4">
         <div className="flex gap-3 items-center">
-          <div className="p-2 bg-gray-50 rounded-lg group-hover:bg-brand-soft transition-colors">
+          <div className="p-2 bg-surface-muted rounded-lg group-hover:bg-brand-soft transition-colors">
             {getIcon(simulation.type)}
           </div>
           <div>
@@ -122,7 +123,7 @@ export const SimulationCard = ({ simulation, onClick, onDelete }) => {
                 {t(`pricing.${simulation.type}`)}
               </Badge>
               {!isBundle && simulation.sourceNameSnapshot && (
-                <span className="text-xs text-text-tertiary line-clamp-1 flex-1">
+                <span className="text-xs text-text-muted line-clamp-1 flex-1">
                   {simulation.sourceNameSnapshot}
                 </span>
               )}
@@ -138,7 +139,7 @@ export const SimulationCard = ({ simulation, onClick, onDelete }) => {
               e.stopPropagation();
               onDelete(simulation.id, isBundle);
             }} 
-            className="w-8 h-8 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+            className="w-8 h-8 text-text-muted hover:text-status-loss hover:bg-status-lossBg rounded-lg transition-colors group-focus-within:opacity-100 focus:opacity-100"
             aria-label="Delete"
           >
             <Trash2 className="w-4 h-4" />
@@ -146,7 +147,7 @@ export const SimulationCard = ({ simulation, onClick, onDelete }) => {
         )}
       </div>
 
-      <div className="flex-grow space-y-1 bg-gray-50/50 p-3 rounded-lg">
+      <div className="flex-grow space-y-1 bg-surface-muted/50 p-3 rounded-lg">
         {renderResultSnippet()}
       </div>
 

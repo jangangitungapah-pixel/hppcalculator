@@ -161,16 +161,16 @@ export const IngredientFormPage = () => {
                 placeholder="1"
                 value={form.purchaseQuantity}
                 onChange={(e) => updateField('purchaseQuantity', e.target.value)}
-                error={errors.purchaseQuantity && 'Wajib diisi'}
+                error={errors.purchaseQuantity && t('errors.requiredQuantity')}
               />
             </div>
-            <div className="w-32">
+            <div className="w-40">
               <Select 
                 label={t('ingredients.purchaseUnit')}
                 value={form.purchaseUnit}
                 onChange={(e) => updateField('purchaseUnit', e.target.value)}
                 options={unitOptions}
-                error={errors.purchaseUnit}
+                error={errors.purchaseUnit && t('errors.requiredUnit')}
               />
             </div>
           </div>
@@ -186,11 +186,9 @@ export const IngredientFormPage = () => {
               placeholder="1.0"
               value={form.density}
               onChange={(e) => updateField('density', e.target.value)}
-              error={errors.density && 'Massa jenis harus berupa angka positif (cth: 0.92)'}
+              error={errors.density && t('errors.invalidDensity')}
+              helperText={t('ingredients.densityHelp')}
             />
-            <p className="text-xs text-text-muted font-medium">
-              {t('ingredients.densityHelp')}
-            </p>
           </div>
         )}
 

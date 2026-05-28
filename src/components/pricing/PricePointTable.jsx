@@ -2,6 +2,7 @@ import React from 'react';
 import { useLanguage } from '../../hooks/useLanguage';
 import { formatCurrency } from '../../lib/calculations';
 import { Card } from '../ui/Card';
+import { AnimatedNumber } from '../motion/AnimatedNumber';
 
 export const PricePointTable = ({ points }) => {
   const { t, lang, settings } = useLanguage();
@@ -19,19 +20,19 @@ export const PricePointTable = ({ points }) => {
   if (data.length === 0) return null;
 
   return (
-    <Card className="overflow-hidden border-gray-200">
-      <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+    <Card className="overflow-hidden border border-border shadow-xs">
+      <div className="bg-surface-muted/50 px-4 py-3 border-b border-border-soft">
         <h4 className="text-sm font-semibold text-text-primary">{t('pricing.pricePoints')}</h4>
       </div>
-      <div className="divide-y divide-gray-100">
+      <div className="divide-y divide-border-soft">
         {data.map((item, i) => (
           <div key={i} className="flex justify-between items-center px-4 py-3">
             <div>
               <div className="text-sm font-medium text-text-primary">{item.label}</div>
-              <div className="text-xs text-text-tertiary">Margin {item.margin}</div>
+              <div className="text-xs text-text-muted">Margin {item.margin}</div>
             </div>
             <div className="font-semibold text-brand-primary">
-              {formatCurrency(item.value, lang, currency)}
+              <AnimatedNumber value={item.value} isCurrency={true} />
             </div>
           </div>
         ))}

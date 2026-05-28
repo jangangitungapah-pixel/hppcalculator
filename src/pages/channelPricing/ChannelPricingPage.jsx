@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useLanguage } from '../../hooks/useLanguage';
 import { useChannelPricing } from '../../hooks/useChannelPricing';
 import { usePricingSimulations } from '../../hooks/usePricingSimulations';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import { ChannelTabs } from '../../components/pricing/ChannelTabs';
 import { ProductSourcePicker } from '../../components/pricing/ProductSourcePicker';
@@ -117,7 +118,7 @@ export const ChannelPricingPage = () => {
         </div>
 
         {activeTab !== 'bundle' && (
-          <div className="mb-6">
+          <div className="mb-8">
             <ProductSourcePicker 
               value={sourceData} 
               onChange={setSourceData} 
@@ -127,8 +128,18 @@ export const ChannelPricingPage = () => {
 
         <ChannelTabs activeTab={activeTab} onChange={setActiveTab} />
 
-        <div className="mt-4">
-          {renderActiveForm()}
+        <div className="mt-2 overflow-hidden">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 15, filter: 'blur(4px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, y: -10, filter: 'blur(4px)' }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {renderActiveForm()}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
 

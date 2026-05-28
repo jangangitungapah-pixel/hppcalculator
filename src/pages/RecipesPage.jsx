@@ -4,6 +4,7 @@ import { Plus, Search, ArchiveRestore, BookOpen } from 'lucide-react';
 import { PageContainer } from '../components/layout/PageContainer';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
+import { Card } from '../components/ui/Card';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { useLanguage } from '../hooks/useLanguage';
 import { useRecipes } from '../hooks/useRecipes';
@@ -45,7 +46,7 @@ export const RecipesPage = () => {
 
   return (
     <PageContainer>
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <div>
           <h1 className="text-2xl font-bold text-text-primary mb-1">{t('recipes.title')}</h1>
           <p className="text-text-secondary">{t('recipes.subtitle')}</p>
@@ -73,25 +74,23 @@ export const RecipesPage = () => {
 
       {recipes.length > 0 ? (
         <>
-          <div className="mb-6 relative max-w-md">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-text-secondary" />
-            </div>
+          <div className="mb-6 max-w-md">
             <Input 
               type="text" 
               placeholder="Cari nama resep atau kategori..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
+              prefix={<Search className="h-4 w-4" />}
             />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredRecipes.map(recipe => (
-              <div 
+              <Card 
                 key={recipe.id} 
+                variant="clickable"
                 onClick={() => navigate(`/recipes/${recipe.id}`)}
-                className="bg-surface border border-border p-5 rounded-2xl cursor-pointer hover:shadow-floating hover:border-brand-soft transition-all duration-200"
+                className="p-5"
               >
                 <div className="flex justify-between items-start mb-3">
                   <h3 className="font-bold text-lg text-text-primary line-clamp-1" title={recipe.name}>{recipe.name}</h3>
@@ -120,7 +119,7 @@ export const RecipesPage = () => {
                     {formatCurrency(recipe.resultSnapshot?.hppPerUnit || 0, lang, settings.currency)}
                   </span>
                 </div>
-              </div>
+              </Card>
             ))}
             
             {filteredRecipes.length === 0 && (
@@ -132,7 +131,7 @@ export const RecipesPage = () => {
           </div>
         </>
       ) : (
-        <div className="flex flex-col items-center justify-center py-20 px-4 text-center bg-surface rounded-3xl border border-dashed border-border mt-8">
+        <div className="flex flex-col items-center justify-center py-20 px-4 text-center bg-surface rounded-2xl border border-dashed border-border mt-8">
           <div className="w-20 h-20 bg-brand-soft rounded-full flex items-center justify-center mb-6 text-brand-primary">
             <BookOpen className="w-10 h-10" />
           </div>

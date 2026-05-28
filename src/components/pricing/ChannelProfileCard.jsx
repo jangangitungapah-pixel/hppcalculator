@@ -30,10 +30,10 @@ export const ChannelProfileCard = ({ profile, onEdit, onDelete }) => {
   };
 
   return (
-    <Card className="p-4 flex flex-col h-full bg-white border-gray-200 hover:border-brand-primary/50 transition-colors">
+    <Card className="p-4 flex flex-col h-full bg-white border-border hover:border-brand-primary/50 transition-colors">
       <div className="flex justify-between items-start mb-3">
         <div className="flex gap-3 items-center">
-          <div className="p-2 bg-gray-50 rounded-lg">
+          <div className="p-2 bg-surface-muted/50 rounded-lg">
             {getIcon(profile.type)}
           </div>
           <div>
@@ -49,7 +49,7 @@ export const ChannelProfileCard = ({ profile, onEdit, onDelete }) => {
               variant="ghost"
               size="icon"
               onClick={() => onEdit(profile)} 
-              className="w-8 h-8 text-gray-400 hover:text-brand-primary hover:bg-brand-soft rounded-lg transition-colors"
+              className="w-8 h-8 text-text-muted hover:text-brand-primary hover:bg-brand-soft rounded-lg transition-colors"
               aria-label="Edit"
             >
               <Edit2 className="w-4 h-4" />
@@ -60,7 +60,7 @@ export const ChannelProfileCard = ({ profile, onEdit, onDelete }) => {
               variant="ghost"
               size="icon"
               onClick={() => onDelete(profile.id)} 
-              className="w-8 h-8 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+              className="w-8 h-8 text-text-muted hover:text-status-loss hover:bg-status-lossBg rounded-lg transition-colors"
               aria-label="Delete"
             >
               <Trash2 className="w-4 h-4" />
@@ -103,8 +103,8 @@ export const ChannelProfileCard = ({ profile, onEdit, onDelete }) => {
       </div>
 
       {profile.isPreset && (
-        <div className="pt-3 border-t border-gray-100 flex justify-between items-center text-xs">
-          <span className="text-text-tertiary">Preset Sistem</span>
+        <div className="pt-3 border-t border-border-soft flex justify-between items-center text-xs">
+          <span className="text-text-muted">Preset Sistem</span>
           {profile.notes && <span className="text-brand-primary truncate max-w-[150px] ml-2" title={profile.notes}>Info tambahan tersedia</span>}
         </div>
       )}

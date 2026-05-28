@@ -90,7 +90,7 @@ export const BundlePricingForm = ({ onSave }) => {
   return (
     <div className="pricing-grid">
       {/* Left Column: Form Inputs */}
-      <div className="space-y-6">
+      <div className="space-y-5">
         {/* Step 1: Bundle Items */}
         <div className="pricing-step-card">
           <h3 className="font-bold text-text-primary text-base mb-1">1. Isi Paket Produk (Bundle)</h3>
@@ -98,10 +98,10 @@ export const BundlePricingForm = ({ onSave }) => {
           
           <div className="space-y-4 mb-4">
             {items.map((item, idx) => (
-              <div key={item.id} className="flex justify-between items-center p-3 bg-zinc-50 rounded-lg border border-zinc-100">
+              <div key={item.id} className="flex justify-between items-center p-3 bg-surface-muted/50 rounded-xl border border-border-soft">
                 <div>
                   <div className="font-medium text-text-primary text-sm">{item.sourceNameSnapshot}</div>
-                  <div className="text-xs text-text-tertiary">
+                  <div className="text-xs text-text-muted">
                     {item.quantity} x {formatCurrency(item.hppPerUnit, lang, currency)}
                   </div>
                 </div>
@@ -113,7 +113,7 @@ export const BundlePricingForm = ({ onSave }) => {
                     variant="ghost"
                     size="icon"
                     onClick={() => handleRemoveItem(item.id)}
-                    className="w-8 h-8 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg"
+                    className="w-8 h-8 text-text-muted hover:text-status-loss hover:bg-status-lossBg rounded-lg"
                     aria-label={t('common.delete')}
                   >
                     <Trash2 className="w-4 h-4" />
@@ -122,7 +122,7 @@ export const BundlePricingForm = ({ onSave }) => {
               </div>
             ))}
             {items.length === 0 && (
-              <div className="text-sm text-text-tertiary text-center py-4 border border-dashed border-zinc-200 rounded-xl bg-zinc-50/50 italic">
+              <div className="text-sm text-text-muted text-center py-4 border border-dashed border-border rounded-xl bg-surface-muted/30 italic">
                 Belum ada item di paket ini. Tambahkan item di bawah.
               </div>
             )}
@@ -222,7 +222,7 @@ export const BundlePricingForm = ({ onSave }) => {
           </Card>
         ) : result ? (
           <div className="space-y-4">
-            <div className="bg-zinc-50 border border-zinc-100 rounded-xl px-4 py-2 mt-2">
+            <div className="bg-surface-muted/50 border border-border-soft rounded-xl px-4 py-2 mt-2">
               <div className="pricing-result-metric">
                 <span className="text-xs text-text-secondary">{t('pricing.totalBundleHpp')}</span>
                 <span className="text-sm font-bold text-text-primary">
@@ -243,8 +243,8 @@ export const BundlePricingForm = ({ onSave }) => {
             <PricingResultSummary result={result} />
           </div>
         ) : (
-          <Card className="p-8 text-center bg-gray-50 border-gray-100 border-dashed rounded-2xl">
-            <p className="text-sm text-text-tertiary">Tambahkan item untuk melihat hasil simulasi</p>
+          <Card className="p-8 text-center bg-surface-muted border-border border-dashed rounded-2xl">
+            <p className="text-sm text-text-muted">Tambahkan item untuk melihat hasil simulasi</p>
           </Card>
         )}
 

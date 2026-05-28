@@ -110,14 +110,14 @@ export const MarketplacePricingForm = ({ sourceData, onSave }) => {
 
   if (!sourceData || !sourceData.hppPerUnit) {
     return (
-      <Card className="p-8 text-center bg-gray-50 border-gray-100 border-dashed rounded-2xl">
-        <p className="text-text-tertiary">{t('pricing.sourceRequired')}</p>
+      <Card className="p-8 text-center bg-surface-muted border-border border-dashed rounded-2xl">
+        <p className="text-text-muted">{t('pricing.sourceRequired')}</p>
       </Card>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Step 1: Channel Profile */}
       <div className="pricing-step-card">
         <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 mb-4">
@@ -169,7 +169,7 @@ export const MarketplacePricingForm = ({ sourceData, onSave }) => {
 
       <div className="pricing-grid">
         {/* Left Column: Form Inputs */}
-        <div className="space-y-6">
+        <div className="space-y-5">
           <div className="pricing-step-card">
             <h3 className="font-bold text-text-primary text-base mb-1">2. Harga & Biaya Potongan</h3>
             <p className="text-xs text-text-secondary mb-4">Masukkan harga jual yang diincar dan atur rincian potongan jika ada perubahan.</p>

@@ -4,6 +4,7 @@ import { Search, ArchiveRestore, Package, Calculator, Trash2 } from 'lucide-reac
 import { PageContainer } from '../components/layout/PageContainer';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
+import { Card } from '../components/ui/Card';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { useLanguage } from '../hooks/useLanguage';
 import { useProducts } from '../hooks/useProducts';
@@ -78,7 +79,7 @@ export const ProductsPage = () => {
 
   return (
     <PageContainer>
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <div>
           <h1 className="text-2xl font-bold text-text-primary mb-1">{t('products.title')}</h1>
           <p className="text-text-secondary">{t('products.subtitle')}</p>
@@ -99,16 +100,13 @@ export const ProductsPage = () => {
 
       {products.length > 0 ? (
         <>
-          <div className="mb-6 relative max-w-md">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-text-secondary" />
-            </div>
+          <div className="mb-6 max-w-md">
             <Input 
               type="text" 
               placeholder="Cari nama produk..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
+              prefix={<Search className="h-4 w-4" />}
             />
           </div>
 
@@ -120,17 +118,18 @@ export const ProductsPage = () => {
               const margin = targetPrice > 0 ? (profit / targetPrice) * 100 : 0;
               
               return (
-                <div 
+                <Card 
                   key={product.id} 
+                  variant="clickable"
                   onClick={() => navigate(`/products/${product.id}`)}
-                  className="bg-surface border border-border p-5 rounded-2xl cursor-pointer hover:shadow-floating hover:border-brand-soft transition-all duration-200 relative group"
+                  className="p-5 relative group"
                 >
                   <Button 
                     variant="ghost" 
                     size="icon" 
                     onClick={(e) => { e.stopPropagation(); setDeleteId(product.id); }}
                     aria-label="Hapus Produk"
-                    className="absolute top-3 right-3 text-text-secondary opacity-0 group-hover:opacity-100 transition-opacity hover:text-status-loss"
+                    className="absolute top-3 right-3 text-text-secondary opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 focus:opacity-100 transition-opacity hover:text-status-loss"
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
@@ -156,7 +155,7 @@ export const ProductsPage = () => {
 
                   <div className="flex items-center justify-between mb-4 text-xs font-semibold">
                     <span className="text-text-secondary">Estimasi Profit:</span>
-                    <span className={profit > 0 ? 'text-status-win' : 'text-status-loss'}>
+                    <span className={profit > 0 ? 'text-status-good' : 'text-status-loss'}>
                       {formatCurrency(profit, lang, settings.currency)} ({margin.toFixed(1)}%)
                     </span>
                   </div>
@@ -170,7 +169,7 @@ export const ProductsPage = () => {
                     <Calculator className="w-3.5 h-3.5 mr-2" />
                     {t('products.sendToCalculator')}
                   </Button>
-                </div>
+                </Card>
               );
             })}
             
@@ -183,7 +182,7 @@ export const ProductsPage = () => {
           </div>
         </>
       ) : (
-        <div className="flex flex-col items-center justify-center py-20 px-4 text-center bg-surface rounded-3xl border border-dashed border-border mt-8">
+        <div className="flex flex-col items-center justify-center py-20 px-4 text-center bg-surface rounded-2xl border border-dashed border-border mt-8">
           <div className="w-20 h-20 bg-brand-soft rounded-full flex items-center justify-center mb-6 text-brand-primary">
             <Package className="w-10 h-10" />
           </div>

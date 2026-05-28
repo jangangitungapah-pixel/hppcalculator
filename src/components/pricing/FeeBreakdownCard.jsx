@@ -2,6 +2,7 @@ import React from 'react';
 import { useLanguage } from '../../hooks/useLanguage';
 import { formatCurrency } from '../../lib/calculations';
 import { Card } from '../ui/Card';
+import { AnimatedNumber } from '../motion/AnimatedNumber';
 
 export const FeeBreakdownCard = ({ 
   platformCommission = 0, 
@@ -35,18 +36,22 @@ export const FeeBreakdownCard = ({
   if (items.length === 0) return null;
 
   return (
-    <Card className="p-4 bg-gray-50 border-gray-100">
+    <Card className="p-4 bg-surface-muted/50 border border-border-soft">
       <h4 className="text-sm font-semibold text-text-primary mb-3">{t('pricing.totalFees')}</h4>
       <div className="space-y-2 text-sm">
         {items.map((item, i) => (
           <div key={i} className="flex justify-between text-text-secondary">
             <span>{item.label}</span>
-            <span className="font-medium">{formatCurrency(item.value, lang, currency)}</span>
+            <span className="font-medium">
+              <AnimatedNumber value={item.value} isCurrency={true} />
+            </span>
           </div>
         ))}
-        <div className="pt-2 mt-2 border-t border-gray-200 flex justify-between font-semibold text-text-primary">
+        <div className="pt-2 mt-2 border-t border-border-soft flex justify-between font-semibold text-text-primary">
           <span>{t('pricing.totalFees')}</span>
-          <span>{formatCurrency(totalFees || items.reduce((a, b) => a + b.value, 0), lang, currency)}</span>
+          <span>
+            <AnimatedNumber value={totalFees || items.reduce((a, b) => a + b.value, 0)} isCurrency={true} />
+          </span>
         </div>
       </div>
     </Card>

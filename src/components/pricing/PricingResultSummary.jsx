@@ -3,6 +3,8 @@ import { useLanguage } from '../../hooks/useLanguage';
 import { formatCurrency, formatPercent } from '../../lib/calculations';
 import { Card } from '../ui/Card';
 import { AlertCircle, CheckCircle, TrendingUp, TrendingDown, HelpCircle } from 'lucide-react';
+import { AnimatedNumber } from '../motion/AnimatedNumber';
+import { motion } from 'framer-motion';
 
 export const PricingResultSummary = ({ result, showRecommended = true, error = null }) => {
   const { t, lang, settings } = useLanguage();
@@ -21,11 +23,11 @@ export const PricingResultSummary = ({ result, showRecommended = true, error = n
 
   if (!result) {
     return (
-      <Card className="p-8 text-center bg-gray-50 border-gray-100 border-dashed rounded-2xl">
-        <div className="w-12 h-12 rounded-full bg-zinc-100 flex items-center justify-center mx-auto mb-3">
-          <HelpCircle className="w-6 h-6 text-text-tertiary" />
+      <Card className="p-8 text-center bg-surface-muted border-border border-dashed rounded-2xl">
+        <div className="w-12 h-12 rounded-full bg-surface-muted border border-border-soft flex items-center justify-center mx-auto mb-3">
+          <HelpCircle className="w-6 h-6 text-text-muted" />
         </div>
-        <p className="text-sm text-text-tertiary">Masukkan data harga & HPP untuk melihat hasil simulasi</p>
+        <p className="text-sm text-text-muted">Masukkan data harga & HPP untuk melihat hasil simulasi</p>
       </Card>
     );
   }
@@ -71,14 +73,14 @@ export const PricingResultSummary = ({ result, showRecommended = true, error = n
           Profit Bersih {result.quantity > 1 ? `(${result.quantity} unit)` : ''}
         </div>
         <div className="text-3xl font-extrabold tracking-tight mb-2">
-          {formatCurrency(result.profit, lang, currency)}
+          <AnimatedNumber value={result.profit} isCurrency={true} />
         </div>
         <div className="flex items-center justify-center gap-2">
           <span className={`pricing-status-badge ${badgeClass}`}>
             {badgeText}
           </span>
           <span className="text-sm font-bold">
-            Margin {formatPercent(result.marginPercent, lang)}
+            Margin <AnimatedNumber value={result.marginPercent} suffix="%" decimals={1} />
           </span>
         </div>
       </div>
@@ -86,36 +88,38 @@ export const PricingResultSummary = ({ result, showRecommended = true, error = n
       {/* Margin Progress Bar */}
       <div>
         <div className="flex justify-between text-xs font-semibold text-text-secondary mb-1">
-          <span>Margin Margin</span>
-          <span>{formatPercent(result.marginPercent, lang)}</span>
+          <span>{t('pricing.margin', 'Margin')}</span>
+          <AnimatedNumber value={result.marginPercent} suffix="%" decimals={1} />
         </div>
         <div className="pricing-margin-bar">
-          <div 
+          <motion.div 
             className={`pricing-margin-bar-fill ${barColor}`} 
-            style={{ width: `${visualMarginPercent}%` }}
+            initial={{ width: 0 }}
+            animate={{ width: `${visualMarginPercent}%` }}
+            transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
           />
         </div>
       </div>
 
       {/* Metrics List */}
-      <div className="bg-zinc-50 border border-zinc-100 rounded-xl px-4 py-2 mt-2">
+      <div className="bg-surface-muted/50 border border-border-soft rounded-xl px-4 py-2 mt-2">
         <div className="pricing-result-metric">
           <span className="text-xs text-text-secondary">Harga Jual Kotor</span>
           <span className="text-sm font-semibold text-text-primary">
-            {formatCurrency(result.grossRevenue || 0, lang, currency)}
+            <AnimatedNumber value={result.grossRevenue || 0} isCurrency={true} />
           </span>
         </div>
         <div className="pricing-result-metric">
           <span className="text-xs text-text-secondary">Total HPP Produk</span>
           <span className="text-sm font-medium text-text-secondary">
-            {formatCurrency(result.totalHpp || 0, lang, currency)}
+            <AnimatedNumber value={result.totalHpp || 0} isCurrency={true} />
           </span>
         </div>
         {result.totalFees !== undefined && (
           <div className="pricing-result-metric">
             <span className="text-xs text-text-secondary">Total Potongan Channel</span>
             <span className="text-sm font-medium text-text-secondary">
-              {formatCurrency(result.totalFees, lang, currency)}
+              <AnimatedNumber value={result.totalFees} isCurrency={true} />
             </span>
           </div>
         )}
@@ -123,20 +127,20 @@ export const PricingResultSummary = ({ result, showRecommended = true, error = n
           <div className="pricing-result-metric">
             <span className="text-xs text-text-secondary">Biaya Kemasan Tambahan</span>
             <span className="text-sm font-medium text-text-secondary">
-              {formatCurrency(result.totalAdditionalPackaging, lang, currency)}
+              <AnimatedNumber value={result.totalAdditionalPackaging} isCurrency={true} />
             </span>
           </div>
         )}
-        <div className="pricing-result-metric pt-3 mt-1 border-t border-zinc-200">
+        <div className="pricing-result-metric pt-3 mt-1 border-t border-border-soft">
           <span className="text-xs font-bold text-text-primary">Pendapatan Bersih</span>
           <span className="text-sm font-extrabold text-brand-primary">
-            {formatCurrency(result.netRevenue || 0, lang, currency)}
+            <AnimatedNumber value={result.netRevenue || 0} isCurrency={true} />
           </span>
         </div>
       </div>
 
       {/* Recommendation Section */}
-      <div className="p-3 bg-zinc-50 border border-zinc-100 rounded-xl text-xs text-text-secondary flex gap-2 items-start">
+      <div className="p-3 bg-surface-muted/50 border border-border-soft rounded-xl text-xs text-text-secondary flex gap-2 items-start">
         <CheckCircle className={`w-4.5 h-4.5 shrink-0 mt-0.5 ${isLoss ? 'text-status-loss' : status === 'low' ? 'text-status-low' : 'text-status-good'}`} />
         <span>{recommendationText}</span>
       </div>
@@ -145,7 +149,9 @@ export const PricingResultSummary = ({ result, showRecommended = true, error = n
       {showRecommended && result.recommendedPrice && (
         <div className="p-3 bg-brand-soft rounded-xl border border-brand-primary/20 flex justify-between items-center text-xs">
           <span className="font-semibold text-brand-primary">{t('pricing.recommendedPrice')}</span>
-          <span className="font-bold text-brand-primary text-sm">{formatCurrency(result.recommendedPrice, lang, currency)}</span>
+          <span className="font-bold text-brand-primary text-sm">
+            <AnimatedNumber value={result.recommendedPrice} isCurrency={true} />
+          </span>
         </div>
       )}
     </div>

@@ -97,8 +97,8 @@ export const ConsignmentPricingForm = ({ sourceData, onSave }) => {
 
   if (!sourceData || !sourceData.hppPerUnit) {
     return (
-      <Card className="p-8 text-center bg-gray-50 border-gray-100 border-dashed rounded-2xl">
-        <p className="text-text-tertiary">{t('pricing.sourceRequired')}</p>
+      <Card className="p-8 text-center bg-surface-muted border-border border-dashed rounded-2xl">
+        <p className="text-text-muted">{t('pricing.sourceRequired')}</p>
       </Card>
     );
   }
@@ -154,7 +154,7 @@ export const ConsignmentPricingForm = ({ sourceData, onSave }) => {
 
       <div className="pricing-grid">
         {/* Left Column: Form Inputs */}
-        <div className="space-y-6">
+        <div className="space-y-5">
           <div className="pricing-step-card">
             <h3 className="font-bold text-text-primary text-base mb-1">2. Harga & Bagi Hasil</h3>
             <p className="text-xs text-text-secondary mb-4">Atur harga jual di toko mitra dan biaya konsinyasi terkait.</p>

@@ -4,6 +4,7 @@ import { calculatePromoProfit, calculateBogoProfit } from '../../lib/channelPric
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
+import { ChevronDown } from 'lucide-react';
 import { PricingResultSummary } from './PricingResultSummary';
 import { formatCurrency } from '../../lib/calculations';
 
@@ -68,8 +69,8 @@ export const PromoPricingForm = ({ sourceData, onSave }) => {
 
   if (!sourceData || !sourceData.hppPerUnit) {
     return (
-      <Card className="p-8 text-center bg-gray-50 border-gray-100 border-dashed rounded-2xl">
-        <p className="text-text-tertiary">{t('pricing.sourceRequired')}</p>
+      <Card className="p-8 text-center bg-surface-muted border-border border-dashed rounded-2xl">
+        <p className="text-text-muted">{t('pricing.sourceRequired')}</p>
       </Card>
     );
   }
@@ -79,7 +80,7 @@ export const PromoPricingForm = ({ sourceData, onSave }) => {
   return (
     <div className="pricing-grid">
       {/* Left Column: Form Inputs */}
-      <div className="space-y-6">
+      <div className="space-y-5">
         <div className="pricing-step-card">
           <h3 className="font-bold text-text-primary text-base mb-1">1. Pengaturan Promo</h3>
           <p className="text-xs text-text-secondary mb-4">Tentukan jenis promo diskon atau BOGO (Beli X Gratis Y) yang akan disimulasikan.</p>
@@ -89,17 +90,22 @@ export const PromoPricingForm = ({ sourceData, onSave }) => {
               <label className="block text-sm font-semibold text-text-primary mb-2">
                 {t('pricing.promoType')}
               </label>
-              <select
-                name="promoType"
-                value={formData.promoType}
-                onChange={handleChange}
-                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-primary outline-none"
-              >
-                <option value="percent">{t('pricing.percentDiscount')}</option>
-                <option value="fixed">{t('pricing.fixedDiscount')}</option>
-                <option value="voucher">{t('pricing.voucherSubsidy')}</option>
-                <option value="bogo">{t('pricing.bogo')}</option>
-              </select>
+              <div className="relative">
+                <select
+                  name="promoType"
+                  value={formData.promoType}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-white border border-border rounded-xl focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none appearance-none pr-10"
+                >
+                  <option value="percent">{t('pricing.percentDiscount')}</option>
+                  <option value="fixed">{t('pricing.fixedDiscount')}</option>
+                  <option value="voucher">{t('pricing.voucherSubsidy')}</option>
+                  <option value="bogo">{t('pricing.bogo')}</option>
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-text-muted">
+                  <ChevronDown className="w-4 h-4" />
+                </div>
+              </div>
             </div>
 
             <Input

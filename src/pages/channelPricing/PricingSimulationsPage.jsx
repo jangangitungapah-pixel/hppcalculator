@@ -8,6 +8,7 @@ import { SimulationCard } from '../../components/pricing/SimulationCard';
 import { Button } from '../../components/ui/Button';
 import { Toast } from '../../components/ui/Toast';
 import { Card } from '../../components/ui/Card';
+import { Input } from '../../components/ui/Input';
 import { Plus, Calculator, Search, ArrowUpDown, Filter } from 'lucide-react';
 import { PageContainer } from '../../components/layout/PageContainer';
 
@@ -159,26 +160,26 @@ export const PricingSimulationsPage = () => {
           <>
             {/* Summary cards */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              <Card className="p-4 bg-white border border-gray-100 flex flex-col justify-between">
-                <span className="text-xs text-text-tertiary font-bold">Total Simulasi</span>
+              <Card className="p-4 bg-surface border border-border flex flex-col justify-between shadow-sm">
+                <span className="text-xs text-text-muted font-bold">Total Simulasi</span>
                 <span className="text-2xl font-extrabold text-text-primary mt-1">
                   {summaryStats.total} <span className="text-xs font-normal text-text-muted">simulasi</span>
                 </span>
               </Card>
-              <Card className="p-4 bg-white border border-gray-100 flex flex-col justify-between">
-                <span className="text-xs text-text-tertiary font-bold">Rata-rata Margin</span>
+              <Card className="p-4 bg-surface border border-border flex flex-col justify-between shadow-sm">
+                <span className="text-xs text-text-muted font-bold">Rata-rata Margin</span>
                 <span className="text-2xl font-extrabold text-brand-primary mt-1">
                   {formatPercent(summaryStats.avgMargin, lang)}
                 </span>
               </Card>
-              <Card className="p-4 bg-white border border-gray-100 flex flex-col justify-between">
-                <span className="text-xs text-text-tertiary font-bold">Simulasi Sehat</span>
+              <Card className="p-4 bg-surface border border-border flex flex-col justify-between shadow-sm">
+                <span className="text-xs text-text-muted font-bold">Simulasi Sehat</span>
                 <span className="text-2xl font-extrabold text-status-good mt-1">
                   {summaryStats.goodCount} <span className="text-xs font-normal text-text-muted">simulasi</span>
                 </span>
               </Card>
-              <Card className="p-4 bg-white border border-gray-100 flex flex-col justify-between">
-                <span className="text-xs text-text-tertiary font-bold">Simulasi Rugi</span>
+              <Card className="p-4 bg-surface border border-border flex flex-col justify-between shadow-sm">
+                <span className="text-xs text-text-muted font-bold">Simulasi Rugi</span>
                 <span className="text-2xl font-extrabold text-status-loss mt-1">
                   {summaryStats.lossCount} <span className="text-xs font-normal text-text-muted">simulasi</span>
                 </span>
@@ -187,14 +188,13 @@ export const PricingSimulationsPage = () => {
 
             {/* Toolbar */}
             <div className="pricing-toolbar">
-              <div className="relative flex-1 max-w-md w-full">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-text-muted" />
-                <input 
+              <div className="max-w-md flex-1 w-full">
+                <Input 
                   type="text"
                   placeholder="Cari simulasi atau nama produk..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 bg-zinc-50 border border-zinc-200 rounded-xl focus:border-brand-primary outline-none text-sm transition-colors"
+                  prefix={<Search className="h-4 w-4 text-text-secondary" />}
                 />
               </div>
 
@@ -202,29 +202,43 @@ export const PricingSimulationsPage = () => {
                 {/* Filter */}
                 <div className="flex items-center gap-1.5 flex-1 sm:flex-none">
                   <Filter className="w-4 h-4 text-text-muted hidden sm:inline" />
-                  <select
-                    value={statusFilter}
-                    onChange={(e) => setStatusFilter(e.target.value)}
-                    className="w-full sm:w-auto py-2 px-3 bg-zinc-50 border border-zinc-200 rounded-xl text-sm focus:border-brand-primary outline-none"
-                  >
-                    <option value="all">Semua Status</option>
-                    <option value="good">Sehat (Margin &gt;= 25%)</option>
-                    <option value="low">Rendah (Margin &lt; 25%)</option>
-                    <option value="loss">Rugi (Profit &lt; 0)</option>
-                  </select>
+                  <div className="relative flex items-center group flex-1 sm:flex-none">
+                    <select
+                      value={statusFilter}
+                      onChange={(e) => setStatusFilter(e.target.value)}
+                      className="w-full sm:w-auto pl-3 pr-8 py-2 bg-surface border border-border rounded-xl text-sm focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none appearance-none transition-all duration-200"
+                    >
+                      <option value="all">Semua Status</option>
+                      <option value="good">Sehat (Margin &gt;= 25%)</option>
+                      <option value="low">Rendah (Margin &lt; 25%)</option>
+                      <option value="loss">Rugi (Profit &lt; 0)</option>
+                    </select>
+                    <div className="absolute right-2.5 pointer-events-none text-text-muted group-focus-within:text-primary transition-colors">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Sort */}
                 <div className="flex items-center gap-1.5 flex-1 sm:flex-none">
                   <ArrowUpDown className="w-4 h-4 text-text-muted hidden sm:inline" />
-                  <select
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                    className="w-full sm:w-auto py-2 px-3 bg-zinc-50 border border-zinc-200 rounded-xl text-sm focus:border-brand-primary outline-none"
-                  >
-                    <option value="latest">Terbaru</option>
-                    <option value="margin_desc">Margin Tertinggi</option>
-                  </select>
+                  <div className="relative flex items-center group flex-1 sm:flex-none">
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value)}
+                      className="w-full sm:w-auto pl-3 pr-8 py-2 bg-surface border border-border rounded-xl text-sm focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none appearance-none transition-all duration-200"
+                    >
+                      <option value="latest">Terbaru</option>
+                      <option value="margin_desc">Margin Tertinggi</option>
+                    </select>
+                      <div className="absolute right-2.5 pointer-events-none text-text-muted group-focus-within:text-primary transition-colors">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                      </div>
+                  </div>
                 </div>
               </div>
             </div>

@@ -112,8 +112,8 @@ export const RecipeDetailPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Info & Details */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-surface border border-border rounded-3xl shadow-sm overflow-hidden">
-            <div className="p-6 md:p-8">
+          <div className="bg-surface border border-border rounded-2xl shadow-sm overflow-hidden">
+            <div className="p-4 sm:p-6 md:p-8">
               <div className="flex items-start justify-between mb-2">
                 <h2 className="text-3xl font-bold text-text-primary">{recipe.name}</h2>
                 {recipe.source === 'demo' && (
@@ -125,19 +125,19 @@ export const RecipeDetailPage = () => {
               <p className="text-text-secondary mb-6">{recipe.description || 'Tidak ada deskripsi'}</p>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <div className="bg-surface-muted/50 p-4 rounded-2xl border border-border/50">
+                <div className="bg-surface-muted/50 p-3 sm:p-4 rounded-xl border border-border/50">
                   <p className="text-xs text-text-secondary font-medium uppercase mb-1">Target Hasil</p>
                   <p className="text-lg font-bold text-text-primary">{recipe.outputQuantity} <span className="text-sm font-medium">{recipe.outputUnit}</span></p>
                 </div>
-                <div className="bg-surface-muted/50 p-4 rounded-2xl border border-border/50">
+                <div className="bg-surface-muted/50 p-3 sm:p-4 rounded-xl border border-border/50">
                   <p className="text-xs text-text-secondary font-medium uppercase mb-1">Bisa Dijual</p>
                   <p className="text-lg font-bold text-text-primary">{result.sellableQuantity || 0} <span className="text-sm font-medium">{recipe.outputUnit}</span></p>
                 </div>
-                <div className="bg-surface-muted/50 p-4 rounded-2xl border border-border/50">
+                <div className="bg-surface-muted/50 p-3 sm:p-4 rounded-xl border border-border/50">
                   <p className="text-xs text-status-loss font-medium uppercase mb-1">Gagal/Reject</p>
                   <p className="text-lg font-bold text-text-primary">{recipe.failedQuantity || 0} <span className="text-sm font-medium">{recipe.outputUnit}</span></p>
                 </div>
-                <div className="bg-surface-muted/50 p-4 rounded-2xl border border-border/50">
+                <div className="bg-surface-muted/50 p-3 sm:p-4 rounded-xl border border-border/50">
                   <p className="text-xs text-status-loss font-medium uppercase mb-1">Penyusutan</p>
                   <p className="text-lg font-bold text-text-primary">{recipe.wastePercent || 0} <span className="text-sm font-medium">%</span></p>
                 </div>
@@ -153,7 +153,7 @@ export const RecipeDetailPage = () => {
             </div>
           </div>
 
-          <div className="bg-surface border border-border p-6 rounded-3xl shadow-sm">
+          <div className="bg-surface border border-border p-4 sm:p-6 rounded-2xl shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold text-text-primary">{t('recipes.ingredients')}</h3>
               <span className="text-sm font-bold text-text-primary bg-surface-muted px-3 py-1 rounded-lg">
@@ -180,7 +180,7 @@ export const RecipeDetailPage = () => {
           </div>
 
           {(recipe.extraCosts && recipe.extraCosts.length > 0) && (
-            <div className="bg-surface border border-border p-6 rounded-3xl shadow-sm">
+            <div className="bg-surface border border-border p-4 sm:p-6 rounded-2xl shadow-sm">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold text-text-primary">{t('recipes.extraCosts')}</h3>
                 <span className="text-sm font-bold text-text-primary bg-surface-muted px-3 py-1 rounded-lg">
@@ -206,7 +206,7 @@ export const RecipeDetailPage = () => {
 
         {/* Right Column: Actions & Results */}
         <div className="space-y-6">
-          <div className="bg-surface border border-brand-soft p-6 rounded-3xl shadow-sm relative overflow-hidden">
+          <div className="bg-surface border border-brand-soft p-4 sm:p-6 rounded-2xl shadow-sm relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-brand-soft/20 rounded-bl-[100px] -z-0"></div>
             
             <h3 className="text-sm font-bold text-brand-primary uppercase tracking-wider mb-2 relative z-10">Ringkasan Biaya</h3>
@@ -218,7 +218,7 @@ export const RecipeDetailPage = () => {
               </p>
             </div>
             
-            <div className="bg-brand-primary text-white p-4 rounded-2xl relative z-10">
+            <div className="bg-brand-primary text-white p-4 rounded-xl relative z-10">
               <p className="text-xs text-white/80 font-medium mb-1">HPP per {recipe.outputUnit}</p>
               <p className="text-3xl font-bold">
                 {formatCurrency(result.hppPerUnit || 0, lang, settings.currency)}
@@ -226,7 +226,7 @@ export const RecipeDetailPage = () => {
             </div>
           </div>
 
-          <div className="bg-surface border border-border p-6 rounded-3xl shadow-sm">
+          <div className="bg-surface border border-border p-4 sm:p-6 rounded-2xl shadow-sm">
             <h3 className="font-bold text-text-primary mb-4 flex items-center gap-2">
               <ChefHat className="w-5 h-5 text-brand-primary" />
               Tindakan Cepat
@@ -251,12 +251,12 @@ export const RecipeDetailPage = () => {
           </div>
 
           {result.suggestedPrices && (
-            <div className="bg-surface border border-border p-6 rounded-3xl shadow-sm">
+            <div className="bg-surface border border-border p-4 sm:p-6 rounded-2xl shadow-sm">
               <h3 className="font-bold text-text-primary mb-4">Rekomendasi Harga Jual</h3>
               <div className="space-y-3">
-                <div className="flex justify-between items-center p-3 rounded-xl bg-status-win/10 border border-status-win/20">
+                <div className="flex justify-between items-center p-3 rounded-xl bg-status-goodBg border border-status-good/20">
                   <div>
-                    <p className="font-semibold text-status-win text-sm">Aman (15%)</p>
+                    <p className="font-semibold text-status-good text-sm">Aman (15%)</p>
                   </div>
                   <p className="font-bold text-text-primary">
                     {formatCurrency(result.suggestedPrices.safe?.price, lang, settings.currency)}
@@ -298,7 +298,7 @@ export const RecipeDetailPage = () => {
       {/* Scale Modal */}
       {showScaleModal && (
         <div className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4">
-          <div className="bg-surface rounded-3xl w-full max-w-md overflow-hidden shadow-modal animate-in fade-in zoom-in-95 duration-200">
+          <div className="bg-surface rounded-2xl w-full max-w-md overflow-hidden shadow-modal animate-in fade-in zoom-in-95 duration-200">
             <div className="p-6">
               <h3 className="text-xl font-bold text-text-primary mb-2">Ubah Skala Resep</h3>
               <p className="text-text-secondary text-sm mb-6">

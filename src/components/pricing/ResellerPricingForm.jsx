@@ -76,8 +76,8 @@ export const ResellerPricingForm = ({ sourceData, onSave }) => {
 
   if (!sourceData || !sourceData.hppPerUnit) {
     return (
-      <Card className="p-8 text-center bg-gray-50 border-gray-100 border-dashed rounded-2xl">
-        <p className="text-text-tertiary">{t('pricing.sourceRequired')}</p>
+      <Card className="p-8 text-center bg-surface-muted border-border border-dashed rounded-2xl">
+        <p className="text-text-muted">{t('pricing.sourceRequired')}</p>
       </Card>
     );
   }
@@ -85,7 +85,7 @@ export const ResellerPricingForm = ({ sourceData, onSave }) => {
   return (
     <div className="pricing-grid">
       {/* Left Column: Input Steps */}
-      <div className="space-y-6">
+      <div className="space-y-5">
         <div className="pricing-step-card">
           <h3 className="font-bold text-text-primary text-base mb-1">1. Pengaturan Reseller</h3>
           <p className="text-xs text-text-secondary mb-4">Tentukan target profit Anda dan margin untuk komisi reseller Anda.</p>
@@ -151,7 +151,7 @@ export const ResellerPricingForm = ({ sourceData, onSave }) => {
             </div>
 
             {/* Metrics Breakdown */}
-            <div className="bg-zinc-50 border border-zinc-100 rounded-xl px-4 py-2 mt-2">
+            <div className="bg-surface-muted/50 border border-border-soft rounded-xl px-4 py-2 mt-2">
               <div className="pricing-result-metric">
                 <span className="text-xs text-text-secondary">Profit Anda (Owner)</span>
                 <div className="text-right">

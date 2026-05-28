@@ -8,14 +8,18 @@ export const ChannelTabs = ({ activeTab, onChange }) => {
 
   const tabs = [
     { id: 'marketplace', label: t('pricing.marketplace', 'Marketplace'), icon: Store },
-    { id: 'reseller', label: t('pricing.reseller', 'Reseller / Grosir'), icon: Users },
-    { id: 'promo', label: t('pricing.promo', 'Promo / Diskon'), icon: Tag },
+    { id: 'reseller', label: t('pricing.reseller', 'Reseller & Grosir'), icon: Users },
+    { id: 'promo', label: t('pricing.promo', 'Promo & Diskon'), icon: Tag },
     { id: 'bundle', label: t('pricing.bundle', 'Paket Bundling'), icon: Package },
-    { id: 'consignment', label: t('pricing.consignment', 'Titip Jual / Konsinyasi'), icon: ShoppingBag }
+    { id: 'consignment', label: t('pricing.consignment', 'Titip Jual (Konsinyasi)'), icon: ShoppingBag }
   ];
 
   return (
-    <div className="flex gap-2 overflow-x-auto hide-scrollbar border-b border-zinc-200 mb-6 bg-white pt-1 pb-px sticky top-0 z-10" role="tablist" aria-label="Channel Tabs">
+    <div 
+      className="w-full bg-surface-muted border border-border-soft p-2 rounded-full flex flex-nowrap justify-start sm:justify-center gap-2 overflow-x-auto hide-scrollbar sticky top-0 z-20 mb-8 shadow-sm scroll-smooth" 
+      role="tablist" 
+      aria-label="Channel Tabs"
+    >
       {tabs.map(tab => {
         const Icon = tab.icon;
         const isActive = activeTab === tab.id;
@@ -26,13 +30,16 @@ export const ChannelTabs = ({ activeTab, onChange }) => {
             aria-selected={isActive}
             onClick={() => onChange(tab.id)}
             className={cn(
-              "flex items-center gap-2 px-4 py-3 text-sm font-bold whitespace-nowrap border-b-2 transition-all duration-200 outline-none",
+              "flex items-center justify-center gap-2.5 px-6 py-3.5 text-sm font-semibold rounded-full whitespace-nowrap transition-all duration-300 outline-none select-none shrink-0 sm:shrink sm:flex-1",
               isActive 
-                ? "border-brand-primary text-brand-primary" 
-                : "border-transparent text-text-muted hover:text-text-primary hover:border-zinc-300"
+                ? "bg-brand-primary text-white shadow-md shadow-brand-primary/10 transform scale-[1.02] active:scale-[0.98]" 
+                : "text-text-muted hover:text-text-primary hover:bg-white/40 active:bg-white/60"
             )}
           >
-            <Icon className="w-4 h-4" />
+            <Icon className={cn(
+              "w-4 h-4 transition-transform duration-300 shrink-0", 
+              isActive ? "text-white scale-110" : "text-text-muted"
+            )} />
             <span>{tab.label}</span>
           </button>
         );

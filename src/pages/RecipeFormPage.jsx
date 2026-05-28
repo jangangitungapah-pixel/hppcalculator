@@ -4,6 +4,7 @@ import { ArrowLeft, Save, Plus, Trash2, GripVertical } from 'lucide-react';
 import { PageContainer } from '../components/layout/PageContainer';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
+import { Select } from '../components/ui/Select';
 import { useLanguage } from '../hooks/useLanguage';
 import { useRecipes } from '../hooks/useRecipes';
 import { useIngredients } from '../hooks/useIngredients';
@@ -225,7 +226,7 @@ export const RecipeFormPage = () => {
 
       <div className="space-y-6">
         {/* Basic Info */}
-        <div className="bg-surface border border-border p-6 rounded-3xl shadow-sm">
+        <div className="bg-surface border border-border p-4 sm:p-6 rounded-2xl shadow-sm">
           <h2 className="text-lg font-bold text-text-primary mb-4">Informasi Dasar</h2>
           <div className="space-y-4">
             <Input 
@@ -261,23 +262,19 @@ export const RecipeFormPage = () => {
                 onChange={(e) => updateField('outputQuantity', e.target.value)}
                 error={errors.outputQuantity && t('errors.outputRequired')}
               />
-              <div>
-                <label className="block text-sm font-semibold text-text-primary mb-1.5">
-                  {t('recipes.outputUnit')}
-                </label>
-                <select 
-                  className="w-full bg-background border border-border rounded-xl px-4 py-3 text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
-                  value={form.outputUnit}
-                  onChange={(e) => updateField('outputUnit', e.target.value)}
-                >
-                  <option value="pcs">Pcs / Buah</option>
-                  <option value="porsi">Porsi</option>
-                  <option value="cup">Cup</option>
-                  <option value="loyang">Loyang</option>
-                  <option value="toples">Toples</option>
-                  <option value="box">Box / Kotak</option>
-                </select>
-              </div>
+              <Select 
+                label={t('recipes.outputUnit')}
+                value={form.outputUnit}
+                onChange={(e) => updateField('outputUnit', e.target.value)}
+                options={[
+                  { value: 'pcs', label: 'Pcs / Buah' },
+                  { value: 'porsi', label: 'Porsi' },
+                  { value: 'cup', label: 'Cup' },
+                  { value: 'loyang', label: 'Loyang' },
+                  { value: 'toples', label: 'Toples' },
+                  { value: 'box', label: 'Box / Kotak' }
+                ]}
+              />
               <Input 
                 type="number"
                 min="0"
@@ -291,11 +288,11 @@ export const RecipeFormPage = () => {
         </div>
 
         {/* Ingredients */}
-        <div className="bg-surface border border-border p-6 rounded-3xl shadow-sm">
+        <div className="bg-surface border border-border p-4 sm:p-6 rounded-2xl shadow-sm">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-bold text-text-primary">{t('recipes.ingredients')}</h2>
             <Button variant="secondary" size="sm" onClick={addIngredient}>
-              <Plus className="w-4 h-4 mr-1" /> Tambah Bahan
+              Tambah Bahan
             </Button>
           </div>
 
@@ -313,16 +310,22 @@ export const RecipeFormPage = () => {
             <div className="space-y-3">
               {form.ingredients.map((ing, index) => (
                 <div key={ing.id} className="flex flex-col md:flex-row gap-3 p-3 border border-border rounded-xl bg-background items-start md:items-center">
-                  <div className="flex-1 w-full">
+                  <div className="flex-1 w-full relative flex items-center group">
                     <select 
-                      className="w-full bg-surface border border-border rounded-lg px-3 py-2 text-text-primary"
+                      className="w-full bg-surface border border-border rounded-lg pl-3 pr-8 py-2 text-text-primary appearance-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200"
                       value={ing.ingredientId}
                       onChange={(e) => updateIngredient(index, 'ingredientId', e.target.value)}
+                      aria-label="Pilih Bahan Baku"
                     >
                       {ingredients.map(i => (
                         <option key={i.id} value={i.id}>{i.name}</option>
                       ))}
                     </select>
+                    <div className="absolute right-2.5 pointer-events-none text-text-muted group-focus-within:text-primary transition-colors">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    </div>
                   </div>
                   <div className="flex gap-2 w-full md:w-auto">
                     <input 
@@ -330,19 +333,28 @@ export const RecipeFormPage = () => {
                       min="0"
                       step="any"
                       placeholder="Jml"
-                      className="w-24 bg-surface border border-border rounded-lg px-3 py-2 text-text-primary"
+                      className="w-full flex-1 md:w-24 md:flex-none bg-surface border border-border rounded-lg px-3 py-2 text-text-primary focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200"
                       value={ing.usedQuantity}
                       onChange={(e) => updateIngredient(index, 'usedQuantity', e.target.value)}
+                      aria-label="Jumlah Bahan"
                     />
-                    <select 
-                      className="w-28 bg-surface border border-border rounded-lg px-2 py-2 text-text-primary"
-                      value={ing.usedUnit}
-                      onChange={(e) => updateIngredient(index, 'usedUnit', e.target.value)}
-                    >
-                      {unitOptions.map(u => (
-                        <option key={u.value} value={u.value}>{u.label}</option>
-                      ))}
-                    </select>
+                    <div className="relative flex-1 w-full md:w-40 md:flex-none flex items-center group">
+                      <select 
+                        className="w-full md:w-40 bg-surface border border-border rounded-lg pl-3 pr-8 py-2 text-text-primary appearance-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200"
+                        value={ing.usedUnit}
+                        onChange={(e) => updateIngredient(index, 'usedUnit', e.target.value)}
+                        aria-label="Satuan Bahan"
+                      >
+                        {unitOptions.map(u => (
+                          <option key={u.value} value={u.value}>{u.label}</option>
+                        ))}
+                      </select>
+                      <div className="absolute right-2.5 pointer-events-none text-text-muted group-focus-within:text-primary transition-colors">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                      </div>
+                    </div>
                     <Button 
                       variant="ghost" 
                       size="icon" 
@@ -360,7 +372,7 @@ export const RecipeFormPage = () => {
         </div>
 
         {/* Extra Costs */}
-        <div className="bg-surface border border-border p-6 rounded-3xl shadow-sm">
+        <div className="bg-surface border border-border p-4 sm:p-6 rounded-2xl shadow-sm">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-bold text-text-primary">{t('recipes.extraCosts')}</h2>
             <Button variant="secondary" size="sm" onClick={addExtraCost}>
@@ -380,21 +392,23 @@ export const RecipeFormPage = () => {
                     <input 
                       type="text"
                       placeholder="Nama Biaya (cth: Plastik, Gas)"
-                      className="w-full bg-surface border border-border rounded-lg px-3 py-2 text-text-primary"
+                      className="w-full bg-surface border border-border rounded-lg px-3 py-2 text-text-primary focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200"
                       value={cost.name}
                       onChange={(e) => updateExtraCost(index, 'name', e.target.value)}
+                      aria-label="Nama Biaya Tambahan"
                     />
                   </div>
                   <div className="flex gap-2 w-full md:w-auto">
-                    <div className="relative flex-1 md:w-40">
+                    <div className="relative flex-1 w-full md:w-40 md:flex-none">
                       <span className="absolute left-3 top-2.5 text-text-secondary text-sm">Rp</span>
                       <input 
                         type="number"
                         min="0"
                         placeholder="0"
-                        className="w-full bg-surface border border-border rounded-lg pl-9 pr-3 py-2 text-text-primary"
+                        className="w-full bg-surface border border-border rounded-lg pl-9 pr-3 py-2 text-text-primary focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200"
                         value={cost.amount}
                         onChange={(e) => updateExtraCost(index, 'amount', e.target.value)}
+                        aria-label="Jumlah Biaya Tambahan"
                       />
                     </div>
                     <Button 
@@ -414,8 +428,8 @@ export const RecipeFormPage = () => {
         </div>
       </div>
 
-      <div className="mt-8">
-        <Button className="w-full py-4 text-lg" onClick={handleSave}>
+      <div className="mt-8 flex justify-end">
+        <Button className="w-full sm:w-auto px-8 py-4 text-lg" onClick={handleSave}>
           <Save className="w-5 h-5 mr-2" />
           {t('common.save')}
         </Button>

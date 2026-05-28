@@ -1025,19 +1025,19 @@ button.dashboard-metric-card {
 }
 
 .pricing-result-hero.profit-good {
-  background: var(--color-status-goodBg, rgba(40, 167, 69, 0.1));
+  background: var(--color-status-good-bg, rgba(40, 167, 69, 0.1));
   border: 1px solid rgba(40, 167, 69, 0.2);
   color: var(--color-status-good, #28a745);
 }
 
 .pricing-result-hero.profit-low {
-  background: var(--color-status-lowBg, rgba(255, 193, 7, 0.1));
+  background: var(--color-status-low-bg, rgba(255, 193, 7, 0.1));
   border: 1px solid rgba(255, 193, 7, 0.2);
   color: var(--color-status-low, #ffc107);
 }
 
 .pricing-result-hero.profit-loss {
-  background: var(--color-status-lossBg, rgba(220, 53, 69, 0.1));
+  background: var(--color-status-loss-bg, rgba(220, 53, 69, 0.1));
   border: 1px solid rgba(220, 53, 69, 0.2);
   color: var(--color-status-loss, #dc3545);
 }
@@ -1081,17 +1081,17 @@ button.dashboard-metric-card {
 }
 
 .pricing-status-badge.status-good {
-  background-color: var(--color-status-goodBg, rgba(40, 167, 69, 0.1));
+  background-color: var(--color-status-good-bg, rgba(40, 167, 69, 0.1));
   color: var(--color-status-good, #28a745);
 }
 
 .pricing-status-badge.status-low {
-  background-color: var(--color-status-lowBg, rgba(255, 193, 7, 0.1));
+  background-color: var(--color-status-low-bg, rgba(255, 193, 7, 0.1));
   color: var(--color-status-low, #ffc107);
 }
 
 .pricing-status-badge.status-loss {
-  background-color: var(--color-status-lossBg, rgba(220, 53, 69, 0.1));
+  background-color: var(--color-status-loss-bg, rgba(220, 53, 69, 0.1));
   color: var(--color-status-loss, #dc3545);
 }
 
