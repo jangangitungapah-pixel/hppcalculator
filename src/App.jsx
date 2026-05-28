@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { createBrowserRouter, RouterProvider, createRoutesFromElements, Route, Navigate } from 'react-router-dom';
 import { AppShell } from './components/layout/AppShell';
+import { useAuth } from './hooks/useAuth';
 
 const WelcomePage = React.lazy(() => import('./pages/WelcomePage').then(module => ({ default: module.WelcomePage })));
 const DashboardPage = React.lazy(() => import('./pages/DashboardPage').then(module => ({ default: module.DashboardPage })));
@@ -60,9 +61,19 @@ const hasReturningUserData = () => {
   return false;
 };
 
-const RootRedirect = () => (
-  <Navigate to={hasReturningUserData() ? '/dashboard' : '/welcome'} replace />
-);
+const RootRedirect = () => {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-surface flex items-center justify-center text-sm font-semibold text-text-secondary">
+        Memuat...
+      </div>
+    );
+  }
+
+  return <Navigate to={isAuthenticated ? '/dashboard' : '/welcome'} replace />;
+};
 
 const RouteFallback = () => (
   <div className="min-h-screen bg-surface flex items-center justify-center text-sm font-semibold text-text-secondary">
