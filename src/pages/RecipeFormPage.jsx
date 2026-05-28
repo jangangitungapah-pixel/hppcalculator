@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useBlocker } from 'react-router-dom';
 import { ArrowLeft, Save, Plus, Trash2, Tag, Calculator, ChefHat } from 'lucide-react';
 import { PageContainer } from '../components/layout/PageContainer';
 import { Button } from '../components/ui/Button';
@@ -13,6 +13,7 @@ import { validateRecipeInput, calculateRecipeCost, calculateIngredientUsageCost 
 import { formatCurrency } from '../lib/calculations';
 import { useToast } from '../hooks/useToast';
 import { useAppData } from '../hooks/useAppData';
+import { getRecipeDraft, saveRecipeDraft, clearRecipeDraft } from '../lib/storage';
 
 export const RecipeFormPage = () => {
   const { id } = useParams();
@@ -39,12 +40,62 @@ export const RecipeFormPage = () => {
   });
   
   const [errors, setErrors] = useState({});
+  const [baseForm, setBaseForm] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [draftToRestore, setDraftToRestore] = useState(null);
+
+  const isFormDirty = baseForm ? JSON.stringify(form) !== JSON.stringify(baseForm) : false;
+
+  const blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      isFormDirty && !isSaving && currentLocation.pathname !== nextLocation.pathname
+  );
+
+  // Initialize baseForm for comparison (isDirty check)
+  useEffect(() => {
+    if (!isEdit) {
+      const initialForm = {
+        name: '',
+        description: '',
+        category: '',
+        outputQuantity: '1',
+        outputUnit: 'pcs',
+        failedQuantity: '0',
+        wastePercent: '0',
+        ingredients: [],
+        extraCosts: []
+      };
+      setBaseForm(initialForm);
+    }
+  }, [isEdit]);
+
+  // Check for unsaved draft on mount/id change
+  useEffect(() => {
+    const draft = getRecipeDraft();
+    if (draft && draft.recipeId === (id || 'new') && draft.form) {
+      setDraftToRestore(draft);
+    }
+  }, [id]);
+
+  // Intercept window unload/refresh for unsaved changes
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (isFormDirty && !isSaving) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [isFormDirty, isSaving]);
 
   useEffect(() => {
     if (isEdit) {
       const existing = getRecipeById(id);
       if (existing) {
-        setForm({
+        const loadedForm = {
           ...existing,
           outputQuantity: existing.outputQuantity.toString(),
           failedQuantity: (existing.failedQuantity || 0).toString(),
@@ -57,7 +108,9 @@ export const RecipeFormPage = () => {
             ...cost,
             amount: cost.amount.toString()
           }))
-        });
+        };
+        setForm(loadedForm);
+        setBaseForm(loadedForm);
       } else {
         navigate('/recipes');
       }
@@ -229,6 +282,8 @@ export const RecipeFormPage = () => {
       return;
     }
 
+    setIsSaving(true);
+
     const result = calculateRecipeCost(recipeInput, settings);
 
     if (isEdit) {
@@ -236,6 +291,8 @@ export const RecipeFormPage = () => {
     } else {
       saveRecipe(recipeInput, result);
     }
+    
+    clearRecipeDraft();
     
     addToast({ type: 'success', title: t('recipes.recipeSaved') });
     navigate('/recipes');
@@ -256,6 +313,49 @@ export const RecipeFormPage = () => {
           {isEdit ? t('recipes.editRecipe') : t('recipes.createRecipe')}
         </h2>
       </div>
+
+      {draftToRestore && (
+        <div className="mb-5 p-4 bg-amber-500/5 border border-amber-500/15 text-amber-800 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 animate-in fade-in slide-in-from-top-4 duration-300">
+          <div className="flex gap-3 items-start">
+            <ChefHat className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+            <div>
+              <strong className="font-extrabold text-amber-950 block mb-0.5">
+                {lang === 'id' ? 'Draf Belum Disimpan Ditemukan' : 'Unsaved Draft Found'}
+              </strong>
+              <span className="text-xs font-semibold text-amber-900/80">
+                {lang === 'id'
+                  ? `Kami menemukan draf dari tanggal ${new Date(draftToRestore.updatedAt).toLocaleString('id-ID')}.`
+                  : `We found a draft from ${new Date(draftToRestore.updatedAt).toLocaleString('en-US')}.`}
+              </span>
+            </div>
+          </div>
+          <div className="flex gap-2 shrink-0 w-full sm:w-auto justify-end mt-2 sm:mt-0">
+            <button
+              onClick={() => {
+                clearRecipeDraft();
+                setDraftToRestore(null);
+              }}
+              className="px-3.5 py-1.5 text-xs font-bold text-amber-850 hover:bg-amber-500/10 rounded-xl border border-amber-500/10 transition-all cursor-pointer"
+            >
+              {lang === 'id' ? 'Abaikan' : 'Ignore'}
+            </button>
+            <button
+              onClick={() => {
+                setForm(draftToRestore.form);
+                setBaseForm(draftToRestore.form);
+                setDraftToRestore(null);
+                addToast({
+                  type: 'success',
+                  title: lang === 'id' ? 'Draf resep dipulihkan' : 'Recipe draft restored'
+                });
+              }}
+              className="px-3.5 py-1.5 text-xs font-bold text-white bg-amber-600 hover:bg-amber-700 rounded-xl shadow-xs transition-all cursor-pointer"
+            >
+              {lang === 'id' ? 'Pulihkan' : 'Restore'}
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Form Fields */}
@@ -562,6 +662,60 @@ export const RecipeFormPage = () => {
           </div>
         </div>
       </div>
+      {/* Blocker Modal */}
+      {blocker.state === 'blocked' && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-surface border border-border-soft rounded-3xl p-6 max-w-md w-full shadow-floating animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex gap-4 items-start">
+              <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-600 shrink-0">
+                <ChefHat className="w-5 h-5 animate-pulse" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-base font-extrabold text-text-primary tracking-tight mb-1.5">
+                  {lang === 'id' ? 'Simpan Resep sebagai Draft?' : 'Save Recipe as Draft?'}
+                </h3>
+                <p className="text-xs text-text-secondary font-semibold leading-relaxed mb-5">
+                  {lang === 'id' 
+                    ? 'Perubahan Anda belum disimpan. Apakah Anda ingin menyimpannya sebagai draft untuk dilanjutkan nanti, atau membuang semua perubahan?' 
+                    : 'Your changes have not been saved. Would you like to save them as a draft to continue later, or discard all changes?'}
+                </p>
+                <div className="flex flex-col sm:flex-row gap-2 justify-end">
+                  <button
+                    onClick={() => {
+                      blocker.reset();
+                    }}
+                    className="w-full sm:w-auto px-4 py-2 text-xs font-bold text-text-secondary border border-border-soft hover:bg-surface-cream rounded-xl transition-all cursor-pointer text-center"
+                  >
+                    {lang === 'id' ? 'Batal' : 'Cancel'}
+                  </button>
+                  <button
+                    onClick={() => {
+                      clearRecipeDraft();
+                      blocker.proceed();
+                    }}
+                    className="w-full sm:w-auto px-4 py-2 text-xs font-bold text-red-650 hover:bg-red-500/5 border border-red-500/10 rounded-xl transition-all cursor-pointer text-center"
+                  >
+                    {lang === 'id' ? 'Buang' : 'Discard'}
+                  </button>
+                  <button
+                    onClick={() => {
+                      saveRecipeDraft(id || 'new', form);
+                      addToast({
+                        type: 'success',
+                        title: lang === 'id' ? 'Draft resep disimpan' : 'Recipe draft saved'
+                      });
+                      blocker.proceed();
+                    }}
+                    className="w-full sm:w-auto px-4 py-2 text-xs font-bold text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:shadow-md hover:shadow-orange-500/10 rounded-xl transition-all cursor-pointer text-center"
+                  >
+                    {lang === 'id' ? 'Simpan Draft' : 'Save Draft'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </PageContainer>
   );
 };

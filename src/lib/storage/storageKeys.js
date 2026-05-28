@@ -4,6 +4,7 @@ export const STORAGE_KEYS = {
   calculations: "modalin:v1:calculations",
   settings: "modalin:v1:settings",
   calculatorDraft: "modalin:v1:calculatorDraft",
+  recipeDraft: "modalin:v1:recipeDraft",
   meta: "modalin:v1:meta",
   INGREDIENTS: "modalin:v1:ingredients",
   RECIPES: "modalin:v1:recipes",
