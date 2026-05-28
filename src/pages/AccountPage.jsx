@@ -52,10 +52,17 @@ export const AccountPage = () => {
 
   if (isGuest) {
     return (
-      <PageContainer maxWidth="max-w-2xl">
-        <div className="page-header">
-          <h1 className="page-title">Akun & Profil</h1>
-        </div>
+      <PageContainer maxWidth="max-w-3xl" className="account-page">
+        <section className="app-page-hero account-hero">
+          <div className="app-page-hero-main">
+            <div className="app-page-eyebrow">
+              <User className="w-4 h-4" aria-hidden="true" />
+              Mode Lokal
+            </div>
+            <h2 className="app-page-title">Akun & Profil</h2>
+            <p className="app-page-subtitle">Kelola identitas bisnis dan opsi sinkronisasi cloud.</p>
+          </div>
+        </section>
         <Card className="p-8 text-center bg-gradient-to-br from-surface to-brand-soft/20">
           <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 text-brand-primary">
             <User className="w-8 h-8" />
@@ -73,10 +80,17 @@ export const AccountPage = () => {
   }
 
   return (
-    <PageContainer maxWidth="max-w-2xl">
-      <div className="page-header">
-        <h1 className="page-title">Akun & Profil Bisnis</h1>
-      </div>
+    <PageContainer maxWidth="max-w-3xl" className="account-page">
+      <section className="app-page-hero account-hero">
+        <div className="app-page-hero-main">
+          <div className="app-page-eyebrow">
+            <User className="w-4 h-4" aria-hidden="true" />
+            Profil Bisnis
+          </div>
+          <h2 className="app-page-title">Akun & Profil Bisnis</h2>
+          <p className="app-page-subtitle">Pantau akun, status cloud, dan identitas bisnis dalam satu tempat.</p>
+        </div>
+      </section>
 
       <div className="space-y-6">
         <FadeIn>

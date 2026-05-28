@@ -5,6 +5,7 @@ import { useReports } from '../hooks/useReports';
 import { useAppData } from '../hooks/useAppData';
 import { formatPercent } from '../lib/calculations';
 import { AlertTriangle, BarChart3, Database, ShieldCheck } from 'lucide-react';
+import { PageContainer } from '../components/layout/PageContainer';
 
 import { ReportTabs } from '../components/reports/ReportTabs';
 import { ReportPeriodFilter } from '../components/reports/ReportPeriodFilter';
@@ -74,11 +75,10 @@ export const ReportsPage = () => {
   };
 
   return (
-    <div className="reports-page min-h-screen bg-background pb-20">
-      
+    <PageContainer maxWidth="max-w-6xl" className="reports-page">
       <main className="reports-main" aria-labelledby="reports-page-title">
-        <section className="reports-hero" aria-describedby="reports-page-subtitle">
-          <div className="reports-hero-copy">
+        <section className="reports-hero app-page-hero" aria-describedby="reports-page-subtitle">
+          <div className="reports-hero-copy app-page-hero-main">
             <div className="reports-eyebrow">
               <BarChart3 className="w-4 h-4" aria-hidden="true" />
               {t('reports.generatedFromLocalData')}
@@ -136,6 +136,6 @@ export const ReportsPage = () => {
           {renderContent()}
         </section>
       </main>
-    </div>
+    </PageContainer>
   );
 };

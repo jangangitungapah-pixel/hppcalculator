@@ -11,7 +11,7 @@ import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { InstallAppCard } from '../components/pwa/InstallAppCard';
-import { Database, Cloud, Trash2 } from 'lucide-react';
+import { Database, Cloud, Trash2, SlidersHorizontal } from 'lucide-react';
 import { StaggerContainer } from '../components/motion/StaggerContainer';
 import { FadeIn } from '../components/motion/FadeIn';
 
@@ -51,10 +51,19 @@ export const SettingsPage = () => {
   };
 
   return (
-    <PageContainer maxWidth="max-w-2xl">
-      <div className="page-header">
-        <h1 className="page-title">{t('settings.title')}</h1>
-      </div>
+    <PageContainer maxWidth="max-w-3xl" className="settings-page">
+      <section className="app-page-hero settings-hero">
+        <div className="app-page-hero-main">
+          <div className="app-page-eyebrow">
+            <SlidersHorizontal className="w-4 h-4" aria-hidden="true" />
+            Preferensi
+          </div>
+          <h2 className="app-page-title">{t('settings.title')}</h2>
+          <p className="app-page-subtitle">
+            {lang === 'en' ? 'Tune app defaults, install options, and data controls.' : 'Atur default aplikasi, opsi instalasi, dan kontrol data.'}
+          </p>
+        </div>
+      </section>
 
       <StaggerContainer className="content-stack">
         <FadeIn>

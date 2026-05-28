@@ -187,12 +187,15 @@ export const PricingSimulationsPage = () => {
   return (
     <PageContainer maxWidth="max-w-5xl">
       <div className="pricing-page space-y-6">
-        {/* Page Hero */}
-        <div className="pricing-hero">
+        <div className="pricing-hero app-page-hero">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <h1 className="text-2xl font-bold text-text-primary">Riwayat Simulasi Harga</h1>
-              <p className="text-sm text-text-secondary mt-1">
+            <div className="app-page-hero-main">
+              <div className="app-page-eyebrow">
+                <Calculator className="w-4 h-4" aria-hidden="true" />
+                Simulasi Tersimpan
+              </div>
+              <h2 className="app-page-title">Riwayat Simulasi Harga</h2>
+              <p className="app-page-subtitle">
                 Pantau perbandingan harga jual, keuntungan bersih, dan margin dari simulasi yang telah disimpan.
               </p>
             </div>

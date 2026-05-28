@@ -15,7 +15,7 @@ import { ConsignmentPricingForm } from '../../components/pricing/ConsignmentPric
 import { Toast } from '../../components/ui/Toast';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { Button } from '../../components/ui/Button';
-import { History, Settings } from 'lucide-react';
+import { History, Settings, TrendingUp } from 'lucide-react';
 
 export const ChannelPricingPage = () => {
   const { t } = useLanguage();
@@ -87,12 +87,15 @@ export const ChannelPricingPage = () => {
   return (
     <PageContainer maxWidth="max-w-5xl">
       <div className="pricing-page">
-        {/* Header/Hero Section */}
-        <div className="pricing-hero">
+        <div className="pricing-hero app-page-hero">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <h1 className="text-2xl font-bold text-text-primary">Simulasi Harga</h1>
-              <p className="text-sm text-text-secondary mt-1">
+            <div className="app-page-hero-main">
+              <div className="app-page-eyebrow">
+                <TrendingUp className="w-4 h-4" aria-hidden="true" />
+                Channel Pricing
+              </div>
+              <h2 className="app-page-title">Simulasi Harga</h2>
+              <p className="app-page-subtitle">
                 Bandingkan harga jual, biaya channel, dan margin dari berbagai skenario.
               </p>
             </div>

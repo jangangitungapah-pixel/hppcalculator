@@ -1958,3 +1958,419 @@ button.dashboard-metric-card {
   }
 }
 
+/* ==================================================
+   VISUAL CONSISTENCY PASS
+   Shared compact page language for utility, pricing, and report surfaces.
+   ================================================= */
+.app-page-container {
+  min-width: 0;
+}
+
+.app-page-container > * {
+  animation: page-soft-in 420ms var(--ease-premium, ease) both;
+}
+
+.app-page-container > *:nth-child(2) {
+  animation-delay: 40ms;
+}
+
+.app-page-container > *:nth-child(3) {
+  animation-delay: 80ms;
+}
+
+.app-page-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 16%, var(--color-border));
+  border-radius: var(--radius-2xl);
+  background:
+    linear-gradient(135deg, rgba(255, 247, 237, 0.94), rgba(255, 255, 255, 0.98) 46%, rgba(236, 253, 245, 0.64)),
+    var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.app-page-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(249, 115, 22, 0.08), transparent 34%),
+    linear-gradient(180deg, rgba(16, 185, 129, 0.06), transparent 38%);
+}
+
+.app-page-hero-main,
+.app-page-note,
+.reports-hero-stats {
+  position: relative;
+  z-index: 1;
+}
+
+.app-page-eyebrow {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.45rem;
+  padding: 0.28rem 0.62rem;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 18%, var(--color-border));
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--color-primary);
+  font-size: 0.72rem;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+
+.app-page-title {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: clamp(1.25rem, 1.05rem + 0.8vw, 1.85rem);
+  line-height: 1.12;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.app-page-subtitle {
+  max-width: 48rem;
+  margin: 0.35rem 0 0;
+  color: var(--color-text-secondary);
+  font-size: 0.88rem;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.app-page-note {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+  padding: 0.8rem;
+  border: 1px solid rgba(14, 165, 233, 0.14);
+  border-radius: var(--radius-xl);
+  background: rgba(240, 249, 255, 0.72);
+  color: #075985;
+  font-size: 0.78rem;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.app-page-note strong,
+.app-page-note span {
+  display: block;
+}
+
+.app-page-note strong {
+  margin-bottom: 0.1rem;
+  color: #0c4a6e;
+  font-weight: 900;
+}
+
+.pricing-page {
+  padding: 0;
+}
+
+.pricing-hero {
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
+
+.pricing-page.space-y-6 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 1rem;
+}
+
+.pricing-toolbar,
+.reports-toolbar {
+  border-color: color-mix(in srgb, var(--color-primary) 12%, var(--color-border));
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: var(--shadow-sm);
+}
+
+.pricing-channel-tabs {
+  border-radius: var(--radius-2xl);
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.pricing-page :is(.border, .border-t, .border-b, .border-l, .border-r, .border-2),
+.data-backup-page :is(.border, .border-t, .border-b, .border-l, .border-r, .border-2),
+.reports-page :is(.border, .border-t, .border-b, .border-l, .border-r, .border-2) {
+  border-color: color-mix(in srgb, var(--color-primary) 14%, var(--color-border)) !important;
+}
+
+.pricing-page :is(.border-dashed),
+.data-backup-page :is(.border-dashed),
+.reports-page :is(.border-dashed) {
+  border-color: color-mix(in srgb, var(--color-primary) 28%, var(--color-border)) !important;
+}
+
+.pricing-channel-tabs button {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-xl);
+}
+
+.pricing-form-card,
+.pricing-step-card,
+.pricing-result-panel,
+.pricing-simulation-card,
+.report-panel-card,
+.report-metric-card,
+.report-table-card,
+.report-mobile-profit-card,
+.data-backup-page .card,
+.sync-page .card,
+.account-page .card,
+.settings-page .card {
+  border-color: color-mix(in srgb, var(--color-primary) 10%, var(--color-border));
+  box-shadow: var(--shadow-xs);
+  transition:
+    transform var(--duration-normal) var(--ease-premium),
+    box-shadow var(--duration-normal) var(--ease-premium),
+    border-color var(--duration-normal) var(--ease-premium);
+}
+
+.pricing-form-card:hover,
+.pricing-step-card:hover,
+.pricing-simulation-card:hover,
+.report-panel-card:hover,
+.report-metric-card:hover,
+.data-backup-page .card:hover,
+.sync-page .card:hover,
+.account-page .card:hover,
+.settings-page .card:hover,
+.more-tool-card:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--color-primary) 28%, var(--color-border));
+  box-shadow: var(--shadow-md);
+}
+
+.pricing-empty-state,
+.report-empty-state,
+.report-section-empty {
+  border-color: color-mix(in srgb, var(--color-primary) 24%, var(--color-border));
+  background:
+    linear-gradient(135deg, rgba(255, 247, 237, 0.76), rgba(255, 255, 255, 0.94)),
+    var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.pricing-empty-state {
+  max-width: 42rem;
+  margin: 1rem auto;
+  padding: 2rem 1.25rem;
+}
+
+.report-empty-state {
+  min-height: 16rem;
+  padding: 1.75rem 1.25rem;
+}
+
+.reports-page {
+  padding-top: 0;
+}
+
+.reports-main {
+  width: 100%;
+  padding: 0;
+}
+
+.reports-hero {
+  margin-bottom: 1rem;
+}
+
+.reports-title {
+  font-size: clamp(1.25rem, 1.05rem + 0.8vw, 1.85rem);
+  font-weight: 900;
+}
+
+.reports-subtitle {
+  max-width: 48rem;
+  font-size: 0.88rem;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.reports-local-note {
+  margin-top: 0.55rem;
+}
+
+.reports-hero-stats {
+  gap: 0.6rem;
+}
+
+.reports-hero-stat {
+  min-height: 4.7rem;
+  border-color: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.report-panel-stack,
+.report-insight-grid,
+.content-stack {
+  gap: 1rem;
+}
+
+.more-page {
+  padding-top: 0.75rem;
+}
+
+.more-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: 0.75rem;
+}
+
+.more-tool-card {
+  display: flex;
+  width: 100%;
+  min-height: 4.75rem;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 10%, var(--color-border));
+  border-radius: var(--radius-2xl);
+  background: var(--color-surface);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform var(--duration-normal) var(--ease-premium),
+    box-shadow var(--duration-normal) var(--ease-premium),
+    border-color var(--duration-normal) var(--ease-premium);
+}
+
+.more-tool-icon {
+  display: inline-flex;
+  width: 2.55rem;
+  height: 2.55rem;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-xl);
+  transition: transform var(--duration-normal) var(--ease-premium);
+}
+
+.more-tool-card:hover .more-tool-icon {
+  transform: scale(1.06) rotate(-2deg);
+}
+
+.more-tool-title,
+.more-tool-description {
+  display: block;
+  min-width: 0;
+}
+
+.more-tool-title {
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+  font-weight: 900;
+  line-height: 1.25;
+}
+
+.more-tool-description {
+  margin-top: 0.15rem;
+  color: var(--color-text-secondary);
+  font-size: 0.74rem;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.data-backup-page .space-y-8 > :not([hidden]) ~ :not([hidden]),
+.data-backup-page .space-y-6 > :not([hidden]) ~ :not([hidden]),
+.sync-page .space-y-6 > :not([hidden]) ~ :not([hidden]),
+.account-page .space-y-6 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 1rem;
+}
+
+.data-backup-page .rounded-3xl,
+.sync-page .rounded-3xl,
+.account-page .rounded-3xl,
+.settings-page .rounded-3xl {
+  border-radius: var(--radius-2xl);
+}
+
+.dialog-overlay button[aria-label="Tutup dialog profil channel"] {
+  font-size: 0;
+}
+
+.dialog-overlay button[aria-label="Tutup dialog profil channel"]::before {
+  content: 'x';
+  color: currentColor;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+@keyframes page-soft-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (min-width: 768px) {
+  .app-page-hero {
+    grid-template-columns: minmax(0, 1.4fr) minmax(16rem, 0.6fr);
+    padding: 1.15rem 1.25rem;
+  }
+
+  .pricing-hero.app-page-hero,
+  .more-hero,
+  .settings-hero,
+  .account-hero,
+  .sync-hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 639px) {
+  .pricing-hero .flex,
+  .app-page-hero .flex {
+    gap: 0.75rem;
+  }
+
+  .pricing-channel-tabs {
+    padding: 0.45rem;
+    border-radius: var(--radius-xl);
+  }
+
+  .pricing-channel-tabs button {
+    padding: 0.65rem 0.85rem;
+    font-size: 0.78rem;
+  }
+
+  .reports-hero-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .more-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-page-container > *,
+  .more-tool-card,
+  .pricing-form-card,
+  .pricing-step-card,
+  .pricing-simulation-card,
+  .report-panel-card,
+  .report-metric-card,
+  .data-backup-page .card,
+  .sync-page .card,
+  .account-page .card,
+  .settings-page .card {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+

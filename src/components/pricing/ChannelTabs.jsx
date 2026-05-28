@@ -16,7 +16,7 @@ export const ChannelTabs = ({ activeTab, onChange }) => {
 
   return (
     <div 
-      className="w-full bg-surface-muted border border-border-soft p-2 rounded-full flex flex-nowrap justify-start sm:justify-center gap-2 overflow-x-auto hide-scrollbar sticky top-0 z-20 mb-8 shadow-sm scroll-smooth" 
+      className="w-full pricing-channel-tabs bg-surface-muted border border-border-soft p-2 rounded-full flex flex-nowrap justify-start sm:justify-center gap-2 overflow-x-auto hide-scrollbar mb-5 shadow-sm scroll-smooth" 
       role="tablist" 
       aria-label="Channel Tabs"
     >

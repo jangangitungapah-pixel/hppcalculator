@@ -135,12 +135,15 @@ export const ChannelProfilesPage = () => {
   return (
     <PageContainer maxWidth="max-w-5xl">
       <div className="pricing-page space-y-6">
-        {/* Page Hero */}
-        <div className="pricing-hero">
+        <div className="pricing-hero app-page-hero">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <h1 className="text-2xl font-bold text-text-primary">Profil Channel Penjualan</h1>
-              <p className="text-sm text-text-secondary mt-1">
+            <div className="app-page-hero-main">
+              <div className="app-page-eyebrow">
+                <Store className="w-4 h-4" aria-hidden="true" />
+                Channel Setup
+              </div>
+              <h2 className="app-page-title">Profil Channel Penjualan</h2>
+              <p className="app-page-subtitle">
                 Kelola profil biaya layanan, komisi marketplace, dan pengemasan untuk setiap channel.
               </p>
             </div>
@@ -217,6 +220,7 @@ export const ChannelProfilesPage = () => {
               <button 
                 onClick={() => setIsModalOpen(false)}
                 className="text-text-muted hover:text-text-primary text-xl font-bold p-1 rounded-lg hover:bg-surface-muted transition-colors"
+                aria-label="Tutup dialog profil channel"
               >
                 ✕
               </button>

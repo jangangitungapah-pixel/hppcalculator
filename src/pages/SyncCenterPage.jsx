@@ -32,7 +32,7 @@ export const SyncCenterPage = () => {
 
   if (!isFirebaseReady) {
     return (
-      <PageContainer maxWidth="max-w-xl">
+      <PageContainer maxWidth="max-w-2xl" className="sync-page">
         <FadeIn>
           <Card className="p-8 text-center border-amber-500/15 bg-amber-500/[0.02] rounded-3xl shadow-xs">
             <div className="w-16 h-16 bg-amber-500/10 rounded-full flex items-center justify-center mx-auto mb-4.5 text-amber-600">
@@ -58,15 +58,21 @@ export const SyncCenterPage = () => {
 
   if (isGuest) {
     return (
-      <PageContainer maxWidth="max-w-xl">
-        <div className="mb-6">
-          <h2 className="text-xl sm:text-2xl font-black text-text-primary mb-1 tracking-tight">
+      <PageContainer maxWidth="max-w-3xl" className="sync-page">
+        <section className="app-page-hero sync-hero">
+          <div className="app-page-hero-main">
+            <div className="app-page-eyebrow">
+              <Cloud className="w-4 h-4" aria-hidden="true" />
+              Cloud Sync
+            </div>
+          <h2 className="app-page-title">
             {t('sync.title', 'Pusat Sinkronisasi')}
           </h2>
-          <p className="text-xs sm:text-sm font-semibold text-text-secondary">
+          <p className="app-page-subtitle">
             {t('sync.subtitle', 'Kelola data cloud dan lokal Anda')}
           </p>
-        </div>
+          </div>
+        </section>
 
         <FadeIn>
           <Card className="p-8 text-center bg-gradient-to-br from-surface to-brand-soft/20 border-border/80 rounded-3xl shadow-xs">
@@ -180,15 +186,21 @@ export const SyncCenterPage = () => {
   };
 
   return (
-    <PageContainer maxWidth="max-w-2xl">
-      <div className="mb-6">
-        <h2 className="text-xl sm:text-2xl font-black text-text-primary mb-1 tracking-tight">
+    <PageContainer maxWidth="max-w-3xl" className="sync-page">
+      <section className="app-page-hero sync-hero">
+        <div className="app-page-hero-main">
+          <div className="app-page-eyebrow">
+            <Cloud className="w-4 h-4" aria-hidden="true" />
+            Cloud Sync
+          </div>
+        <h2 className="app-page-title">
           {t('sync.title', 'Pusat Sinkronisasi')}
         </h2>
-        <p className="text-xs sm:text-sm font-semibold text-text-secondary">
+        <p className="app-page-subtitle">
           {t('sync.subtitle', 'Kelola data cloud dan lokal Anda')}
         </p>
-      </div>
+        </div>
+      </section>
 
       <div className="space-y-6">
         {showInitialPrompt && (

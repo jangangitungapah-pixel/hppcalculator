@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../hooks/useLanguage';
 import { useDataBackup } from '../hooks/useDataBackup';
-import { AppHeader } from '../components/layout/AppHeader';
+import { PageContainer } from '../components/layout/PageContainer';
 
 import { BackupSummaryCard } from '../components/backup/BackupSummaryCard';
 import { ExportBackupCard } from '../components/backup/ExportBackupCard';
@@ -10,7 +10,7 @@ import { ImportPreviewPanel } from '../components/backup/ImportPreviewPanel';
 import { ExportCsvCenter } from '../components/backup/ExportCsvCenter';
 import { DataHealthPanel } from '../components/backup/DataHealthPanel';
 import { ResetDataPanel } from '../components/backup/ResetDataPanel';
-import { Database, Download, Upload, History, Info } from 'lucide-react';
+import { Database, Download, Upload, History, Info, ShieldCheck } from 'lucide-react';
 
 export const DataBackupPage = () => {
   const { t, lang } = useLanguage();
@@ -65,29 +65,30 @@ export const DataBackupPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-surface-cream pb-20 lg:pb-8">
-      <AppHeader title={t('nav.dataBackup')} />
-      
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        
-        <div className="mb-6">
-          <h2 className="text-xl sm:text-2xl font-black text-text-primary mb-1 tracking-tight">
+    <PageContainer maxWidth="max-w-6xl" className="data-backup-page">
+      <section className="app-page-hero data-backup-hero">
+        <div className="app-page-hero-main">
+          <div className="app-page-eyebrow">
+            <ShieldCheck className="w-4 h-4" aria-hidden="true" />
+            {t('nav.dataBackup')}
+          </div>
+          <h2 className="app-page-title">
             {t('dataBackup.dataBackupTitle', 'Kelola Data & Backup')}
           </h2>
-          <p className="text-xs sm:text-sm font-semibold text-text-secondary">
+          <p className="app-page-subtitle">
             {t('dataBackup.dataBackupSubtitle', 'Amankan data Anda secara lokal, pindahkan antar perangkat, atau export untuk diolah lebih lanjut.')}
           </p>
         </div>
-
-        <div className="mb-6 p-4 bg-sky-500/5 border border-sky-500/10 text-sky-800 rounded-2xl text-xs sm:text-sm leading-relaxed flex gap-3 items-start">
-          <Info className="w-5 h-5 text-sky-600 shrink-0 mt-0.5" />
+        <div className="app-page-note">
+          <Info className="w-4 h-4 text-sky-600 shrink-0 mt-0.5" />
           <div>
-            <strong className="font-extrabold text-sky-950 block mb-0.5">Catatan Sinkronisasi</strong>
-            Meskipun Anda mengaktifkan Cloud Sync, pencadangan manual dalam format JSON (Local Backup) tetap sangat disarankan sebagai cadangan tambahan yang aman.
+            <strong>Catatan Sinkronisasi</strong>
+            <span>Meskipun Cloud Sync aktif, backup JSON manual tetap disarankan sebagai cadangan tambahan.</span>
           </div>
         </div>
+      </section>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 mb-5">
           <BackupSummaryCard 
             title={t('dataBackup.businessRecords', 'Total Data Bisnis')}
             value={storageHealth.backupReminder.totalBusinessRecords}
@@ -115,8 +116,8 @@ export const DataBackupPage = () => {
           />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          <div className="space-y-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-6">
+          <div className="space-y-5">
             <ExportBackupCard 
               moduleCounts={storageHealth.modules}
               onExport={exportBackup}
@@ -137,7 +138,7 @@ export const DataBackupPage = () => {
             )}
           </div>
           
-          <div className="space-y-8">
+          <div className="space-y-5">
             <ExportCsvCenter 
               modules={storageHealth.modules}
               onExportModule={exportCsvModule}
@@ -146,7 +147,7 @@ export const DataBackupPage = () => {
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-ui-border">
+        <div className="mt-8 pt-5 border-t border-ui-border">
           <ResetDataPanel 
             modules={storageHealth.modules}
             onResetModule={resetModuleData}
@@ -154,8 +155,6 @@ export const DataBackupPage = () => {
             onResetDraft={resetDraft}
           />
         </div>
-
-      </main>
-    </div>
+    </PageContainer>
   );
 };
