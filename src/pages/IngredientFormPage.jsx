@@ -4,6 +4,7 @@ import { ArrowLeft, Save } from 'lucide-react';
 import { PageContainer } from '../components/layout/PageContainer';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
+import { Select } from '../components/ui/Select';
 import { useLanguage } from '../hooks/useLanguage';
 import { useIngredients } from '../hooks/useIngredients';
 import { useAppData } from '../hooks/useAppData';
@@ -99,7 +100,7 @@ export const IngredientFormPage = () => {
 
   return (
     <PageContainer maxWidth="max-w-2xl">
-      <div className="mb-6 flex items-center gap-4">
+      <div className="mb-5 flex items-center gap-4">
         <Button 
           variant="ghost" 
           size="icon" 
@@ -114,7 +115,7 @@ export const IngredientFormPage = () => {
         </h1>
       </div>
 
-      <div className="bg-surface border border-border p-6 rounded-3xl shadow-sm mb-6 space-y-5">
+      <div className="bg-surface border border-border p-4 sm:p-6 rounded-2xl shadow-sm mb-5 space-y-4">
         <Input 
           label={t('ingredients.ingredientName')}
           placeholder="Cth: Tepung Terigu Segitiga Biru"
@@ -123,26 +124,22 @@ export const IngredientFormPage = () => {
           error={errors.name && t('errors.requiredProductName')}
         />
 
-        <div>
-          <label className="block text-sm font-semibold text-text-primary mb-1.5">
-            {t('ingredients.category')}
-          </label>
-          <select 
-            className="w-full bg-background border border-border rounded-xl px-4 py-3 text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
-            value={form.category}
-            onChange={(e) => updateField('category', e.target.value)}
-          >
-            <option value="ingredient">Bahan Pokok</option>
-            <option value="protein">Protein</option>
-            <option value="sayur_buah">Sayur / Buah</option>
-            <option value="spice">Bumbu</option>
-            <option value="dairy">Dairy</option>
-            <option value="packaging">Kemasan</option>
-            <option value="topping">Topping</option>
-            <option value="operasional">Operasional</option>
-            <option value="other">Lainnya</option>
-          </select>
-        </div>
+        <Select
+          label={t('ingredients.category')}
+          value={form.category}
+          onChange={(e) => updateField('category', e.target.value)}
+          options={[
+            { value: 'ingredient', label: 'Bahan Pokok' },
+            { value: 'protein', label: 'Protein' },
+            { value: 'sayur_buah', label: 'Sayur / Buah' },
+            { value: 'spice', label: 'Bumbu' },
+            { value: 'dairy', label: 'Dairy' },
+            { value: 'packaging', label: 'Kemasan' },
+            { value: 'topping', label: 'Topping' },
+            { value: 'operasional', label: 'Operasional' },
+            { value: 'other', label: 'Lainnya' }
+          ]}
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Input 
@@ -168,24 +165,19 @@ export const IngredientFormPage = () => {
               />
             </div>
             <div className="w-32">
-              <label className="block text-sm font-semibold text-text-primary mb-1.5">
-                {t('ingredients.purchaseUnit')}
-              </label>
-              <select 
-                className={`w-full bg-background border ${errors.purchaseUnit ? 'border-status-loss' : 'border-border'} rounded-xl px-2 py-3 text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary`}
+              <Select 
+                label={t('ingredients.purchaseUnit')}
                 value={form.purchaseUnit}
                 onChange={(e) => updateField('purchaseUnit', e.target.value)}
-              >
-                {unitOptions.map(u => (
-                  <option key={u.value} value={u.value}>{u.label}</option>
-                ))}
-              </select>
+                options={unitOptions}
+                error={errors.purchaseUnit}
+              />
             </div>
           </div>
         </div>
 
         {(getUnitType(form.purchaseUnit) === UNIT_TYPES.WEIGHT || getUnitType(form.purchaseUnit) === UNIT_TYPES.VOLUME) && (
-          <div className="bg-background border border-border p-4 rounded-2xl space-y-2">
+          <div className="bg-background border border-border p-4 rounded-xl space-y-2">
             <Input 
               type="number"
               step="0.01"
@@ -203,7 +195,7 @@ export const IngredientFormPage = () => {
         )}
 
         {/* Live Preview Panel */}
-        <div className="bg-brand-soft/30 p-4 rounded-2xl flex justify-between items-center border border-brand-soft">
+        <div className="bg-brand-soft/30 p-4 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 border border-brand-soft">
           <div className="text-sm">
             <p className="text-text-secondary font-medium">{t('ingredients.costPerBaseUnit')}</p>
             <p className="font-bold text-brand-primary text-lg">
@@ -211,7 +203,7 @@ export const IngredientFormPage = () => {
               <span className="text-sm font-medium text-text-secondary"> / {previewBaseUnit}</span>
             </p>
           </div>
-          <div className="text-xs text-text-secondary text-right max-w-[150px]">
+          <div className="text-xs text-text-secondary text-left sm:text-right max-w-none sm:max-w-[180px]">
             Satuan dasar ({previewBaseUnit}) digunakan otomatis saat menghitung resep.
           </div>
         </div>
@@ -231,8 +223,8 @@ export const IngredientFormPage = () => {
         />
       </div>
 
-      <div className="flex gap-3">
-        <Button className="flex-[2]" onClick={handleSave}>
+      <div className="flex justify-end">
+        <Button className="w-full sm:w-auto sm:px-8 font-bold" onClick={handleSave}>
           <Save className="w-5 h-5 mr-2" />
           {t('common.save')}
         </Button>

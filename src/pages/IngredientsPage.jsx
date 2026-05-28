@@ -138,7 +138,7 @@ export const IngredientsPage = () => {
             {/* Render List or Grid */}
             {sortedIngredients.length > 0 ? (
               viewMode === 'grid' ? (
-                <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                   {sortedIngredients.map((ing) => (
                     <FadeIn key={ing.id}>
                       <IngredientCard
@@ -163,7 +163,7 @@ export const IngredientsPage = () => {
                 />
               )
             ) : (
-              <div className="py-16 text-center text-text-secondary bg-surface rounded-3xl border border-dashed border-border shadow-sm">
+              <div className="py-12 text-center text-text-secondary bg-surface rounded-2xl border border-dashed border-border shadow-sm">
                 <p className="font-bold text-text-primary text-base">Tidak ada bahan baku yang cocok.</p>
                 <p className="text-xs text-text-secondary mt-1">Coba kata kunci pencarian atau filter yang lain.</p>
               </div>

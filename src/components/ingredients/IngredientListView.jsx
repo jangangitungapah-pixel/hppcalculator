@@ -34,7 +34,15 @@ export const IngredientListView = ({
           <div 
             key={ing.id}
             onClick={() => onItemClick(ing.id)}
-            className="ingredient-list-row bg-surface border border-border hover:border-brand-soft hover:shadow-sm p-4 md:px-5 md:py-3.5 rounded-2xl md:rounded-xl cursor-pointer transition-all duration-200 grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4 items-center group"
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onItemClick(ing.id);
+              }
+            }}
+            className="ingredient-list-row bg-surface border border-border hover:border-brand-soft hover:shadow-sm p-3 md:px-4 md:py-2.5 rounded-xl md:rounded-lg cursor-pointer transition-all duration-200 grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4 items-center group"
           >
             {/* Column 1: Title & Badges */}
             <div className="col-span-1 md:col-span-4 flex items-center justify-between md:justify-start gap-2.5">
@@ -105,15 +113,12 @@ export const IngredientListView = ({
               >
                 <Trash2 className="w-4 h-4" />
               </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="md:hidden text-brand-primary hover:bg-brand-soft rounded-xl flex items-center gap-1 font-semibold text-xs py-1"
-                aria-label="Lihat Detail"
+              <div
+                className="md:hidden text-brand-primary hover:bg-brand-soft/20 rounded-xl flex items-center gap-1 font-semibold text-xs py-1 px-2.5 transition-colors"
               >
                 <span>Detail</span>
                 <ArrowRight className="w-3.5 h-3.5" />
-              </Button>
+              </div>
             </div>
           </div>
         );

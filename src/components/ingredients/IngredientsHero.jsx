@@ -4,7 +4,7 @@ import { Button } from '../ui/Button';
 
 export const IngredientsHero = ({ hasIngredients, onAddClick, onLoadDemoClick }) => {
   return (
-    <div className="ingredients-hero relative overflow-hidden bg-gradient-to-br from-brand-primary to-accent-coral text-white rounded-3xl p-6 md:p-8 shadow-glow-primary mb-8">
+    <div className="ingredients-hero relative overflow-hidden bg-gradient-to-br from-brand-primary to-accent-coral text-white rounded-2xl p-5 md:p-6 shadow-glow-primary mb-6">
       {/* Decorative background orbs */}
       <div className="absolute -top-12 -left-12 w-48 h-48 rounded-full bg-white/10 blur-2xl pointer-events-none"></div>
       <div className="absolute -bottom-16 -right-16 w-64 h-64 rounded-full bg-white/10 blur-3xl pointer-events-none"></div>
@@ -19,7 +19,7 @@ export const IngredientsHero = ({ hasIngredients, onAddClick, onLoadDemoClick })
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-2 flex items-center gap-2">
             Bahan Baku
           </h1>
-          <p className="text-white/80 text-sm md:text-base font-medium leading-relaxed">
+          <p className="text-white/80 text-xs sm:text-sm md:text-base font-medium leading-relaxed">
             Kelola harga bahan, satuan, dan modal dasar untuk resep dan produkmu.
           </p>
         </div>

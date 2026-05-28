@@ -26,13 +26,26 @@ const cardVariants = cva(
 );
 
 export const Card = React.forwardRef(({ className, variant, ...props }, ref) => {
-  if (variant === 'clickable' || props.onClick) {
+  const isClickable = variant === 'clickable' || props.onClick;
+
+  if (isClickable) {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        props.onClick?.(e);
+      }
+      props.onKeyDown?.(e);
+    };
+
     return (
       <motion.div
         ref={ref}
+        role="button"
+        tabIndex={0}
         whileHover={{ y: -2 }}
         whileTap={{ scale: 0.99 }}
-        className={cn(cardVariants({ variant: variant === 'default' && props.onClick ? 'clickable' : variant, className }))}
+        className={cn(cardVariants({ variant: variant === 'default' ? 'clickable' : variant, className }))}
+        onKeyDown={handleKeyDown}
         {...props}
       />
     );

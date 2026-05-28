@@ -18,8 +18,8 @@ export const IngredientsToolbar = ({
   uniqueCategories
 }) => {
   return (
-    <div className="ingredients-toolbar bg-surface border border-border p-4 rounded-3xl mb-6 flex flex-col gap-4 shadow-sm">
-      <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4">
+    <div className="ingredients-toolbar bg-surface border border-border p-3.5 sm:p-4 rounded-2xl mb-5 flex flex-col gap-3.5 shadow-sm">
+      <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-3">
         {/* Search Input */}
         <div className="ingredients-search relative flex-1">
           <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
@@ -69,11 +69,11 @@ export const IngredientsToolbar = ({
       {/* Filter and Sort Row */}
       <div className="ingredients-filter-row flex flex-wrap md:flex-nowrap gap-3 items-center">
         {/* Category Filter */}
-        <div className="flex-1 min-w-[130px]">
+        <div className="flex-1 min-w-[130px] relative flex items-center group">
           <select
             value={selectedCategory}
             onChange={(e) => onCategoryChange(e.target.value)}
-            className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-xs text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary font-medium"
+            className="w-full bg-background border border-border rounded-xl pl-3 pr-8 py-2.5 appearance-none text-xs text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary font-medium transition-all duration-300"
             aria-label="Filter Kategori"
           >
             <option value="all">Semua Kategori</option>
@@ -83,28 +83,38 @@ export const IngredientsToolbar = ({
               </option>
             ))}
           </select>
+          <div className="absolute right-2.5 pointer-events-none text-text-muted group-focus-within:text-brand-primary transition-colors">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
         </div>
 
         {/* Source Filter */}
-        <div className="flex-1 min-w-[130px]">
+        <div className="flex-1 min-w-[130px] relative flex items-center group">
           <select
             value={selectedSource}
             onChange={(e) => onSourceChange(e.target.value)}
-            className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-xs text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary font-medium"
+            className="w-full bg-background border border-border rounded-xl pl-3 pr-8 py-2.5 appearance-none text-xs text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary font-medium transition-all duration-300"
             aria-label="Filter Sumber Data"
           >
             <option value="all">Semua Sumber</option>
             <option value="user">Data Saya</option>
             <option value="demo">Data Demo</option>
           </select>
+          <div className="absolute right-2.5 pointer-events-none text-text-muted group-focus-within:text-brand-primary transition-colors">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
         </div>
 
         {/* Sort Selector */}
-        <div className="flex-1 min-w-[130px]">
+        <div className="flex-1 min-w-[130px] relative flex items-center group">
           <select
             value={sortBy}
             onChange={(e) => onSortChange(e.target.value)}
-            className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-xs text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary font-medium"
+            className="w-full bg-background border border-border rounded-xl pl-3 pr-8 py-2.5 appearance-none text-xs text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary font-medium transition-all duration-300"
             aria-label="Urutkan"
           >
             <option value="newest">Terbaru</option>
@@ -113,6 +123,11 @@ export const IngredientsToolbar = ({
             <option value="price_desc">Harga Termahal</option>
             <option value="price_asc">Harga Termurah</option>
           </select>
+          <div className="absolute right-2.5 pointer-events-none text-text-muted group-focus-within:text-brand-primary transition-colors">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
         </div>
       </div>
     </div>
