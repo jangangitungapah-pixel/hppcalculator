@@ -5,6 +5,8 @@ import { useAppData } from '../hooks/useAppData';
 import { useReports } from '../hooks/useReports';
 import { useToast } from '../hooks/useToast';
 import { useDataBackup } from '../hooks/useDataBackup';
+import { useInventory } from '../hooks/useInventory';
+import { Button } from '../components/ui/Button';
 import { BackupReminderBanner } from '../components/backup/BackupReminderBanner';
 import { InstallAppBanner } from '../components/pwa/InstallAppBanner';
 import { PageContainer } from '../components/layout/PageContainer';
@@ -31,6 +33,7 @@ export const DashboardPage = () => {
     hasAnyData 
   } = useReports();
   const { storageHealth } = useDataBackup();
+  const { lowStockIngredients } = useInventory();
   const { addToast } = useToast();
 
   const handleLoadDemo = () => {
@@ -68,6 +71,15 @@ export const DashboardPage = () => {
           <div className="space-y-6">
             <DashboardMetricGrid summary={summary} />
             <DashboardBusinessPulse summary={summary} />
+            {lowStockIngredients.length > 0 && (
+              <div className="inventory-dashboard-alert">
+                <div>
+                  <strong>Ada {lowStockIngredients.length} bahan stok rendah</strong>
+                  <span>Cek Inventory untuk melihat bahan yang perlu restock.</span>
+                </div>
+                <Button size="sm" onClick={() => navigate('/inventory')}>Buka Inventory</Button>
+              </div>
+            )}
             <DashboardNewProductCta />
             <DashboardRecentCalculations />
             <DashboardQuickActions />

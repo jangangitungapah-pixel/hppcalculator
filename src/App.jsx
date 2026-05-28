@@ -22,6 +22,7 @@ const MorePage = React.lazy(() => import('./pages/MorePage').then(module => ({ d
 const IngredientsPage = React.lazy(() => import('./pages/IngredientsPage').then(module => ({ default: module.IngredientsPage })));
 const IngredientFormPage = React.lazy(() => import('./pages/IngredientFormPage').then(module => ({ default: module.IngredientFormPage })));
 const IngredientDetailPage = React.lazy(() => import('./pages/IngredientDetailPage').then(module => ({ default: module.IngredientDetailPage })));
+const InventoryPage = React.lazy(() => import('./pages/InventoryPage').then(module => ({ default: module.InventoryPage })));
 
 const RecipesPage = React.lazy(() => import('./pages/RecipesPage').then(module => ({ default: module.RecipesPage })));
 const RecipeFormPage = React.lazy(() => import('./pages/RecipeFormPage').then(module => ({ default: module.RecipeFormPage })));
@@ -36,8 +37,8 @@ const PricingSimulationsPage = React.lazy(() => import('./pages/channelPricing/P
 const ReportsPage = React.lazy(() => import('./pages/ReportsPage').then(module => ({ default: module.ReportsPage })));
 const DataBackupPage = React.lazy(() => import('./pages/DataBackupPage').then(module => ({ default: module.DataBackupPage })));
 
-const businessStoragePattern = /^modalin:v1:(guest|user:[^:]+):(calculations|ingredients|recipes|products|channelProfiles|pricingSimulations|bundleSimulations)$/;
-const legacyBusinessStoragePattern = /^modalin:v1:(calculations|ingredients|recipes|products|channelProfiles|pricingSimulations|bundleSimulations)$/;
+const businessStoragePattern = /^modalin:v1:(guest|user:[^:]+):(calculations|ingredients|recipes|products|channelProfiles|pricingSimulations|bundleSimulations|inventorySettings|stockMovements)$/;
+const legacyBusinessStoragePattern = /^modalin:v1:(calculations|ingredients|recipes|products|channelProfiles|pricingSimulations|bundleSimulations|inventorySettings|stockMovements)$/;
 
 const hasReturningUserData = () => {
   if (typeof window === 'undefined' || !window.localStorage) return false;
@@ -96,6 +97,7 @@ const router = createBrowserRouter(
         <Route path="/ingredients/new" element={<Suspense fallback={<RouteFallback />}><IngredientFormPage /></Suspense>} />
         <Route path="/ingredients/:id" element={<Suspense fallback={<RouteFallback />}><IngredientDetailPage /></Suspense>} />
         <Route path="/ingredients/:id/edit" element={<Suspense fallback={<RouteFallback />}><IngredientFormPage /></Suspense>} />
+        <Route path="/inventory" element={<Suspense fallback={<RouteFallback />}><InventoryPage /></Suspense>} />
         
         <Route path="/recipes" element={<Suspense fallback={<RouteFallback />}><RecipesPage /></Suspense>} />
         <Route path="/recipes/new" element={<Suspense fallback={<RouteFallback />}><RecipeFormPage /></Suspense>} />

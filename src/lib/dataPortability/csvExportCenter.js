@@ -112,6 +112,34 @@ export const buildBundleSimulationsCsvRows = (bundles) => {
   }));
 };
 
+export const buildInventorySettingsCsvRows = (settings) => {
+  return settings.map(setting => ({
+    ingredientId: setting.ingredientId,
+    stockTrackingEnabled: setting.stockTrackingEnabled ? 'Yes' : 'No',
+    stockUnit: setting.stockUnit,
+    minimumStock: setting.minimumStock,
+    reorderPoint: setting.reorderPoint || '',
+    notes: setting.notes || '',
+    updatedAt: setting.updatedAt
+  }));
+};
+
+export const buildStockMovementsCsvRows = (movements) => {
+  return movements.map(movement => ({
+    id: movement.id,
+    ingredientId: movement.ingredientId,
+    type: movement.type,
+    quantity: movement.quantity,
+    unit: movement.unit,
+    reason: movement.reason || '',
+    note: movement.note || '',
+    movementDate: movement.movementDate,
+    referenceType: movement.referenceType || '',
+    referenceId: movement.referenceId || '',
+    createdAt: movement.createdAt
+  }));
+};
+
 export const exportModuleToCsv = (moduleName, data) => {
   if (!Array.isArray(data) || data.length === 0) return false;
   
@@ -124,6 +152,8 @@ export const exportModuleToCsv = (moduleName, data) => {
     case 'channelProfiles': rows = buildChannelProfilesCsvRows(data); break;
     case 'pricingSimulations': rows = buildPricingSimulationsCsvRows(data); break;
     case 'bundleSimulations': rows = buildBundleSimulationsCsvRows(data); break;
+    case 'inventorySettings': rows = buildInventorySettingsCsvRows(data); break;
+    case 'stockMovements': rows = buildStockMovementsCsvRows(data); break;
     default: return false;
   }
   

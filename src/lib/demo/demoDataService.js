@@ -4,6 +4,7 @@ import { demoRecipes } from '../../data/demoRecipes';
 import { demoProducts } from '../../data/demoProducts';
 import { demoChannelProfiles } from '../../data/demoChannelProfiles';
 import { demoPricingSimulations } from '../../data/demoPricingSimulations';
+import { demoInventorySettings, demoStockMovements } from '../../data/demoInventory';
 
 import {
   getSavedCalculations,
@@ -39,6 +40,14 @@ import {
   getBundleSimulations,
   clearDemoBundleSimulations
 } from '../storage/bundleSimulationsStorage';
+import {
+  getInventorySettings,
+  getStockMovements,
+  loadDemoInventorySettings,
+  loadDemoStockMovements,
+  clearDemoInventorySettings,
+  clearDemoStockMovements
+} from '../storage/inventoryStorage';
 
 /**
  * 1. Load mockCalculations only to saved calculations
@@ -54,7 +63,9 @@ export const loadDemoBusinessLibrary = () => {
   const ingredients = loadDemoIngredients(demoIngredients);
   const recipes = loadDemoRecipes(demoRecipes);
   const products = loadDemoProducts(demoProducts);
-  return { ingredients, recipes, products };
+  const inventorySettings = loadDemoInventorySettings(demoInventorySettings);
+  const stockMovements = loadDemoStockMovements(demoStockMovements);
+  return { ingredients, recipes, products, inventorySettings, stockMovements };
 };
 
 /**
@@ -85,6 +96,8 @@ export const clearDemoDataOnly = () => {
   clearDemoChannelProfiles();
   clearDemoPricingSimulations();
   clearDemoBundleSimulations();
+  clearDemoInventorySettings();
+  clearDemoStockMovements();
   return true;
 };
 
@@ -99,6 +112,8 @@ export const hasDemoData = () => {
   const channelProfiles = getChannelProfiles();
   const pricingSimulations = getPricingSimulations();
   const bundleSimulations = getBundleSimulations();
+  const inventorySettings = getInventorySettings();
+  const stockMovements = getStockMovements();
 
   return (
     calculations.some(c => c.source === 'demo') ||
@@ -107,7 +122,9 @@ export const hasDemoData = () => {
     products.some(p => p.source === 'demo') ||
     channelProfiles.some(p => p.source === 'demo') ||
     pricingSimulations.some(s => s.source === 'demo') ||
-    bundleSimulations.some(s => s.source === 'demo')
+    bundleSimulations.some(s => s.source === 'demo') ||
+    inventorySettings.some(s => s.source === 'demo') ||
+    stockMovements.some(s => s.source === 'demo')
   );
 };
 
@@ -122,6 +139,8 @@ export const getDemoDataSummary = () => {
   const channelProfiles = getChannelProfiles().filter(p => p.source === 'demo').length;
   const pricingSimulations = getPricingSimulations().filter(s => s.source === 'demo').length;
   const bundleSimulations = getBundleSimulations().filter(s => s.source === 'demo').length;
+  const inventorySettings = getInventorySettings().filter(s => s.source === 'demo').length;
+  const stockMovements = getStockMovements().filter(s => s.source === 'demo').length;
 
   return {
     calculations,
@@ -131,6 +150,8 @@ export const getDemoDataSummary = () => {
     channelProfiles,
     pricingSimulations,
     bundleSimulations,
-    total: calculations + ingredients + recipes + products + channelProfiles + pricingSimulations + bundleSimulations
+    inventorySettings,
+    stockMovements,
+    total: calculations + ingredients + recipes + products + channelProfiles + pricingSimulations + bundleSimulations + inventorySettings + stockMovements
   };
 };

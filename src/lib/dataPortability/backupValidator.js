@@ -1,5 +1,11 @@
 import { BACKUP_FORMAT_VERSION, BACKUP_KIND, BACKUP_MODULES } from './backupTypes';
 
+const getModuleRecordId = (module, item) => {
+  if (!item) return null;
+  if (module === 'inventorySettings') return item.ingredientId || null;
+  return item.id || null;
+};
+
 export const validateBackupEnvelope = (backup) => {
   if (!backup || typeof backup !== 'object') return false;
   if (backup.kind !== BACKUP_KIND) return false;
@@ -40,10 +46,11 @@ export const createImportPreview = (backup, currentAppData) => {
     const currentArr = currentAppData[module];
     
     if (Array.isArray(incomingArr) && Array.isArray(currentArr)) {
-      const currentIds = new Set(currentArr.map(item => item.id).filter(Boolean));
+      const currentIds = new Set(currentArr.map(item => getModuleRecordId(module, item)).filter(Boolean));
       
       incomingArr.forEach(item => {
-        if (item.id && currentIds.has(item.id)) {
+        const itemId = getModuleRecordId(module, item);
+        if (itemId && currentIds.has(itemId)) {
           preview.conflicts[module]++;
         }
       });

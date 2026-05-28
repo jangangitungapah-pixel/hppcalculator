@@ -19,6 +19,9 @@ export const AppDataProvider = ({ children }) => {
   const [channelProfiles, setChannelProfiles] = useState([]);
   const [pricingSimulations, setPricingSimulations] = useState([]);
   const [bundleSimulations, setBundleSimulations] = useState([]);
+  const [inventorySettings, setInventorySettings] = useState([]);
+  const [stockMovements, setStockMovements] = useState([]);
+  const [inventorySnapshots, setInventorySnapshots] = useState([]);
 
   // Centralized reload function
   const refreshData = useCallback(() => {
@@ -33,6 +36,9 @@ export const AppDataProvider = ({ children }) => {
       setChannelProfiles(storage.getChannelProfiles());
       setPricingSimulations(storage.getPricingSimulations());
       setBundleSimulations(storage.getBundleSimulations());
+      setInventorySettings(storage.getInventorySettings());
+      setStockMovements(storage.getStockMovements());
+      setInventorySnapshots(storage.getInventorySnapshots());
     } catch (e) {
       console.error("[AppDataContext] Error refreshing data", e);
     }
@@ -274,6 +280,45 @@ export const AppDataProvider = ({ children }) => {
     refreshData();
   }, [refreshData]);
 
+  // Inventory Actions
+  const saveInventorySetting = useCallback((input) => {
+    const saved = storage.saveInventorySetting(input);
+    refreshData();
+    return saved;
+  }, [refreshData]);
+
+  const updateInventorySetting = useCallback((ingredientId, patch) => {
+    const updated = storage.updateInventorySetting(ingredientId, patch);
+    refreshData();
+    return updated;
+  }, [refreshData]);
+
+  const deleteInventorySetting = useCallback((ingredientId) => {
+    storage.deleteInventorySetting(ingredientId);
+    refreshData();
+  }, [refreshData]);
+
+  const saveStockMovement = useCallback((input) => {
+    const saved = storage.saveStockMovement(input);
+    refreshData();
+    return saved;
+  }, [refreshData]);
+
+  const updateStockMovement = useCallback((id, patch) => {
+    const updated = storage.updateStockMovement(id, patch);
+    refreshData();
+    return updated;
+  }, [refreshData]);
+
+  const deleteStockMovement = useCallback((id) => {
+    storage.deleteStockMovement(id);
+    refreshData();
+  }, [refreshData]);
+
+  const getInventorySnapshotByIngredientId = useCallback((ingredientId) => {
+    return storage.getInventorySnapshotByIngredientId(ingredientId);
+  }, []);
+
   const value = {
     isReady,
     calculations,
@@ -291,6 +336,9 @@ export const AppDataProvider = ({ children }) => {
     channelProfiles,
     pricingSimulations,
     bundleSimulations,
+    inventorySettings,
+    stockMovements,
+    inventorySnapshots,
     saveCalculation,
     deleteCalculation,
     deleteAllCalculations,
@@ -332,6 +380,13 @@ export const AppDataProvider = ({ children }) => {
     updateBundleSimulation,
     deleteBundleSimulation,
     deleteAllBundleSimulations,
+    saveInventorySetting,
+    updateInventorySetting,
+    deleteInventorySetting,
+    saveStockMovement,
+    updateStockMovement,
+    deleteStockMovement,
+    getInventorySnapshotByIngredientId,
     refreshData
   };
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DashboardActionCard } from './DashboardActionCard';
-import { Calculator, BookOpen, Box, ShoppingBag, Store, BarChart3, Database, RefreshCw } from 'lucide-react';
+import { Calculator, BookOpen, Box, ShoppingBag, Store, BarChart3, Database, RefreshCw, PackageSearch } from 'lucide-react';
 import { StaggerContainer } from '../motion/StaggerContainer';
 import { FadeIn } from '../motion/FadeIn';
 
@@ -9,6 +9,7 @@ const ACTIONS = [
   { title: 'Hitung HPP',       description: 'Hitung modal & harga jual',    icon: Calculator, color: 'orange', route: '/calculator' },
   { title: 'Resep Makanan',    description: 'Kelola resep rahasia',           icon: BookOpen,   color: 'green',  route: '/recipes' },
   { title: 'Bahan Baku',       description: 'Pantau harga bahan mentah',      icon: Box,        color: 'blue',   route: '/ingredients' },
+  { title: 'Inventory',        description: 'Pantau stok & movement bahan',   icon: PackageSearch, color: 'green', route: '/inventory' },
   { title: 'Simulasi Harga',   description: 'Atur harga dine-in & ojol',     icon: ShoppingBag,color: 'gold',   route: '/channel-pricing' },
   { title: 'Profil Channel',   description: 'Atur komisi & diskon ojol',      icon: Store,      color: 'blue',   route: '/channel-profiles' },
   { title: 'Laporan Bisnis',   description: 'Analisis performa & untung',     icon: BarChart3,  color: 'green',  route: '/reports' },

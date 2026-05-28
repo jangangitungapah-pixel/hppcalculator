@@ -6,6 +6,8 @@ export const SYNC_RECORD_TYPES = {
   CHANNEL_PROFILE: 'channelProfile',
   PRICING_SIMULATION: 'pricingSimulation',
   BUNDLE_SIMULATION: 'bundleSimulation',
+  INVENTORY_SETTING: 'inventorySetting',
+  STOCK_MOVEMENT: 'stockMovement',
   SETTINGS: 'settings'
 };
 
@@ -17,6 +19,8 @@ export const LOCAL_MODULE_MAP = {
   channelProfiles: SYNC_RECORD_TYPES.CHANNEL_PROFILE,
   pricingSimulations: SYNC_RECORD_TYPES.PRICING_SIMULATION,
   bundleSimulations: SYNC_RECORD_TYPES.BUNDLE_SIMULATION,
+  inventorySettings: SYNC_RECORD_TYPES.INVENTORY_SETTING,
+  stockMovements: SYNC_RECORD_TYPES.STOCK_MOVEMENT,
   settings: SYNC_RECORD_TYPES.SETTINGS
 };
 

@@ -3,6 +3,8 @@ import { Edit2, Trash2, Eye, Info } from 'lucide-react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { IngredientCategoryPill } from './IngredientCategoryPill';
+import { InventoryStatusBadge } from '../inventory/InventoryStatusBadge';
+import { formatStockQuantity } from '../../lib/inventory';
 import { 
   formatIngredientPurchasePrice, 
   formatIngredientUsagePrice, 
@@ -14,10 +16,12 @@ export const IngredientCard = ({
   onClick, 
   onEdit, 
   onDelete, 
+  inventorySnapshot,
   lang = 'id', 
   currency = 'IDR' 
 }) => {
   const isDemo = ingredient.source === 'demo';
+  const isTracked = inventorySnapshot?.stockStatus && inventorySnapshot.stockStatus !== 'not_tracked';
 
   return (
     <Card 
@@ -44,6 +48,14 @@ export const IngredientCard = ({
         {/* Category Badge */}
         <div className="ingredient-card-meta mb-3">
           <IngredientCategoryPill category={ingredient.category} />
+          {isTracked && (
+            <div className="mt-2 flex items-center gap-2 flex-wrap">
+              <InventoryStatusBadge status={inventorySnapshot.stockStatus} />
+              <span className="text-[11px] font-bold text-text-secondary">
+                Stok: {formatStockQuantity(inventorySnapshot.currentStock, inventorySnapshot.stockUnit)}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Purchase Info */}

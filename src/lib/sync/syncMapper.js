@@ -7,9 +7,10 @@ export const mapLocalModuleToSyncRecords = (moduleName, records) => {
   return records.map(record => {
     // Default fallback dates
     const updatedAt = record.updatedAt || record.createdAt || new Date().toISOString();
+    const recordId = moduleName === 'inventorySettings' ? record.ingredientId : record.id;
     return {
       recordType,
-      recordId: record.id,
+      recordId,
       payload: record,
       localUpdatedAt: updatedAt,
       deletedAt: record.deletedAt || null

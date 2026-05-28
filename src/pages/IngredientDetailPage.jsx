@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Edit2, Trash2, Calendar, Store, Info } from 'lucide-react';
+import { ArrowLeft, Edit2, Trash2, Calendar, Store, Info, Plus, Minus, History } from 'lucide-react';
 import { PageContainer } from '../components/layout/PageContainer';
 import { Button } from '../components/ui/Button';
 import { useLanguage } from '../hooks/useLanguage';
@@ -9,6 +9,12 @@ import { useAppData } from '../hooks/useAppData';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { useToast } from '../hooks/useToast';
 import { IngredientCategoryPill } from '../components/ingredients/IngredientCategoryPill';
+import { InventoryStatusBadge } from '../components/inventory/InventoryStatusBadge';
+import { InventorySettingDialog } from '../components/inventory/InventorySettingDialog';
+import { StockMovementDialog } from '../components/inventory/StockMovementDialog';
+import { StockMovementList } from '../components/inventory/StockMovementList';
+import { useInventory } from '../hooks/useInventory';
+import { formatStockQuantity } from '../lib/inventory';
 import { 
   formatIngredientPurchasePrice, 
   formatIngredientUsagePrice,
@@ -21,11 +27,25 @@ export const IngredientDetailPage = () => {
   const { t, lang } = useLanguage();
   const { settings } = useAppData();
   const { getIngredientById, deleteIngredient } = useIngredients();
+  const {
+    settingsByIngredientId,
+    getSnapshotByIngredientId,
+    getMovementsByIngredientId,
+    saveInventorySetting,
+    updateInventorySetting,
+    saveStockMovement
+  } = useInventory();
   const { addToast } = useToast();
   
   const [showDeleteConfirm, setShowDeleteConfirm] = React.useState(false);
+  const [showSettingDialog, setShowSettingDialog] = React.useState(false);
+  const [movementType, setMovementType] = React.useState(null);
+  const [showHistory, setShowHistory] = React.useState(false);
 
   const ingredient = getIngredientById(id);
+  const inventorySetting = settingsByIngredientId.get(id);
+  const inventorySnapshot = getSnapshotByIngredientId(id);
+  const isStockTracked = inventorySnapshot?.stockStatus && inventorySnapshot.stockStatus !== 'not_tracked';
 
   if (!ingredient) {
     return (
@@ -49,6 +69,19 @@ export const IngredientDetailPage = () => {
     return new Date(dateString).toLocaleDateString(lang === 'id' ? 'id-ID' : 'en-US', {
       day: 'numeric', month: 'long', year: 'numeric'
     });
+  };
+
+  const handleSaveInventorySetting = (input) => {
+    if (inventorySetting) updateInventorySetting(id, input);
+    else saveInventorySetting(input);
+    setShowSettingDialog(false);
+    addToast({ type: 'success', title: 'Pengaturan stok disimpan.' });
+  };
+
+  const handleSaveStockMovement = (input) => {
+    saveStockMovement(input);
+    setMovementType(null);
+    addToast({ type: 'success', title: 'Movement stok disimpan.' });
   };
 
   return (
@@ -84,6 +117,52 @@ export const IngredientDetailPage = () => {
           </Button>
         </div>
       </div>
+
+      {/* Stock Section */}
+      <section className="inventory-card mb-6">
+        <div className="inventory-card-header">
+          <div>
+            <h3>Stok Bahan</h3>
+            <span>{isStockTracked ? 'Tracking stok aktif' : 'Pantau stok bahan ini agar kamu tahu kapan perlu restock.'}</span>
+          </div>
+          <InventoryStatusBadge status={inventorySnapshot?.stockStatus} />
+        </div>
+
+        <div className="inventory-stock-block">
+          <span className="inventory-stock-label">Stok saat ini</span>
+          <strong className="inventory-stock-number">
+            {isStockTracked
+              ? formatStockQuantity(inventorySnapshot.currentStock, inventorySnapshot.stockUnit)
+              : 'Belum dipantau'}
+          </strong>
+        </div>
+
+        <div className="inventory-card-meta">
+          <span>Minimum: {isStockTracked ? formatStockQuantity(inventorySnapshot.minimumStock, inventorySnapshot.stockUnit) : '-'}</span>
+          <span>Unit: {inventorySnapshot?.stockUnit || ingredient.baseUnit || ingredient.purchaseUnit || '-'}</span>
+        </div>
+
+        <div className="inventory-card-actions">
+          <Button variant="secondary" size="sm" onClick={() => setShowSettingDialog(true)}>
+            {isStockTracked ? 'Atur Minimum' : 'Aktifkan Tracking'}
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => setMovementType('stock_in')}>
+            <Plus className="w-4 h-4" /> Tambah Stok
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => setMovementType('stock_out')}>
+            <Minus className="w-4 h-4" /> Kurangi Stok
+          </Button>
+          <Button variant="ghost" size="sm" onClick={() => setShowHistory((value) => !value)}>
+            <History className="w-4 h-4" /> Lihat Riwayat
+          </Button>
+        </div>
+
+        {showHistory && (
+          <div className="mt-4">
+            <StockMovementList movements={getMovementsByIngredientId(id)} ingredients={[ingredient]} />
+          </div>
+        )}
+      </section>
 
       {/* Main Details Card */}
       <div className="bg-surface border border-border/80 rounded-3xl shadow-xs overflow-hidden mb-6">
@@ -175,6 +254,23 @@ export const IngredientDetailPage = () => {
         confirmLabel={t('common.delete')}
         cancelLabel={t('common.cancel')}
         variant="danger"
+      />
+
+      <InventorySettingDialog
+        open={showSettingDialog}
+        ingredient={ingredient}
+        setting={inventorySetting}
+        onClose={() => setShowSettingDialog(false)}
+        onSubmit={handleSaveInventorySetting}
+      />
+
+      <StockMovementDialog
+        open={Boolean(movementType)}
+        ingredient={ingredient}
+        ingredients={[ingredient]}
+        initialType={movementType || 'stock_in'}
+        onClose={() => setMovementType(null)}
+        onSubmit={handleSaveStockMovement}
       />
     </PageContainer>
   );

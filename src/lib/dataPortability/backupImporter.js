@@ -3,6 +3,12 @@ import { markBackupImported } from './dataBackupMeta';
 import { STORAGE_KEYS } from '../storage';
 import { getScopedJson, setScopedJson } from '../storage/localStorageClient';
 
+const getModuleRecordId = (module, item) => {
+  if (!item) return null;
+  if (module === 'inventorySettings') return item.ingredientId || null;
+  return item.id || null;
+};
+
 export const mergeArrayById = (currentArray, incomingArray) => {
   if (!Array.isArray(currentArray)) currentArray = [];
   if (!Array.isArray(incomingArray)) incomingArray = [];
@@ -43,9 +49,12 @@ export const applyImportedData = (backupData, mode, includeSettings, currentData
       const currentArray = Array.isArray(currentData[module])
         ? currentData[module]
         : getScopedJson(storageKey, []);
-      const currentIds = new Set(currentArray.map(item => item.id).filter(Boolean));
+      const currentIds = new Set(currentArray.map(item => getModuleRecordId(module, item)).filter(Boolean));
       
-      const newItems = incomingArray.filter(item => item.id && !currentIds.has(item.id));
+      const newItems = incomingArray.filter(item => {
+        const itemId = getModuleRecordId(module, item);
+        return itemId && !currentIds.has(itemId);
+      });
       const duplicateCount = incomingArray.length - newItems.length;
       
       if (newItems.length > 0) {

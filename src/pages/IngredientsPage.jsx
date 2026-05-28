@@ -5,6 +5,7 @@ import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { useLanguage } from '../hooks/useLanguage';
 import { useIngredients } from '../hooks/useIngredients';
 import { useAppData } from '../hooks/useAppData';
+import { useInventory } from '../hooks/useInventory';
 import { useToast } from '../hooks/useToast';
 import { demoIngredients } from '../data/demoIngredients';
 
@@ -24,6 +25,7 @@ export const IngredientsPage = () => {
   const navigate = useNavigate();
   const { ingredients, loadDemoIngredients, deleteIngredient } = useIngredients();
   const { settings } = useAppData();
+  const { getSnapshotByIngredientId } = useInventory();
   const { addToast } = useToast();
 
   // Local toolbar states
@@ -146,6 +148,7 @@ export const IngredientsPage = () => {
                         onClick={() => navigate(`/ingredients/${ing.id}`)}
                         onEdit={() => navigate(`/ingredients/${ing.id}/edit`)}
                         onDelete={() => setDeleteId(ing.id)}
+                        inventorySnapshot={getSnapshotByIngredientId(ing.id)}
                         lang={lang}
                         currency={settings.currency}
                       />
