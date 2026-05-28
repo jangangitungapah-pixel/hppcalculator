@@ -18,12 +18,14 @@ const MetricCard = ({ title, value, helper, iconBg, icon: Icon, onClick, alert }
         <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${iconBg}`}>
           <Icon className="w-5 h-5" />
         </div>
-        {onClick && (
-          <ChevronRight className="w-4 h-4 text-text-muted group-hover:text-brand-primary group-hover:translate-x-0.5 transition-all" />
-        )}
-        {alert && (
-          <span className="text-[10px] font-bold px-2 py-0.5 bg-red-100 text-red-600 rounded-full">{alert}</span>
-        )}
+        <div className="flex items-center gap-1.5">
+          {alert && (
+            <span className="text-[10px] font-bold px-2 py-0.5 bg-red-100 text-red-600 rounded-full">{alert}</span>
+          )}
+          {onClick && (
+            <ChevronRight className="w-4 h-4 text-text-muted group-hover:text-brand-primary group-hover:translate-x-0.5 transition-all" />
+          )}
+        </div>
       </div>
       <div>
         <div className="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">{title}</div>

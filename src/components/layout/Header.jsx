@@ -46,7 +46,7 @@ export const Header = ({ title }) => {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full backdrop-blur-xl bg-white/75 border-b border-border/40 shadow-xs transition-premium">
+    <header className="sticky top-0 z-40 w-full h-16 backdrop-blur-xl bg-white/75 border-b border-border/40 shadow-xs transition-premium">
       <div className="flex items-center justify-between h-16 px-4 sm:px-6 max-w-page mx-auto w-full">
         <div className="flex items-center gap-3">
           <Link to="/" className="flex items-center gap-2 group lg:hidden">
