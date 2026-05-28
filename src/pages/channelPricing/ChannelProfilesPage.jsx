@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../hooks/useLanguage';
 import { useChannelProfiles } from '../../hooks/useChannelProfiles';
@@ -206,7 +207,7 @@ export const ChannelProfilesPage = () => {
       )}
 
       {/* Modal Dialog */}
-      {isModalOpen && (
+      {isModalOpen && createPortal(
         <div className="dialog-overlay bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-4">
           <div className="bg-white rounded-3xl w-full max-w-lg p-6 shadow-floating z-50 overflow-y-auto max-h-[90vh] flex flex-col gap-4 border border-border">
             <div className="flex justify-between items-center border-b border-border-soft pb-3">
@@ -375,7 +376,8 @@ export const ChannelProfilesPage = () => {
               </Button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </PageContainer>
   );
