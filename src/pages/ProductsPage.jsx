@@ -81,7 +81,7 @@ export const ProductsPage = () => {
     <PageContainer>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-text-primary mb-1">{t('products.title')}</h1>
+          <h2 className="text-2xl font-bold text-text-primary mb-1">{t('products.title')}</h2>
           <p className="text-text-secondary">{t('products.subtitle')}</p>
         </div>
         <div className="flex gap-3 w-full md:w-auto">

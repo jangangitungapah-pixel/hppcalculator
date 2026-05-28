@@ -238,7 +238,7 @@ export const CalculatorPage = () => {
 
   return (
     <>
-      <PageContainer maxWidth="max-w-[1280px]" className="py-4 sm:py-5 pb-48 lg:pb-6">
+      <PageContainer maxWidth="max-w-[1280px]" className="calculator-page">
         <div className="calculator-shell pb-6 lg:pb-6">
         
         {/* Banner Hero */}

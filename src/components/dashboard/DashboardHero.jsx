@@ -33,13 +33,13 @@ export const DashboardHero = ({ hasAnyData }) => {
             </span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight">
             {hasAnyData ? (
               <>{greeting} {emoji}, <span className="opacity-90">{businessName}!</span></>
             ) : (
               <>Selamat Datang di <span className="underline decoration-white/50 underline-offset-4">Modalin</span> ✨</>
             )}
-          </h1>
+          </h2>
           <p className="text-white/80 text-sm mt-2 max-w-md font-medium">
             {hasAnyData
               ? 'Pantau modal, margin, dan harga jual bisnismu dari satu tempat.'

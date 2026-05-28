@@ -68,7 +68,7 @@ export const ResultPage = () => {
         >
           <ArrowLeft className="w-6 h-6" />
         </Button>
-        <h1 className="page-title text-xl">{t('result.resultTitle', 'Hasil HPP')}</h1>
+        <h2 className="page-title text-xl">{t('result.resultTitle', 'Hasil HPP')}</h2>
       </div>
 
       <StaggerContainer className="content-stack pb-28">

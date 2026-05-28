@@ -63,7 +63,7 @@ export const RecipesPage = () => {
       {/* Page Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-black text-text-primary mb-1 tracking-tight">{t('recipes.title')}</h1>
+          <h2 className="text-xl sm:text-2xl font-black text-text-primary mb-1 tracking-tight">{t('recipes.title')}</h2>
           <p className="text-sm font-semibold text-text-secondary">{t('recipes.subtitle')}</p>
         </div>
         <div className="flex gap-3 w-full md:w-auto shrink-0">

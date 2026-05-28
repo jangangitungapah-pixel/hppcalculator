@@ -139,9 +139,9 @@ export const HistoryDetailPage = () => {
               {/* Name & date */}
               <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-2 mb-1">
-                  <h1 className="text-xl sm:text-2xl font-bold text-text-primary tracking-tight truncate">
+                  <h2 className="text-xl sm:text-2xl font-bold text-text-primary tracking-tight truncate">
                     {savedCalculation.productName}
-                  </h1>
+                  </h2>
                   <Badge variant={statusKey}>
                     {t(`result.status.${statusKey}`)}
                   </Badge>

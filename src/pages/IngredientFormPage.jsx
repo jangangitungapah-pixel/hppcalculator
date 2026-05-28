@@ -110,9 +110,9 @@ export const IngredientFormPage = () => {
         >
           <ArrowLeft className="w-5 h-5 text-text-secondary" />
         </Button>
-        <h1 className="text-2xl font-bold text-text-primary">
+        <h2 className="text-2xl font-bold text-text-primary">
           {isEdit ? t('ingredients.editIngredient') : t('ingredients.addIngredient')}
-        </h1>
+        </h2>
       </div>
 
       <div className="bg-surface border border-border p-4 sm:p-6 rounded-2xl shadow-sm mb-5 space-y-4">

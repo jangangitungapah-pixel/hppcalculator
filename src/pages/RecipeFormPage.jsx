@@ -252,9 +252,9 @@ export const RecipeFormPage = () => {
         >
           <ArrowLeft className="w-4.5 h-4.5" />
         </button>
-        <h1 className="text-xl sm:text-2xl font-extrabold text-text-primary tracking-tight">
+        <h2 className="text-xl sm:text-2xl font-extrabold text-text-primary tracking-tight">
           {isEdit ? t('recipes.editRecipe') : t('recipes.createRecipe')}
-        </h1>
+        </h2>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

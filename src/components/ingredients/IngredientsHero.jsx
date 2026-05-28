@@ -16,9 +16,9 @@ export const IngredientsHero = ({ hasIngredients, onAddClick, onLoadDemoClick })
             <span className="ingredients-hero-pill px-2.5 py-1 rounded-md bg-white/15 text-[10px] uppercase font-bold tracking-wider backdrop-blur-md">Dipakai di resep</span>
             <span className="ingredients-hero-pill px-2.5 py-1 rounded-md bg-white/15 text-[10px] uppercase font-bold tracking-wider backdrop-blur-md">Satuan otomatis</span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-2 flex items-center gap-2">
+          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-2 flex items-center gap-2">
             Bahan Baku
-          </h1>
+          </h2>
           <p className="text-white/80 text-xs sm:text-sm md:text-base font-medium leading-relaxed">
             Kelola harga bahan, satuan, dan modal dasar untuk resep dan produkmu.
           </p>

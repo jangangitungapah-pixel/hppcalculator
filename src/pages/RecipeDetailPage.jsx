@@ -94,7 +94,7 @@ export const RecipeDetailPage = () => {
           >
             <ArrowLeft className="w-4.5 h-4.5" />
           </button>
-          <h1 className="text-xl sm:text-2xl font-extrabold text-text-primary tracking-tight line-clamp-1">Detail Resep</h1>
+          <h2 className="text-xl sm:text-2xl font-extrabold text-text-primary tracking-tight line-clamp-1">Detail Resep</h2>
         </div>
         <div className="flex gap-2 shrink-0">
           <Button 

@@ -21,9 +21,9 @@ export const CalculatorHero = () => {
             </span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight">
             Hitung <span className="opacity-95 text-yellow-100">HPP Produk</span>
-          </h1>
+          </h2>
           <p className="text-white/80 text-sm mt-2 max-w-lg font-medium leading-relaxed">
             {t('calculator.pageSubtitle', 'Masukkan biaya produksi, jumlah hasil, dan harga jual untuk melihat modal per produk, profit, margin, dan saran harga.')}
           </p>

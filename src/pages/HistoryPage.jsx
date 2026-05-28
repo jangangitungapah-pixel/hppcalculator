@@ -109,7 +109,7 @@ export const HistoryPage = () => {
       {/* Header */}
       <div className="flex items-end justify-between mb-5 gap-4">
         <div>
-          <h1 className="page-title">{t('history.title')}</h1>
+          <h2 className="page-title">{t('history.title')}</h2>
           <p className="page-subtitle">{t('history.subtitle')}</p>
         </div>
         {calculations.length > 0 && (

@@ -1964,6 +1964,8 @@ button.dashboard-metric-card {
    ================================================= */
 .app-page-container {
   min-width: 0;
+  padding-top: var(--page-content-top-gap, 1.25rem) !important;
+  padding-bottom: var(--page-content-bottom-gap, 5rem) !important;
 }
 
 .app-page-container > * {
@@ -2171,13 +2173,13 @@ button.dashboard-metric-card {
   padding: 1.75rem 1.25rem;
 }
 
-.reports-page {
-  padding-top: 0;
-}
-
 .reports-main {
   width: 100%;
   padding: 0;
+}
+
+.calculator-page {
+  padding-bottom: 12rem !important;
 }
 
 .reports-hero {
@@ -2329,6 +2331,17 @@ button.dashboard-metric-card {
   .account-hero,
   .sync-hero {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .app-page-container {
+    padding-top: var(--page-content-top-gap, 1.25rem) !important;
+    padding-bottom: var(--page-content-bottom-gap-desktop, 1.5rem) !important;
+  }
+
+  .calculator-page {
+    padding-bottom: var(--page-content-bottom-gap-desktop, 1.5rem) !important;
   }
 }
 

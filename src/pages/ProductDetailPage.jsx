@@ -105,7 +105,7 @@ export const ProductDetailPage = () => {
           >
             <ArrowLeft className="w-5 h-5 text-text-secondary" />
           </Button>
-          <h1 className="text-2xl font-bold text-text-primary line-clamp-1">Detail Produk</h1>
+          <h2 className="text-2xl font-bold text-text-primary line-clamp-1">Detail Produk</h2>
         </div>
         <div className="flex gap-2">
           <Button variant="destructive" onClick={() => setShowDeleteConfirm(true)} className="px-3">
