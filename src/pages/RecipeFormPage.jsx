@@ -14,6 +14,7 @@ import { formatCurrency } from '../lib/calculations';
 import { useToast } from '../hooks/useToast';
 import { useAppData } from '../hooks/useAppData';
 import { getRecipeDraft, saveRecipeDraft, clearRecipeDraft } from '../lib/storage';
+import { createPortal } from 'react-dom';
 
 export const RecipeFormPage = () => {
   const { id } = useParams();
@@ -663,7 +664,7 @@ export const RecipeFormPage = () => {
         </div>
       </div>
       {/* Blocker Modal */}
-      {blocker.state === 'blocked' && (
+      {blocker.state === 'blocked' && createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
           <div className="bg-surface border border-border-soft rounded-3xl p-6 max-w-md w-full shadow-floating animate-in fade-in zoom-in-95 duration-200">
             <div className="flex gap-4 items-start">
@@ -714,7 +715,8 @@ export const RecipeFormPage = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </PageContainer>
   );
