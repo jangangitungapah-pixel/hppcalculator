@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../hooks/useLanguage';
 import { usePricingSimulations } from '../../hooks/usePricingSimulations';
@@ -350,7 +351,7 @@ export const PricingSimulationsPage = () => {
         />
       )}
 
-      {detailSimulation && (
+      {detailSimulation && createPortal(
         <div className="dialog-overlay" onClick={() => setDetailSimulation(null)}>
           <div
             className="dialog-card max-w-lg"
@@ -399,7 +400,8 @@ export const PricingSimulationsPage = () => {
               </Button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       <ConfirmDialog

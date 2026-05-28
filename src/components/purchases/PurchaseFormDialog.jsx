@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { Select } from '../ui/Select';
@@ -223,7 +224,7 @@ export const PurchaseFormDialog = ({
     { value: 'other', label: t('purchases.payOther', 'Lainnya') }
   ];
 
-  return (
+  return createPortal(
     <div className="dialog-overlay z-50">
       <div 
         className="dialog-card max-w-4xl w-full max-h-[92vh] overflow-y-auto flex flex-col purchase-form-dialog"
@@ -456,6 +457,7 @@ export const PurchaseFormDialog = ({
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

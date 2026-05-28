@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { Button } from './Button';
 
 export const ConfirmDialog = ({
@@ -30,7 +31,7 @@ export const ConfirmDialog = ({
 
   if (!open) return null;
 
-  return (
+  return createPortal(
     <div className="dialog-overlay">
       <div 
         ref={dialogRef}
@@ -68,6 +69,7 @@ export const ConfirmDialog = ({
           </Button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

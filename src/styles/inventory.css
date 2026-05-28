@@ -108,8 +108,21 @@
 .inventory-hero-actions .btn-primary {
   border: 0;
   background: #fff;
-  color: var(--color-primary);
+  color: var(--color-primary) !important;
   box-shadow: var(--shadow-lg);
+}
+
+.inventory-hero-actions .btn-primary:hover:not(:disabled) {
+  background: var(--color-primary-soft) !important;
+  color: var(--color-primary) !important;
+  box-shadow: var(--shadow-md), var(--shadow-soft-glow);
+  transform: translateY(-1.5px);
+}
+
+.inventory-hero-actions .btn-primary:active:not(:disabled) {
+  background: var(--color-primary-soft) !important;
+  color: var(--color-primary) !important;
+  transform: translateY(0) scale(0.98);
 }
 
 .inventory-hero-actions .btn-secondary {
