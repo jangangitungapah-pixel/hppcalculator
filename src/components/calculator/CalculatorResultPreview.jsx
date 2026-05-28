@@ -1,10 +1,10 @@
 import React from 'react';
 import { Calculator, Check, AlertCircle, Circle } from 'lucide-react';
-import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
 import { ResultCard } from '../ui/ResultCard';
 import { AnimatedNumber } from '../motion/AnimatedNumber';
+import { parseLocalizedNumber } from '../../lib/data/calculationMapper';
 
 export const CalculatorResultPreview = ({ 
   form,
@@ -16,16 +16,17 @@ export const CalculatorResultPreview = ({
 }) => {
   // Checklist validation states
   const hasName = form.productName && form.productName.trim().length > 0;
-  const hasCosts = form.costItems && form.costItems.some(item => parseFloat(item.amount) > 0);
-  const hasOutput = form.outputQuantity && parseFloat(form.outputQuantity) > 0;
-  const hasPrice = form.sellingPrice && parseFloat(form.sellingPrice) > 0;
+  const hasCosts = form.costItems && form.costItems.some(item => parseLocalizedNumber(item.amount) > 0);
+  const hasOutput = parseLocalizedNumber(form.outputQuantity) > 0;
+  const hasPrice = parseLocalizedNumber(form.sellingPrice) > 0;
+  const hasUnit = form.sellingUnit !== 'custom' || form.customSellingUnit?.trim().length > 0;
 
   return (
     <div className="calculator-result-panel">
       {result ? (
         <div>
-          <div className="flex justify-between items-center mb-5">
-            <h3 className="text-lg font-extrabold text-text-primary tracking-tight">{t('result.resultTitle', 'Hasil HPP')}</h3>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-base font-extrabold text-text-primary tracking-tight">{t('result.resultTitle', 'Hasil HPP')}</h3>
             <Badge variant={result.profitStatus.key}>
               {t(`result.status.${result.profitStatus.key}`, result.profitStatus.key.toUpperCase())}
             </Badge>
@@ -59,7 +60,7 @@ export const CalculatorResultPreview = ({
           
           {/* Warnings */}
           {result.warnings && result.warnings.length > 0 && (
-            <div className="flex flex-col gap-2 mb-5">
+            <div className="flex flex-col gap-2 mb-4">
               {result.warnings.map((warn, i) => (
                 <div key={i} className="flex items-start gap-2 text-xs text-status-low bg-status-lowBg p-2.5 rounded-xl border border-status-low/20">
                   <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
@@ -70,7 +71,7 @@ export const CalculatorResultPreview = ({
           )}
 
           {/* Pricing breakdown summary */}
-          <div className="space-y-3 mb-5 py-3 border-t border-b border-border/60 text-sm">
+          <div className="space-y-2.5 mb-4 py-3 border-t border-b border-border/60 text-sm">
             <div className="flex justify-between">
               <span className="text-text-secondary">{t('result.totalProductionCost', 'Total Modal Produksi')}</span>
               <AnimatedNumber value={result.totalProductionCost} isCurrency={true} className="font-semibold text-text-primary" />
@@ -87,10 +88,10 @@ export const CalculatorResultPreview = ({
 
           {/* Suggested Price recommendations */}
           <div className="calculator-suggested-prices">
-            <h4 className="text-xs font-bold text-text-primary uppercase tracking-wider mb-3">
+            <h4 className="text-xs font-bold text-text-primary uppercase tracking-wider mb-2">
               {t('result.suggestedPrices', 'Rekomendasi Harga Jual')}
             </h4>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1.5">
               <div className="calculator-suggested-price-card">
                 <span className="text-text-secondary font-medium">{t('result.safePrice', 'Aman')} (15%)</span>
                 <AnimatedNumber value={result.suggestedPrices?.safe?.price || 0} isCurrency={true} className="font-bold text-text-primary" />
@@ -107,11 +108,11 @@ export const CalculatorResultPreview = ({
           </div>
 
           {/* Panel Actions */}
-          <div className="flex flex-col gap-2.5 pt-4 border-t border-border/60">
-            <Button className="w-full h-11" onClick={onSave}>
+          <div className="flex flex-col gap-2 pt-3 border-t border-border/60">
+            <Button className="w-full h-10" onClick={onSave}>
               {t('result.saveCalculation', 'Simpan Perhitungan')}
             </Button>
-            <Button variant="secondary" className="w-full h-11 border-border bg-surface-muted text-text-primary hover:bg-border/30" onClick={onReset}>
+            <Button variant="secondary" className="w-full h-10 border-border bg-surface-muted text-text-primary hover:bg-border/30" onClick={onReset}>
               {t('calculator.resetButton', 'Reset')}
             </Button>
           </div>
@@ -119,21 +120,21 @@ export const CalculatorResultPreview = ({
       ) : (
         /* Empty Preview / Form Checklist Onboarding */
         <div className="calculator-result-empty">
-          <div className="w-16 h-16 bg-brand-soft rounded-2xl flex items-center justify-center mb-6 text-brand-primary shadow-glow-primary">
-            <Calculator className="w-8 h-8" />
+          <div className="w-12 h-12 bg-brand-soft rounded-xl flex items-center justify-center mb-4 text-brand-primary shadow-glow-primary">
+            <Calculator className="w-6 h-6" />
           </div>
-          <h3 className="font-bold text-lg text-text-primary mb-2">
+          <h3 className="font-bold text-base text-text-primary mb-1.5">
             {t('calculator.resultPlaceholderTitle', 'Hasil Perhitungan')}
           </h3>
-          <p className="text-text-secondary text-sm max-w-xs mb-6">
+          <p className="text-text-secondary text-xs leading-relaxed max-w-xs mb-4">
             {t('calculator.resultPlaceholderBody', 'Lengkapi langkah pengisian di sebelah kiri untuk melihat estimasi modal.')}
           </p>
 
           {/* Dynamic checklist */}
-          <div className="w-full max-w-xs bg-surface-cream border border-border-soft p-4.5 rounded-2xl text-left space-y-3.5 mb-6">
-            <h4 className="text-xs font-bold text-text-secondary uppercase tracking-wider mb-2">Checklist Pengisian:</h4>
+          <div className="w-full max-w-xs bg-surface-cream border border-border-soft p-3.5 rounded-xl text-left space-y-2.5 mb-4">
+            <h4 className="text-[0.7rem] font-bold text-text-secondary uppercase tracking-wider mb-1.5">Checklist Pengisian:</h4>
             
-            <div className="flex items-center gap-2.5 text-sm">
+            <div className="flex items-center gap-2 text-xs">
               {hasName ? (
                 <Check className="w-4 h-4 text-secondary shrink-0" />
               ) : (
@@ -144,7 +145,7 @@ export const CalculatorResultPreview = ({
               </span>
             </div>
 
-            <div className="flex items-center gap-2.5 text-sm">
+            <div className="flex items-center gap-2 text-xs">
               {hasCosts ? (
                 <Check className="w-4 h-4 text-secondary shrink-0" />
               ) : (
@@ -155,7 +156,7 @@ export const CalculatorResultPreview = ({
               </span>
             </div>
 
-            <div className="flex items-center gap-2.5 text-sm">
+            <div className="flex items-center gap-2 text-xs">
               {hasOutput ? (
                 <Check className="w-4 h-4 text-secondary shrink-0" />
               ) : (
@@ -166,7 +167,7 @@ export const CalculatorResultPreview = ({
               </span>
             </div>
 
-            <div className="flex items-center gap-2.5 text-sm">
+            <div className="flex items-center gap-2 text-xs">
               {hasPrice ? (
                 <Check className="w-4 h-4 text-secondary shrink-0" />
               ) : (
@@ -176,12 +177,23 @@ export const CalculatorResultPreview = ({
                 Harga jual target diisi
               </span>
             </div>
+
+            <div className="flex items-center gap-2 text-xs">
+              {hasUnit ? (
+                <Check className="w-4 h-4 text-secondary shrink-0" />
+              ) : (
+                <Circle className="w-4 h-4 text-text-muted shrink-0" />
+              )}
+              <span className={hasUnit ? 'text-text-primary font-medium line-through opacity-60' : 'text-text-secondary'}>
+                Satuan jual diisi
+              </span>
+            </div>
           </div>
 
           <Button 
-            className="w-full" 
+            className="w-full h-10"
             onClick={onCalculate}
-            disabled={!hasCosts || !hasOutput}
+            disabled={!hasName || !hasCosts || !hasOutput || !hasPrice || !hasUnit}
           >
             {t('calculator.calculateButton', 'Hitung Sekarang')}
           </Button>

@@ -13,7 +13,8 @@ export const Input = React.forwardRef(({
   type = 'text',
   ...props
 }, ref) => {
-  const inputId = id || Math.random().toString(36).substr(2, 9);
+  const generatedId = React.useId();
+  const inputId = id || `input-${generatedId}`;
   const errorId = `${inputId}-error`;
   const helperId = `${inputId}-helper`;
 

@@ -49,6 +49,111 @@
 
 /* Dashboard Mobile Overrides */
 @media (max-width: 640px) {
+  .calculator-main {
+    gap: 0.9rem;
+  }
+
+  .calculator-hero {
+    align-items: flex-start;
+    padding: 0.95rem 1rem;
+    gap: 0.65rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .calculator-hero-content {
+    max-width: none;
+    width: 100%;
+  }
+
+  .calculator-hero-title {
+    font-size: 1.35rem;
+    line-height: 1.2;
+    margin-bottom: 0.25rem;
+  }
+
+  .calculator-hero-subtitle {
+    max-width: 18rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.45;
+    font-size: 0.875rem;
+  }
+
+  .calculator-hero-visual {
+    display: none !important;
+  }
+
+  .calculator-hero-pills {
+    gap: 0.3rem;
+  }
+
+  .calculator-hero-pill {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.65rem;
+  }
+
+  .calculator-step-card {
+    border-radius: var(--radius-xl);
+    padding: 1rem;
+  }
+
+  .calculator-step-header {
+    gap: 0.625rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .calculator-step-number {
+    width: 1.8rem;
+    height: 1.8rem;
+    font-size: 0.85rem;
+  }
+
+  .calculator-step-title {
+    font-size: 1rem;
+  }
+
+  .calculator-step-helper {
+    font-size: 0.78rem;
+  }
+
+  .cost-item-row {
+    padding: 0.625rem;
+    gap: 0.45rem 0.55rem;
+  }
+
+  .cost-item-row input,
+  .cost-item-row select {
+    height: 2.4rem;
+    min-height: 2.4rem;
+    font-size: 0.875rem;
+  }
+
+  .cost-item-delete {
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+
+  .cost-template-chips {
+    gap: 0.35rem;
+    margin-top: 0.35rem;
+    padding-top: 0.65rem;
+  }
+
+  .production-grid {
+    gap: 0.65rem;
+  }
+
+  .production-mini-card {
+    padding: 0;
+  }
+
+  .sellable-preview {
+    padding: 0.65rem 0.85rem;
+  }
+
+  .calculator-mobile-cta {
+    padding: 0.7rem 0.875rem;
+  }
+
   .dashboard-demo-banner {
     padding: 1rem !important;
     margin-bottom: 1rem !important;

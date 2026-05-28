@@ -14,12 +14,12 @@ export const CostItemsSection = ({
   t 
 }) => {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3">
       {costItems.length === 0 ? (
         <CalculatorEmptyCostState onAdd={onAdd} t={t} />
       ) : (
         <>
-          <div className="hidden sm:grid sm:grid-cols-[2fr_1.5fr_1.5fr_auto] text-xs font-bold text-text-muted uppercase tracking-wider px-4 pb-2 mb-2 border-b border-border/60">
+          <div className="hidden sm:grid sm:grid-cols-[2fr_1.5fr_1.5fr_auto] text-xs font-bold text-text-muted uppercase tracking-wider px-4 pb-2 mb-1 border-b border-border/60">
             <div className="pl-3">Nama Biaya</div>
             <div className="pl-3">Kategori</div>
             <div className="pl-3">Nominal</div>
@@ -46,7 +46,7 @@ export const CostItemsSection = ({
         <p className="text-sm text-status-loss font-semibold mt-1">{error}</p>
       )}
 
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-2">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-1">
         <Button 
           variant="ghost" 
           onClick={onAdd} 

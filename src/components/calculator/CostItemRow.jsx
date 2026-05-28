@@ -12,6 +12,10 @@ export const CostItemRow = ({
   canRemove = true,
   t 
 }) => {
+  const rowNumber = index + 1;
+  const rowName = item.name?.trim() || `biaya ${rowNumber}`;
+  const rowLabel = `Baris ${rowNumber}, ${rowName}`;
+
   const categoryOptions = [
     { value: 'Bahan', label: t('calculator.costDefaultIngredients', 'Biaya Bahan') },
     { value: 'Kemasan', label: t('calculator.costDefaultPackaging', 'Biaya Kemasan') },
@@ -30,7 +34,7 @@ export const CostItemRow = ({
           onChange={(e) => onChange(index, 'name', e.target.value)}
           containerClassName="w-full"
           className="bg-transparent border-transparent hover:bg-black/5 focus:bg-surface focus:border-primary shadow-none h-11 px-3"
-          aria-label={t('calculator.costName')}
+          aria-label={`${t('calculator.costName')} ${rowNumber}`}
         />
       </div>
 
@@ -42,7 +46,7 @@ export const CostItemRow = ({
           onChange={(e) => onChange(index, 'category', e.target.value)}
           containerClassName="w-full"
           className="bg-transparent border-transparent hover:bg-black/5 focus:bg-surface focus:border-primary shadow-none h-11 px-3"
-          aria-label={t('calculator.costCategory')}
+          aria-label={`${t('calculator.costCategory')} ${rowLabel}`}
         />
       </div>
 
@@ -57,7 +61,7 @@ export const CostItemRow = ({
           onChange={(e) => onChange(index, 'amount', e.target.value)}
           containerClassName="flex-1"
           className="bg-transparent border-transparent hover:bg-black/5 focus:bg-surface focus:border-primary shadow-none h-11 pl-10 pr-3 font-semibold"
-          aria-label={t('calculator.costAmount')}
+          aria-label={`${t('calculator.costAmount')} ${rowLabel}`}
         />
         
         <div className="shrink-0 flex items-center justify-center">
@@ -68,8 +72,8 @@ export const CostItemRow = ({
               size="icon"
               onClick={() => onRemove(index)}
               className="cost-item-delete w-10 h-10"
-              title={t('calculator.removeCost')}
-              aria-label={t('calculator.removeCost')}
+              title={`${t('calculator.removeCost')} ${rowLabel}`}
+              aria-label={`${t('calculator.removeCost')} ${rowLabel}`}
             >
               <Trash2 className="w-4 h-4" />
             </Button>

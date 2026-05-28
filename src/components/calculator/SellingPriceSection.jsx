@@ -20,7 +20,7 @@ export const SellingPriceSection = ({
         type="number"
         min="0"
         prefix="Rp"
-        label={t('calculator.sellingPrice', 'Harga Jual')}
+        label={t('calculator.sellingPricePerUnit', 'Harga jual per satuan')}
         placeholder="0"
         value={sellingPrice}
         onChange={(e) => onFieldChange('sellingPrice', e.target.value)}

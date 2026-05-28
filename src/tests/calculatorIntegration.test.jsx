@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { calculateQuickHpp } from '../lib/calculations';
+import { createCalculationInputFromForm, createFormFromSavedCalculation, parseLocalizedNumber } from '../lib/data/calculationMapper';
 
 // This is a minimal integration test to ensure the calculation logic
 // remains healthy when integrated with the frontend payload structures.
@@ -50,5 +51,46 @@ describe('Calculator Integration Payload Test', () => {
 
     const result = calculateQuickHpp(parsedPayload);
     expect(result.hppPerUnit).toBe(5000);
+  });
+
+  it('maps localized number strings and custom units from calculator form', () => {
+    const form = {
+      productName: 'Brownies',
+      costItems: [{ id: '1', name: 'Coklat', category: 'Bahan', amount: '12.500,75' }],
+      outputQuantity: '10,5',
+      failedQuantity: '0,5',
+      sellingUnit: 'custom',
+      customSellingUnit: 'loyang',
+      sellingPrice: '25.000'
+    };
+
+    const payload = createCalculationInputFromForm(form, {
+      language: 'id',
+      currency: 'IDR',
+      roundingStep: 500
+    });
+
+    expect(parseLocalizedNumber('1,5')).toBe(1.5);
+    expect(payload.costItems[0].amount).toBe(12500.75);
+    expect(payload.outputQuantity).toBe(10.5);
+    expect(payload.failedQuantity).toBe(0.5);
+    expect(payload.sellingUnit).toBe('loyang');
+    expect(payload.sellingPrice).toBe(25000);
+  });
+
+  it('restores saved custom units into the custom-unit form state', () => {
+    const restored = createFormFromSavedCalculation({
+      input: {
+        productName: 'Cake',
+        costItems: [],
+        outputQuantity: 2,
+        failedQuantity: 0,
+        sellingUnit: 'loyang',
+        sellingPrice: 100000
+      }
+    });
+
+    expect(restored.sellingUnit).toBe('custom');
+    expect(restored.customSellingUnit).toBe('loyang');
   });
 });

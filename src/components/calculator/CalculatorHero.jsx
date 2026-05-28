@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calculator, Sparkles } from 'lucide-react';
+import { Calculator } from 'lucide-react';
 import { Badge } from '../ui/Badge';
 import { useLanguage } from '../../hooks/useLanguage';
 
@@ -9,7 +9,7 @@ export const CalculatorHero = () => {
   return (
     <div className="calculator-hero">
       <div className="calculator-hero-content">
-        <Badge variant="neutral" className="mb-3.5 bg-brand-soft text-brand-primary border-none font-bold uppercase tracking-wider text-xs">
+        <Badge variant="neutral" className="mb-2.5 bg-brand-soft text-brand-primary border-none font-bold uppercase tracking-wider text-xs">
           {lang === 'en' ? 'Quick HPP Calculator' : 'Kalkulator Cepat'}
         </Badge>
         <h1 className="calculator-hero-title">
@@ -29,7 +29,7 @@ export const CalculatorHero = () => {
       <div className="calculator-hero-visual hidden md:flex">
         <div className="calculator-hero-orb"></div>
         <div className="calculator-hero-icon-wrapper">
-          <Calculator className="w-8 h-8" />
+          <Calculator className="w-6 h-6" />
         </div>
       </div>
     </div>

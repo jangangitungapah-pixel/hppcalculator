@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from '../ui/Button';
 import { CalculatorStickySummary } from './CalculatorStickySummary';
+import { parseLocalizedNumber } from '../../lib/data/calculationMapper';
 
 export const CalculatorMobileCta = ({ 
   form, 
@@ -10,9 +11,20 @@ export const CalculatorMobileCta = ({
   t 
 }) => {
   // Check validity
-  const hasCosts = form.costItems && form.costItems.some(item => parseFloat(item.amount) > 0);
-  const hasOutput = form.outputQuantity && parseFloat(form.outputQuantity) > 0;
-  const isValid = hasCosts && hasOutput;
+  const hasName = form.productName && form.productName.trim().length > 0;
+  const hasCosts = form.costItems && form.costItems.some(item => parseLocalizedNumber(item.amount) > 0);
+  const hasOutput = parseLocalizedNumber(form.outputQuantity) > 0;
+  const hasPrice = parseLocalizedNumber(form.sellingPrice) > 0;
+  const hasUnit = form.sellingUnit !== 'custom' || form.customSellingUnit?.trim().length > 0;
+  const isValid = hasName && hasCosts && hasOutput && hasPrice && hasUnit;
+
+  const missingLabels = [
+    !hasName && 'Nama',
+    !hasCosts && 'Biaya',
+    !hasOutput && 'Hasil',
+    !hasPrice && 'Harga',
+    !hasUnit && 'Satuan'
+  ].filter(Boolean);
 
   return (
     <div className="calculator-mobile-cta lg:hidden">
@@ -43,7 +55,7 @@ export const CalculatorMobileCta = ({
             <div className="calculator-mobile-summary">
               <span className="calculator-mobile-summary-label">Status Form:</span>
               <span className="text-xs text-text-secondary mt-0.5">
-                {isValid ? 'Siap Dihitung' : 'Biaya & Hasil wajib diisi'}
+                {isValid ? 'Siap Dihitung' : `Lengkapi ${missingLabels.join(', ')}`}
               </span>
             </div>
             

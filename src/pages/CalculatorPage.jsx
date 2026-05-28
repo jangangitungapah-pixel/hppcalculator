@@ -24,6 +24,29 @@ import { CalculatorDraftBanner } from '../components/calculator/CalculatorDraftB
 import { calculateQuickHpp, validateQuickCalculationInput } from '../lib/calculations';
 import { createCalculationInputFromForm, createFormFromSavedCalculation } from '../lib/data/calculationMapper';
 
+const getValidationMessage = (error, lang) => {
+  if (!error) return '';
+  return lang === 'en'
+    ? error.messageEn || error.messageId || error.message || ''
+    : error.messageId || error.messageEn || error.message || '';
+};
+
+const normalizeValidationErrors = (errors = [], lang = 'id') => {
+  const normalized = { _summary: [] };
+
+  errors.forEach((error) => {
+    const message = getValidationMessage(error, lang);
+    const field = error.field || 'form';
+    const baseField = field.split('[')[0];
+
+    normalized._summary.push({ field, message });
+    if (!normalized[field]) normalized[field] = message;
+    if (!normalized[baseField]) normalized[baseField] = message;
+  });
+
+  return normalized;
+};
+
 const emptyCostItem = () => ({
   id: Math.random().toString(36).substring(7),
   name: '',
@@ -42,11 +65,12 @@ const defaultForm = {
   outputQuantity: '',
   failedQuantity: '',
   sellingUnit: 'pcs',
+  customSellingUnit: '',
   sellingPrice: ''
 };
 
 export const CalculatorPage = () => {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
   const isDesktop = useMediaQuery('(min-width: 1024px)');
@@ -93,6 +117,13 @@ export const CalculatorPage = () => {
     return () => clearTimeout(debounceTimer.current);
   }, [form, saveDraft, showDraftBanner]);
 
+  const dismissDraftBannerForNewWork = () => {
+    if (showDraftBanner) {
+      clearDraft();
+      setShowDraftBanner(false);
+    }
+  };
+
   // Auto-validate form when calculating or if has calculated once
   useEffect(() => {
     if (hasCalculatedOnce && isDesktop && !isInitialMount.current) {
@@ -101,20 +132,24 @@ export const CalculatorPage = () => {
   }, [form, hasCalculatedOnce, isDesktop]);
 
   const updateField = (field, value) => {
+    dismissDraftBannerForNewWork();
     setForm(prev => ({ ...prev, [field]: value }));
   };
 
   const updateCostItem = (index, field, value) => {
+    dismissDraftBannerForNewWork();
     const newItems = [...form.costItems];
     newItems[index][field] = value;
     setForm(prev => ({ ...prev, costItems: newItems }));
   };
 
   const addCostItem = () => {
+    dismissDraftBannerForNewWork();
     setForm(prev => ({ ...prev, costItems: [...prev.costItems, emptyCostItem()] }));
   };
 
   const addCostItemWithCategory = (category, defaultName) => {
+    dismissDraftBannerForNewWork();
     const newItem = {
       id: Math.random().toString(36).substring(7),
       name: defaultName || '',
@@ -125,6 +160,7 @@ export const CalculatorPage = () => {
   };
 
   const removeCostItem = (index) => {
+    dismissDraftBannerForNewWork();
     if (form.costItems.length > 1) {
       const newItems = [...form.costItems];
       newItems.splice(index, 1);
@@ -164,7 +200,8 @@ export const CalculatorPage = () => {
     const validation = validateQuickCalculationInput(payload);
     
     if (!validation.isValid) {
-      setValidationErrors(validation.errors);
+      setValidationErrors(normalizeValidationErrors(validation.errors, lang));
+      setResult(null);
       return;
     }
 
@@ -200,8 +237,9 @@ export const CalculatorPage = () => {
   };
 
   return (
-    <PageContainer maxWidth="max-w-[1280px]">
-      <div className="calculator-shell pb-24 lg:pb-8">
+    <>
+      <PageContainer maxWidth="max-w-[1280px]" className="py-4 sm:py-5 pb-48 lg:pb-6">
+        <div className="calculator-shell pb-6 lg:pb-6">
         
         {/* Banner Hero */}
         <CalculatorHero />
@@ -220,14 +258,14 @@ export const CalculatorPage = () => {
           <div className="calculator-main">
             
             {/* Friendly Validation Errors summary */}
-            {validationErrors && Object.keys(validationErrors).length > 0 && !hasCalculatedOnce && (
+            {validationErrors?._summary?.length > 0 && (
               <div className="p-4.5 bg-status-lossBg border border-status-loss/20 rounded-2xl flex items-start gap-3 shadow-xs">
                 <AlertTriangle className="w-5 h-5 text-status-loss shrink-0 mt-0.5" />
                 <div>
                   <h4 className="font-extrabold text-status-loss text-sm">{t('calculator.validationHelpTitle', 'Ada yang belum lengkap')}</h4>
                   <ul className="list-disc list-inside text-xs text-status-loss/90 mt-1.5 space-y-1.5 font-bold">
-                    {Object.values(validationErrors).map((err, i) => (
-                      <li key={i}>{err}</li>
+                    {validationErrors._summary.map((err, i) => (
+                      <li key={`${err.field}-${i}`}>{err.message}</li>
                     ))}
                   </ul>
                 </div>
@@ -275,6 +313,7 @@ export const CalculatorPage = () => {
                 outputQuantity={form.outputQuantity}
                 failedQuantity={form.failedQuantity}
                 sellingUnit={form.sellingUnit}
+                customSellingUnit={form.customSellingUnit}
                 onFieldChange={updateField}
                 errors={validationErrors}
                 t={t}
@@ -323,16 +362,17 @@ export const CalculatorPage = () => {
           </div>
         </StaggerContainer>
 
-        {/* Mobile Fixed Sticky Footer */}
-        <CalculatorMobileCta 
-          form={form}
-          result={result}
-          onCalculate={() => handleCalculate(false)}
-          onReset={resetForm}
-          t={t}
-        />
+        </div>
+      </PageContainer>
 
-      </div>
-    </PageContainer>
+      {/* Mobile Fixed Sticky Footer */}
+      <CalculatorMobileCta
+        form={form}
+        result={result}
+        onCalculate={() => handleCalculate(false)}
+        onReset={resetForm}
+        t={t}
+      />
+    </>
   );
 };

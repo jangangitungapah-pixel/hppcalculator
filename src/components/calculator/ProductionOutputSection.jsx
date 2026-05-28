@@ -1,12 +1,14 @@
 import React from 'react';
 import { Input } from '../ui/Input';
 import { Select } from '../ui/Select';
+import { parseLocalizedNumber } from '../../lib/data/calculationMapper';
 import { AlertCircle } from 'lucide-react';
 
 export const ProductionOutputSection = ({ 
   outputQuantity, 
   failedQuantity, 
   sellingUnit, 
+  customSellingUnit,
   onFieldChange, 
   errors, 
   t 
@@ -20,9 +22,10 @@ export const ProductionOutputSection = ({
   ];
 
   // Simple live preview calculation
-  const outputVal = parseFloat(outputQuantity) || 0;
-  const failedVal = parseFloat(failedQuantity) || 0;
+  const outputVal = parseLocalizedNumber(outputQuantity);
+  const failedVal = parseLocalizedNumber(failedQuantity);
   const sellableQty = Math.max(0, outputVal - failedVal);
+  const displayUnit = sellingUnit === 'custom' ? customSellingUnit?.trim() || 'satuan' : sellingUnit;
 
   return (
     <div className="flex flex-col gap-4">
@@ -46,8 +49,18 @@ export const ProductionOutputSection = ({
               value={sellingUnit}
               onChange={(e) => onFieldChange('sellingUnit', e.target.value)}
               containerClassName="w-[110px] shrink-0"
+              error={errors?.sellingUnit}
             />
           </div>
+          {sellingUnit === 'custom' && (
+            <Input
+              label={t('calculator.customSellingUnit', 'Nama satuan')}
+              placeholder="Cth: loyang"
+              value={customSellingUnit || ''}
+              onChange={(e) => onFieldChange('customSellingUnit', e.target.value)}
+              error={errors?.sellingUnit}
+            />
+          )}
         </div>
 
         {/* Failed Quantity */}
@@ -77,7 +90,7 @@ export const ProductionOutputSection = ({
         <div className="sellable-preview">
           <span>Bisa Dijual:</span>
           <span className="font-extrabold text-base">
-            {sellableQty} {sellingUnit}
+            {sellableQty} {displayUnit}
           </span>
         </div>
       )}

@@ -11,7 +11,8 @@ export const Select = React.forwardRef(({
   containerClassName,
   ...props
 }, ref) => {
-  const selectId = id || Math.random().toString(36).substr(2, 9);
+  const generatedId = React.useId();
+  const selectId = id || `select-${generatedId}`;
   const errorId = `${selectId}-error`;
   const helperId = `${selectId}-helper`;
 
