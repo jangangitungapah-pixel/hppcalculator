@@ -141,8 +141,10 @@ export const MarketplacePricingForm = ({ sourceData, onSave }) => {
               const totalFeeText = [feeDesc, paymentDesc].filter(Boolean).join(' ') || '0%';
               
               return (
-                <div 
+                <button
                   key={p.id}
+                  type="button"
+                  aria-pressed={isSelected}
                   onClick={() => setProfileId(isSelected ? '' : p.id)}
                   className={`pricing-channel-card ${isSelected ? 'selected' : ''}`}
                 >
@@ -151,7 +153,7 @@ export const MarketplacePricingForm = ({ sourceData, onSave }) => {
                   {isSelected && (
                     <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-brand-primary" />
                   )}
-                </div>
+                </button>
               );
             })}
           </div>
@@ -195,14 +197,14 @@ export const MarketplacePricingForm = ({ sourceData, onSave }) => {
               
               <div className="grid grid-cols-2 gap-3">
                 <Input
-                  label={t('pricing.commissionPercent') + " (%)"}
+                  label={t('pricing.commissionPercent')}
                   name="commissionPercent"
                   type="number"
                   value={formData.commissionPercent || ''}
                   onChange={handleChange}
                 />
                 <Input
-                  label={t('pricing.paymentFeePercent') + " (%)"}
+                  label={t('pricing.paymentFeePercent')}
                   name="paymentFeePercent"
                   type="number"
                   value={formData.paymentFeePercent || ''}
@@ -219,7 +221,7 @@ export const MarketplacePricingForm = ({ sourceData, onSave }) => {
                   onChange={handleChange}
                 />
                 <Input
-                  label={t('pricing.sellerPromoPercent') + " (%)"}
+                  label={t('pricing.sellerPromoPercent')}
                   name="sellerPromoPercent"
                   type="number"
                   value={formData.sellerPromoPercent || ''}

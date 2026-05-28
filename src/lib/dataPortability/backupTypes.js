@@ -11,3 +11,13 @@ export const BACKUP_MODULES = [
   'pricingSimulations',
   'bundleSimulations'
 ];
+
+export const BACKUP_MODULE_STORAGE_KEYS = {
+  calculations: 'modalin:v1:calculations',
+  ingredients: 'modalin:v1:ingredients',
+  recipes: 'modalin:v1:recipes',
+  products: 'modalin:v1:products',
+  channelProfiles: 'modalin:v1:channelProfiles',
+  pricingSimulations: 'modalin:v1:pricingSimulations',
+  bundleSimulations: 'modalin:v1:bundleSimulations'
+};

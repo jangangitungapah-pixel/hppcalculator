@@ -27,7 +27,7 @@ export const CalculatorMobileCta = ({
   ].filter(Boolean);
 
   return (
-    <div className="calculator-mobile-cta lg:hidden">
+    <div className="calculator-mobile-cta lg:hidden bg-surface/85 backdrop-blur-md border-t border-border/80 shadow-md">
       <div className="calculator-mobile-cta-inner">
         {result ? (
           <>
@@ -36,14 +36,14 @@ export const CalculatorMobileCta = ({
               <Button 
                 variant="secondary" 
                 size="sm" 
-                className="text-xs h-10 border-border bg-surface-muted hover:bg-border/30 text-text-primary px-3"
+                className="text-[11px] h-10 border-border bg-surface-cream hover:bg-border/20 text-text-secondary px-3.5 rounded-xl font-bold"
                 onClick={onReset}
               >
                 {t('calculator.resetButton', 'Reset')}
               </Button>
               <Button 
                 size="sm" 
-                className="text-xs h-10 px-4 font-bold"
+                className="text-[11px] h-10 px-4.5 font-extrabold rounded-xl shadow-md shadow-orange-500/10"
                 onClick={onCalculate}
               >
                 {t('calculator.calculateButton', 'Hitung')}
@@ -53,15 +53,15 @@ export const CalculatorMobileCta = ({
         ) : (
           <>
             <div className="calculator-mobile-summary">
-              <span className="calculator-mobile-summary-label">Status Form:</span>
-              <span className="text-xs text-text-secondary mt-0.5">
+              <span className="text-[10px] font-extrabold uppercase tracking-wider text-text-secondary">Status Form:</span>
+              <span className={`text-xs font-bold mt-0.5 ${isValid ? 'text-emerald-600' : 'text-text-secondary'}`}>
                 {isValid ? 'Siap Dihitung' : `Lengkapi ${missingLabels.join(', ')}`}
               </span>
             </div>
             
             <Button 
               size="sm"
-              className="px-6 h-10 text-xs font-bold shadow-glow-primary"
+              className="px-5 h-10 text-[11px] font-extrabold rounded-xl shadow-md shadow-orange-500/10"
               disabled={!isValid}
               onClick={onCalculate}
             >

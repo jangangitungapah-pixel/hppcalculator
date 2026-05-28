@@ -25,7 +25,7 @@ export const CostItemRow = ({
   ];
 
   return (
-    <div className="cost-item-row">
+    <div className="cost-item-row group/row bg-surface-cream hover:bg-surface border border-border-soft hover:border-orange-500/20 rounded-2xl p-3 sm:p-2 sm:px-3 flex flex-col sm:grid sm:grid-cols-[2fr_1.5fr_1.5fr_auto] gap-2.5 sm:gap-3 items-stretch sm:items-center transition-all duration-300 shadow-xs hover:shadow-sm">
       {/* Name Input */}
       <div className="cost-item-field-wrap">
         <Input
@@ -33,7 +33,7 @@ export const CostItemRow = ({
           value={item.name}
           onChange={(e) => onChange(index, 'name', e.target.value)}
           containerClassName="w-full"
-          className="bg-transparent border-transparent hover:bg-black/5 focus:bg-surface focus:border-primary shadow-none h-11 px-3"
+          className="bg-transparent border-transparent hover:bg-black/[0.03] focus:bg-surface focus:border-orange-500/50 focus:ring-4 focus:ring-orange-500/10 shadow-none h-11 px-3 rounded-xl transition-all duration-200 text-sm font-semibold"
           aria-label={`${t('calculator.costName')} ${rowNumber}`}
         />
       </div>
@@ -45,13 +45,13 @@ export const CostItemRow = ({
           value={item.category}
           onChange={(e) => onChange(index, 'category', e.target.value)}
           containerClassName="w-full"
-          className="bg-transparent border-transparent hover:bg-black/5 focus:bg-surface focus:border-primary shadow-none h-11 px-3"
+          className="bg-transparent border-transparent hover:bg-black/[0.03] focus:bg-surface focus:border-orange-500/50 focus:ring-4 focus:ring-orange-500/10 shadow-none h-11 px-3 rounded-xl transition-all duration-200 text-sm font-semibold"
           aria-label={`${t('calculator.costCategory')} ${rowLabel}`}
         />
       </div>
 
       {/* Amount Input & Remove Trigger */}
-      <div className="cost-item-field-wrap cost-item-amount-wrap">
+      <div className="cost-item-field-wrap cost-item-amount-wrap flex items-center gap-2">
         <Input
           type="number"
           min="0"
@@ -60,23 +60,21 @@ export const CostItemRow = ({
           value={item.amount || ''}
           onChange={(e) => onChange(index, 'amount', e.target.value)}
           containerClassName="flex-1"
-          className="bg-transparent border-transparent hover:bg-black/5 focus:bg-surface focus:border-primary shadow-none h-11 pl-10 pr-3 font-semibold"
+          className="bg-transparent border-transparent hover:bg-black/[0.03] focus:bg-surface focus:border-orange-500/50 focus:ring-4 focus:ring-orange-500/10 shadow-none h-11 pl-10 pr-3 rounded-xl transition-all duration-200 text-sm font-bold text-text-primary"
           aria-label={`${t('calculator.costAmount')} ${rowLabel}`}
         />
         
         <div className="shrink-0 flex items-center justify-center">
           {canRemove ? (
-            <Button 
+            <button 
               type="button"
-              variant="ghost"
-              size="icon"
               onClick={() => onRemove(index)}
-              className="cost-item-delete w-10 h-10"
+              className="w-10 h-10 rounded-full flex items-center justify-center text-text-muted hover:text-red-500 hover:bg-red-500/10 active:scale-95 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500/20"
               title={`${t('calculator.removeCost')} ${rowLabel}`}
               aria-label={`${t('calculator.removeCost')} ${rowLabel}`}
             >
               <Trash2 className="w-4 h-4" />
-            </Button>
+            </button>
           ) : (
             <div className="w-10"></div>
           )}

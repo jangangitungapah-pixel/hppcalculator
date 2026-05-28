@@ -126,8 +126,10 @@ export const ConsignmentPricingForm = ({ sourceData, onSave }) => {
               const feeDesc = p.consignmentFeePercent > 0 ? `${p.consignmentFeePercent}%` : '0%';
               
               return (
-                <div 
+                <button
                   key={p.id}
+                  type="button"
+                  aria-pressed={isSelected}
                   onClick={() => setProfileId(isSelected ? '' : p.id)}
                   className={`pricing-channel-card ${isSelected ? 'selected' : ''}`}
                 >
@@ -136,7 +138,7 @@ export const ConsignmentPricingForm = ({ sourceData, onSave }) => {
                   {isSelected && (
                     <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-brand-primary" />
                   )}
-                </div>
+                </button>
               );
             })}
           </div>
@@ -178,7 +180,7 @@ export const ConsignmentPricingForm = ({ sourceData, onSave }) => {
                 min="1"
               />
               <Input
-                label={t('pricing.storeFee') + " (%)"}
+                label={t('pricing.consignmentFeePercent')}
                 name="consignmentFeePercent"
                 type="number"
                 value={formData.consignmentFeePercent || ''}
@@ -192,7 +194,7 @@ export const ConsignmentPricingForm = ({ sourceData, onSave }) => {
                 onChange={handleChange}
               />
               <Input
-                label="Target Margin (%)"
+                label={t('pricing.targetMargin')}
                 name="targetMarginPercent"
                 type="number"
                 value={formData.targetMarginPercent || ''}

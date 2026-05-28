@@ -13,20 +13,19 @@ export const ReportPeriodFilter = ({ period, onChange }) => {
   ];
 
   return (
-    <div className="flex bg-surface-muted p-1 rounded-lg w-full sm:w-auto overflow-x-auto">
+    <div className="report-period-filter" role="radiogroup" aria-label={t('reports.periodFilterLabel')}>
       {options.map((opt) => {
         const isActive = period === opt.value;
         return (
           <Button
             key={opt.value}
-            variant={isActive ? 'white' : 'ghost'}
+            type="button"
+            role="radio"
+            aria-checked={isActive}
+            variant="ghost"
             size="xs"
             onClick={() => onChange(opt.value)}
-            className={`flex-1 sm:flex-none rounded-md transition-all ${
-              isActive 
-                ? 'text-brand-primary shadow-sm font-semibold' 
-                : 'text-text-secondary hover:text-text-primary font-semibold'
-            }`}
+            className={`report-period-option ${isActive ? 'is-active' : ''}`}
           >
             {opt.label}
           </Button>

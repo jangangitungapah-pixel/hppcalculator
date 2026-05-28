@@ -129,7 +129,7 @@ export const PromoPricingForm = ({ sourceData, onSave }) => {
 
             {formData.promoType === 'percent' && (
               <Input
-                label={t('pricing.percentDiscount') + " (%)"}
+                label={t('pricing.percentDiscount')}
                 name="discountPercent"
                 type="number"
                 value={formData.discountPercent || ''}

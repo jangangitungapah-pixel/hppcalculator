@@ -25,28 +25,36 @@ export const createQuickCalculatorInputFromRecipe = (recipe, sellingPrice = 0, s
   
   if (recipe.resultSnapshot.totalIngredientCost > 0) {
     costItems.push({
-      id: crypto.randomUUID(),
+      id: typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : Math.random().toString(36).substring(7),
       name: 'Total Bahan Baku (Resep)',
-      amount: recipe.resultSnapshot.totalIngredientCost,
-      category: 'ingredients'
+      amount: String(recipe.resultSnapshot.totalIngredientCost),
+      category: 'Bahan'
     });
   }
   
   if (recipe.resultSnapshot.totalExtraCost > 0) {
     costItems.push({
-      id: crypto.randomUUID(),
+      id: typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : Math.random().toString(36).substring(7),
       name: 'Total Biaya Tambahan (Resep)',
-      amount: recipe.resultSnapshot.totalExtraCost,
-      category: 'other'
+      amount: String(recipe.resultSnapshot.totalExtraCost),
+      category: 'Lainnya'
     });
   }
 
+  // Handle custom selling units
+  const knownUnits = ['pcs', 'porsi', 'cup', 'box'];
+  const isKnownUnit = knownUnits.includes(recipe.outputUnit);
+
   return {
     productName: recipe.name,
-    costItems,
-    outputQuantity: recipe.outputQuantity,
-    failedQuantity: recipe.failedQuantity || 0,
-    sellingUnit: recipe.outputUnit || 'pcs',
-    sellingPrice: sellingPrice || 0
+    costItems: costItems.length > 0 ? costItems : [
+      { id: '1', name: 'Biaya Bahan', category: 'Bahan', amount: '' }
+    ],
+    outputQuantity: String(recipe.outputQuantity || ''),
+    failedQuantity: String(recipe.failedQuantity || '0'),
+    sellingUnit: isKnownUnit ? recipe.outputUnit : 'custom',
+    customSellingUnit: isKnownUnit ? '' : recipe.outputUnit || '',
+    sellingPrice: String(sellingPrice || '')
   };
 };
+

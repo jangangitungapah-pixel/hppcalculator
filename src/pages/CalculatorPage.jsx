@@ -259,11 +259,11 @@ export const CalculatorPage = () => {
             
             {/* Friendly Validation Errors summary */}
             {validationErrors?._summary?.length > 0 && (
-              <div className="p-4.5 bg-status-lossBg border border-status-loss/20 rounded-2xl flex items-start gap-3 shadow-xs">
-                <AlertTriangle className="w-5 h-5 text-status-loss shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="font-extrabold text-status-loss text-sm">{t('calculator.validationHelpTitle', 'Ada yang belum lengkap')}</h4>
-                  <ul className="list-disc list-inside text-xs text-status-loss/90 mt-1.5 space-y-1.5 font-bold">
+              <div className="p-5 bg-red-500/[0.07] border border-red-500/20 rounded-3xl flex items-start gap-3.5 shadow-xs animate-fade-in mb-2">
+                <AlertTriangle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <h4 className="font-extrabold text-red-900 text-sm">{t('calculator.validationHelpTitle', 'Ada yang belum lengkap')}</h4>
+                  <ul className="list-disc list-inside text-xs text-red-800 mt-2 space-y-2 font-semibold">
                     {validationErrors._summary.map((err, i) => (
                       <li key={`${err.field}-${i}`}>{err.message}</li>
                     ))}

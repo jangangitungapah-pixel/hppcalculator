@@ -1,100 +1,59 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BarChart3, ChevronRight } from 'lucide-react';
 import { FadeIn } from '../motion/FadeIn';
-import { Button } from '../ui/Button';
 
 export const DashboardBusinessPulse = ({ summary }) => {
   const navigate = useNavigate();
-
   if (!summary) return null;
 
   const total = (summary.healthyCount || 0) + (summary.lowCount || 0) + (summary.lossCount || 0);
-  const healthyPercent = total > 0 ? ((summary.healthyCount || 0) / total) * 100 : 0;
-  const lowPercent = total > 0 ? ((summary.lowCount || 0) / total) * 100 : 0;
-  const lossPercent = total > 0 ? ((summary.lossCount || 0) / total) * 100 : 0;
-  const formatPercent = (value) => `${Math.round(value)}%`;
+  const hp = total > 0 ? (summary.healthyCount / total) * 100 : 0;
+  const lp = total > 0 ? (summary.lowCount / total) * 100 : 0;
+  const lsp = total > 0 ? (summary.lossCount / total) * 100 : 0;
 
-  // Resolve status text
-  let statusText = "Menu Anda memiliki profit margin yang baik.";
-  if (total <= 2) {
-    statusText = "Data masih sedikit, lanjutkan input produk";
-  } else if (summary.lossCount > 0) {
-    statusText = "Ada item yang perlu dicek (mengalami kerugian)";
-  } else if (summary.averageMargin >= 25) {
-    statusText = "Margin rata-rata sehat (di atas target minimum)";
-  }
+  const overallHealth =
+    summary.lossCount > 0 ? { label: 'Perlu Perhatian', color: 'text-red-600', bg: 'bg-red-50', border: 'border-red-200' } :
+    summary.averageMargin >= 25 ? { label: 'Bisnis Sehat', color: 'text-emerald-700', bg: 'bg-emerald-50', border: 'border-emerald-200' } :
+    { label: 'Perlu Ditingkatkan', color: 'text-amber-700', bg: 'bg-amber-50', border: 'border-amber-200' };
 
   return (
     <FadeIn>
-      <div className="business-pulse-card">
-        <div className="business-pulse-header">
-          <h3 className="business-pulse-title">Business Pulse</h3>
-          <span className="business-pulse-status">{statusText}</span>
-        </div>
-
-        <div
-          className="business-pulse-bar"
-          role="img"
-          aria-label={`Komposisi margin: ${summary.healthyCount || 0} margin sehat (${formatPercent(healthyPercent)}), ${summary.lowCount || 0} margin tipis (${formatPercent(lowPercent)}), ${summary.lossCount || 0} rugi (${formatPercent(lossPercent)}).`}
-        >
-          {healthyPercent > 0 && (
-            <div 
-              className="business-pulse-segment healthy" 
-              style={{ width: `${healthyPercent}%` }} 
-              title={`Healthy: ${summary.healthyCount} items`}
-              aria-hidden="true"
-            />
-          )}
-          {lowPercent > 0 && (
-            <div 
-              className="business-pulse-segment low" 
-              style={{ width: `${lowPercent}%` }} 
-              title={`Low Margin: ${summary.lowCount} items`}
-              aria-hidden="true"
-            />
-          )}
-          {lossPercent > 0 && (
-            <div 
-              className="business-pulse-segment loss" 
-              style={{ width: `${lossPercent}%` }} 
-              title={`Loss: ${summary.lossCount} items`}
-              aria-hidden="true"
-            />
-          )}
-          {total === 0 && (
-            <div 
-              className="w-full h-full bg-border-soft" 
-              title="Belum ada data produk"
-              aria-hidden="true"
-            />
-          )}
-        </div>
-
-        <div className="business-pulse-footer">
-          <div className="business-pulse-legends">
-            <div className="business-pulse-legend">
-              <span className="business-pulse-legend-dot healthy"></span>
-              <span>Margin Sehat ({summary.healthyCount || 0}, {formatPercent(healthyPercent)})</span>
-            </div>
-            <div className="business-pulse-legend">
-              <span className="business-pulse-legend-dot low"></span>
-              <span>Margin Tipis ({summary.lowCount || 0}, {formatPercent(lowPercent)})</span>
-            </div>
-            <div className="business-pulse-legend">
-              <span className="business-pulse-legend-dot loss"></span>
-              <span>Rugi ({summary.lossCount || 0}, {formatPercent(lossPercent)})</span>
-            </div>
+      <div className={`rounded-2xl border p-5 mb-6 ${overallHealth.bg} ${overallHealth.border}`}>
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <div className="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Business Pulse</div>
+            <div className={`text-base font-bold ${overallHealth.color}`}>{overallHealth.label}</div>
           </div>
-          <Button 
-            variant="link"
-            size="sm"
-            className="text-xs font-bold"
+          <button
             onClick={() => navigate('/reports')}
-            iconRight={<ChevronRight className="w-3.5 h-3.5" />}
+            className="text-xs font-bold text-brand-primary hover:underline"
           >
-            Laporan Detail
-          </Button>
+            Laporan Detail →
+          </button>
+        </div>
+
+        {/* Segmented bar */}
+        <div className="h-3 rounded-full overflow-hidden flex gap-0.5 mb-4">
+          {hp > 0 && <div className="bg-emerald-500 rounded-full transition-all duration-700" style={{ width: `${hp}%` }} />}
+          {lp > 0 && <div className="bg-amber-400 rounded-full transition-all duration-700" style={{ width: `${lp}%` }} />}
+          {lsp > 0 && <div className="bg-red-500 rounded-full transition-all duration-700" style={{ width: `${lsp}%` }} />}
+          {total === 0 && <div className="w-full bg-border-soft rounded-full" />}
+        </div>
+
+        {/* Legend */}
+        <div className="flex flex-wrap gap-4">
+          {[
+            { dot: 'bg-emerald-500', label: 'Sehat', count: summary.healthyCount || 0, pct: hp },
+            { dot: 'bg-amber-400', label: 'Tipis', count: summary.lowCount || 0, pct: lp },
+            { dot: 'bg-red-500', label: 'Rugi', count: summary.lossCount || 0, pct: lsp },
+          ].map(seg => (
+            <div key={seg.label} className="flex items-center gap-1.5 text-xs text-text-secondary">
+              <span className={`w-2 h-2 rounded-full ${seg.dot}`} />
+              <span className="font-medium">{seg.label}</span>
+              <span className="font-bold text-text-primary">{seg.count}</span>
+              <span className="text-text-muted">({Math.round(seg.pct)}%)</span>
+            </div>
+          ))}
         </div>
       </div>
     </FadeIn>

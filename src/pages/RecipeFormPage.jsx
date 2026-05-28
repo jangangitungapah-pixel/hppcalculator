@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Save, Plus, Trash2, GripVertical } from 'lucide-react';
+import { ArrowLeft, Save, Plus, Trash2, Tag, Calculator, ChefHat } from 'lucide-react';
 import { PageContainer } from '../components/layout/PageContainer';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
@@ -63,6 +63,40 @@ export const RecipeFormPage = () => {
       }
     }
   }, [id, isEdit, getRecipeById, navigate]);
+
+  // Live calculation of recipe cost based on form state
+  const liveStats = useMemo(() => {
+    let totalIngredientCost = 0;
+    form.ingredients.forEach(ing => {
+      const selectedIng = ingredients.find(i => i.id === ing.ingredientId);
+      if (selectedIng) {
+        totalIngredientCost += calculateIngredientUsageCost(
+          selectedIng, 
+          Number(ing.usedQuantity) || 0, 
+          ing.usedUnit
+        );
+      }
+    });
+
+    let totalExtraCost = 0;
+    form.extraCosts.forEach(cost => {
+      totalExtraCost += Number(cost.amount) || 0;
+    });
+
+    const totalCost = totalIngredientCost + totalExtraCost;
+    const outQty = Number(form.outputQuantity) || 1;
+    const failedQty = Number(form.failedQuantity) || 0;
+    const sellableQty = Math.max(0, outQty - failedQty);
+    const hppPerUnit = sellableQty > 0 ? totalCost / sellableQty : 0;
+
+    return {
+      totalIngredientCost,
+      totalExtraCost,
+      totalCost,
+      hppPerUnit,
+      sellableQty
+    };
+  }, [form.ingredients, form.extraCosts, form.outputQuantity, form.failedQuantity, ingredients]);
 
   const updateField = (field, value) => {
     setForm(prev => ({ ...prev, [field]: value }));
@@ -208,232 +242,327 @@ export const RecipeFormPage = () => {
   };
 
   return (
-    <PageContainer maxWidth="max-w-3xl">
-      <div className="mb-6 flex items-center gap-4">
-        <Button 
-          variant="ghost" 
-          size="icon" 
+    <PageContainer maxWidth="max-w-5xl" className="py-4 sm:py-5">
+      {/* Top Header */}
+      <div className="mb-6 flex items-center gap-3">
+        <button 
           onClick={() => navigate('/recipes')}
           aria-label={t('common.back', 'Kembali')}
-          className="-ml-2"
+          className="w-9 h-9 rounded-full flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-surface-cream border border-border-soft hover:border-border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
         >
-          <ArrowLeft className="w-5 h-5 text-text-secondary" />
-        </Button>
-        <h1 className="text-2xl font-bold text-text-primary">
+          <ArrowLeft className="w-4.5 h-4.5" />
+        </button>
+        <h1 className="text-xl sm:text-2xl font-extrabold text-text-primary tracking-tight">
           {isEdit ? t('recipes.editRecipe') : t('recipes.createRecipe')}
         </h1>
       </div>
 
-      <div className="space-y-6">
-        {/* Basic Info */}
-        <div className="bg-surface border border-border p-4 sm:p-6 rounded-2xl shadow-sm">
-          <h2 className="text-lg font-bold text-text-primary mb-4">Informasi Dasar</h2>
-          <div className="space-y-4">
-            <Input 
-              label={t('recipes.recipeName')}
-              placeholder="Cth: Donat Coklat Lumer"
-              value={form.name}
-              onChange={(e) => updateField('name', e.target.value)}
-              error={errors.name && t('errors.recipeNameRequired')}
-            />
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Column: Form Fields */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Basic Info */}
+          <div className="bg-surface border border-border/80 p-5 sm:p-6 rounded-3xl shadow-xs">
+            <h2 className="text-sm font-extrabold text-text-primary uppercase tracking-wider mb-4 pb-2 border-b border-border-soft">
+              Informasi Dasar
+            </h2>
+            <div className="space-y-4">
               <Input 
-                label={t('recipes.recipeCategory')}
-                placeholder="Cth: Makanan, Minuman"
-                value={form.category}
-                onChange={(e) => updateField('category', e.target.value)}
+                label={t('recipes.recipeName')}
+                placeholder="Cth: Donat Coklat Lumer"
+                value={form.name}
+                onChange={(e) => updateField('name', e.target.value)}
+                error={errors.name && t('errors.recipeNameRequired')}
+                className="bg-surface-cream border-border/80 rounded-xl"
               />
-              <Input 
-                label={t('recipes.description')}
-                placeholder="Deskripsi singkat"
-                value={form.description}
-                onChange={(e) => updateField('description', e.target.value)}
-              />
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Input 
-                type="number"
-                min="0"
-                label={t('recipes.outputQuantity')}
-                placeholder="1"
-                value={form.outputQuantity}
-                onChange={(e) => updateField('outputQuantity', e.target.value)}
-                error={errors.outputQuantity && t('errors.outputRequired')}
-              />
-              <Select 
-                label={t('recipes.outputUnit')}
-                value={form.outputUnit}
-                onChange={(e) => updateField('outputUnit', e.target.value)}
-                options={[
-                  { value: 'pcs', label: 'Pcs / Buah' },
-                  { value: 'porsi', label: 'Porsi' },
-                  { value: 'cup', label: 'Cup' },
-                  { value: 'loyang', label: 'Loyang' },
-                  { value: 'toples', label: 'Toples' },
-                  { value: 'box', label: 'Box / Kotak' }
-                ]}
-              />
-              <Input 
-                type="number"
-                min="0"
-                label={t('recipes.failedQuantity')}
-                placeholder="0"
-                value={form.failedQuantity}
-                onChange={(e) => updateField('failedQuantity', e.target.value)}
-              />
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Input 
+                  label={t('recipes.recipeCategory')}
+                  placeholder="Cth: Makanan, Roti, Minuman"
+                  value={form.category}
+                  onChange={(e) => updateField('category', e.target.value)}
+                  className="bg-surface-cream border-border/80 rounded-xl"
+                />
+                <Input 
+                  label={t('recipes.description')}
+                  placeholder="Deskripsi singkat resep"
+                  value={form.description}
+                  onChange={(e) => updateField('description', e.target.value)}
+                  className="bg-surface-cream border-border/80 rounded-xl"
+                />
+              </div>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <Input 
+                  type="number"
+                  min="0"
+                  label={t('recipes.outputQuantity')}
+                  placeholder="1"
+                  value={form.outputQuantity}
+                  onChange={(e) => updateField('outputQuantity', e.target.value)}
+                  error={errors.outputQuantity && t('errors.outputRequired')}
+                  className="bg-surface-cream border-border/80 rounded-xl font-bold text-center"
+                />
+                <Select 
+                  label={t('recipes.outputUnit')}
+                  value={form.outputUnit}
+                  onChange={(e) => updateField('outputUnit', e.target.value)}
+                  options={[
+                    { value: 'pcs', label: 'Pcs / Buah' },
+                    { value: 'porsi', label: 'Porsi' },
+                    { value: 'cup', label: 'Cup' },
+                    { value: 'loyang', label: 'Loyang' },
+                    { value: 'toples', label: 'Toples' },
+                    { value: 'box', label: 'Box / Kotak' }
+                  ]}
+                  className="bg-surface-cream border-border/80 rounded-xl"
+                />
+                <Input 
+                  type="number"
+                  min="0"
+                  label={t('recipes.failedQuantity')}
+                  placeholder="0"
+                  value={form.failedQuantity}
+                  onChange={(e) => updateField('failedQuantity', e.target.value)}
+                  className="bg-surface-cream border-border/80 rounded-xl font-bold text-center"
+                />
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Ingredients */}
-        <div className="bg-surface border border-border p-4 sm:p-6 rounded-2xl shadow-sm">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-bold text-text-primary">{t('recipes.ingredients')}</h2>
-            <Button variant="secondary" size="sm" onClick={addIngredient}>
-              Tambah Bahan
-            </Button>
-          </div>
-
-          {errors.ingredients && (
-            <div className="text-status-loss text-sm mb-4 bg-status-loss/10 p-3 rounded-xl border border-status-loss/20">
-              {t('errors.ingredientRequired')}
+          {/* Ingredients */}
+          <div className="bg-surface border border-border/80 p-5 sm:p-6 rounded-3xl shadow-xs">
+            <div className="flex justify-between items-center pb-2 border-b border-border-soft mb-4">
+              <h2 className="text-sm font-extrabold text-text-primary uppercase tracking-wider">
+                {t('recipes.ingredients')}
+              </h2>
+              <Button 
+                variant="secondary" 
+                size="sm" 
+                onClick={addIngredient}
+                className="h-8 text-xs font-bold border border-border bg-surface-cream text-text-secondary hover:bg-border/20 rounded-lg px-3"
+              >
+                Tambah Bahan
+              </Button>
             </div>
-          )}
 
-          {form.ingredients.length === 0 ? (
-            <div className="text-center py-8 text-text-secondary border border-dashed border-border rounded-xl bg-surface-muted/30">
-              Belum ada bahan yang ditambahkan.
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {form.ingredients.map((ing, index) => (
-                <div key={ing.id} className="flex flex-col md:flex-row gap-3 p-3 border border-border rounded-xl bg-background items-start md:items-center">
-                  <div className="flex-1 w-full relative flex items-center group">
-                    <select 
-                      className="w-full bg-surface border border-border rounded-lg pl-3 pr-8 py-2 text-text-primary appearance-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200"
-                      value={ing.ingredientId}
-                      onChange={(e) => updateIngredient(index, 'ingredientId', e.target.value)}
-                      aria-label="Pilih Bahan Baku"
-                    >
-                      {ingredients.map(i => (
-                        <option key={i.id} value={i.id}>{i.name}</option>
-                      ))}
-                    </select>
-                    <div className="absolute right-2.5 pointer-events-none text-text-muted group-focus-within:text-primary transition-colors">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="flex gap-2 w-full md:w-auto">
-                    <input 
-                      type="number"
-                      min="0"
-                      step="any"
-                      placeholder="Jml"
-                      className="w-full flex-1 md:w-24 md:flex-none bg-surface border border-border rounded-lg px-3 py-2 text-text-primary focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200"
-                      value={ing.usedQuantity}
-                      onChange={(e) => updateIngredient(index, 'usedQuantity', e.target.value)}
-                      aria-label="Jumlah Bahan"
-                    />
-                    <div className="relative flex-1 w-full md:w-40 md:flex-none flex items-center group">
-                      <select 
-                        className="w-full md:w-40 bg-surface border border-border rounded-lg pl-3 pr-8 py-2 text-text-primary appearance-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200"
-                        value={ing.usedUnit}
-                        onChange={(e) => updateIngredient(index, 'usedUnit', e.target.value)}
-                        aria-label="Satuan Bahan"
-                      >
-                        {unitOptions.map(u => (
-                          <option key={u.value} value={u.value}>{u.label}</option>
-                        ))}
-                      </select>
-                      <div className="absolute right-2.5 pointer-events-none text-text-muted group-focus-within:text-primary transition-colors">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
+            {errors.ingredients && (
+              <div className="text-status-loss text-xs mb-4 bg-status-loss/5 p-3 rounded-xl border border-status-loss/15 font-semibold">
+                {t('errors.ingredientRequired')}
+              </div>
+            )}
+
+            {form.ingredients.length === 0 ? (
+              <div className="text-center py-10 text-text-secondary border border-dashed border-border/80 rounded-2xl bg-surface-cream/50 text-xs font-semibold leading-relaxed">
+                Belum ada bahan baku yang dimasukkan.<br/>Klik tombol "Tambah Bahan" di atas.
+              </div>
+            ) : (
+              <div className="space-y-2.5">
+                {form.ingredients.map((ing, index) => {
+                  const selectedIng = ingredients.find(i => i.id === ing.ingredientId);
+                  const ingCost = getIngredientCost(ing);
+
+                  return (
+                    <div key={ing.id} className="flex flex-col sm:flex-row gap-3 p-3.5 border border-border-soft rounded-2xl bg-surface-cream/40 items-stretch sm:items-center relative group transition-all hover:border-border">
+                      {/* Ingredient Selector */}
+                      <div className="flex-1 min-w-0 relative flex items-center">
+                        <select 
+                          className="w-full bg-surface border border-border-soft rounded-xl pl-3.5 pr-9 py-2 text-xs font-bold text-text-primary appearance-none focus:outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all"
+                          value={ing.ingredientId}
+                          onChange={(e) => updateIngredient(index, 'ingredientId', e.target.value)}
+                          aria-label="Pilih Bahan Baku"
+                        >
+                          {ingredients.map(i => (
+                            <option key={i.id} value={i.id}>{i.name}</option>
+                          ))}
+                        </select>
+                        <div className="absolute right-3 pointer-events-none text-text-secondary">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                          </svg>
+                        </div>
+                      </div>
+
+                      {/* Quantity Input */}
+                      <div className="flex items-center gap-2">
+                        <input 
+                          type="number"
+                          min="0"
+                          step="any"
+                          placeholder="Jml"
+                          className="w-full sm:w-20 bg-surface border border-border-soft rounded-xl px-3 py-2 text-xs font-bold text-text-primary text-center focus:outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all"
+                          value={ing.usedQuantity}
+                          onChange={(e) => updateIngredient(index, 'usedQuantity', e.target.value)}
+                          aria-label="Jumlah Bahan"
+                        />
+
+                        {/* Unit Selector */}
+                        <div className="relative w-full sm:w-32 flex items-center">
+                          <select 
+                            className="w-full bg-surface border border-border-soft rounded-xl pl-3.5 pr-8 py-2 text-xs font-bold text-text-primary appearance-none focus:outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all"
+                            value={ing.usedUnit}
+                            onChange={(e) => updateIngredient(index, 'usedUnit', e.target.value)}
+                            aria-label="Satuan Bahan"
+                          >
+                            {unitOptions.map(u => (
+                              <option key={u.value} value={u.value}>{u.label}</option>
+                            ))}
+                          </select>
+                          <div className="absolute right-2.5 pointer-events-none text-text-secondary">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                              <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                          </div>
+                        </div>
+
+                        {/* Price Badge Preview */}
+                        <div className="hidden sm:flex items-center justify-end w-24 shrink-0 text-right pr-2">
+                          <span className="text-xs font-extrabold text-text-primary">
+                            {formatCurrency(ingCost, lang, settings.currency)}
+                          </span>
+                        </div>
+
+                        {/* Delete Button */}
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          onClick={() => removeIngredient(index)}
+                          aria-label="Hapus Bahan"
+                          className="h-9 w-9 rounded-xl hover:bg-red-500/10 hover:text-red-700 text-text-secondary border border-transparent hover:border-red-500/10"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
                       </div>
                     </div>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      onClick={() => removeIngredient(index)}
-                      aria-label="Hapus Bahan"
-                      className="text-text-secondary hover:text-status-loss"
-                    >
-                      <Trash2 className="w-5 h-5" />
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Extra Costs */}
-        <div className="bg-surface border border-border p-4 sm:p-6 rounded-2xl shadow-sm">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-bold text-text-primary">{t('recipes.extraCosts')}</h2>
-            <Button variant="secondary" size="sm" onClick={addExtraCost}>
-              <Plus className="w-4 h-4 mr-1" /> Tambah Biaya
-            </Button>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
-          {form.extraCosts.length === 0 ? (
-            <div className="text-center py-6 text-text-secondary border border-dashed border-border rounded-xl bg-surface-muted/30">
-              Belum ada biaya tambahan (kemasan, operasional, dll).
+          {/* Extra Costs */}
+          <div className="bg-surface border border-border/80 p-5 sm:p-6 rounded-3xl shadow-xs">
+            <div className="flex justify-between items-center pb-2 border-b border-border-soft mb-4">
+              <h2 className="text-sm font-extrabold text-text-primary uppercase tracking-wider">
+                {t('recipes.extraCosts')}
+              </h2>
+              <Button 
+                variant="secondary" 
+                size="sm" 
+                onClick={addExtraCost}
+                className="h-8 text-xs font-bold border border-border bg-surface-cream text-text-secondary hover:bg-border/20 rounded-lg px-3"
+              >
+                <Plus className="w-3.5 h-3.5 mr-1" /> Tambah Biaya
+              </Button>
             </div>
-          ) : (
-            <div className="space-y-3">
-              {form.extraCosts.map((cost, index) => (
-                <div key={cost.id} className="flex flex-col md:flex-row gap-3 p-3 border border-border rounded-xl bg-background items-start md:items-center">
-                  <div className="flex-1 w-full">
-                    <input 
-                      type="text"
-                      placeholder="Nama Biaya (cth: Plastik, Gas)"
-                      className="w-full bg-surface border border-border rounded-lg px-3 py-2 text-text-primary focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200"
-                      value={cost.name}
-                      onChange={(e) => updateExtraCost(index, 'name', e.target.value)}
-                      aria-label="Nama Biaya Tambahan"
-                    />
-                  </div>
-                  <div className="flex gap-2 w-full md:w-auto">
-                    <div className="relative flex-1 w-full md:w-40 md:flex-none">
-                      <span className="absolute left-3 top-2.5 text-text-secondary text-sm">Rp</span>
+
+            {form.extraCosts.length === 0 ? (
+              <div className="text-center py-8 text-text-secondary border border-dashed border-border/80 rounded-2xl bg-surface-cream/50 text-xs font-semibold leading-relaxed">
+                Belum ada biaya operasional / kemasan tambahan.<br/>Klik tombol "Tambah Biaya" di atas.
+              </div>
+            ) : (
+              <div className="space-y-2.5">
+                {form.extraCosts.map((cost, index) => (
+                  <div key={cost.id} className="flex flex-col sm:flex-row gap-3 p-3.5 border border-border-soft rounded-2xl bg-surface-cream/40 items-stretch sm:items-center relative transition-all hover:border-border">
+                    <div className="flex-1">
                       <input 
-                        type="number"
-                        min="0"
-                        placeholder="0"
-                        className="w-full bg-surface border border-border rounded-lg pl-9 pr-3 py-2 text-text-primary focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200"
-                        value={cost.amount}
-                        onChange={(e) => updateExtraCost(index, 'amount', e.target.value)}
-                        aria-label="Jumlah Biaya Tambahan"
+                        type="text"
+                        placeholder="Nama Biaya (cth: Kemasan Box, Tabung Gas)"
+                        className="w-full bg-surface border border-border-soft rounded-xl px-3.5 py-2 text-xs font-bold text-text-primary focus:outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all"
+                        value={cost.name}
+                        onChange={(e) => updateExtraCost(index, 'name', e.target.value)}
+                        aria-label="Nama Biaya Tambahan"
                       />
                     </div>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      onClick={() => removeExtraCost(index)}
-                      aria-label="Hapus Biaya Tambahan"
-                      className="text-text-secondary hover:text-status-loss"
-                    >
-                      <Trash2 className="w-5 h-5" />
-                    </Button>
+                    <div className="flex gap-2 items-center">
+                      <div className="relative flex-1 sm:w-36">
+                        <span className="absolute left-3.5 top-2.5 text-text-secondary text-xs font-bold">Rp</span>
+                        <input 
+                          type="number"
+                          min="0"
+                          placeholder="0"
+                          className="w-full bg-surface border border-border-soft rounded-xl pl-9 pr-3.5 py-2 text-xs font-bold text-text-primary focus:outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all"
+                          value={cost.amount}
+                          onChange={(e) => updateExtraCost(index, 'amount', e.target.value)}
+                          aria-label="Jumlah Biaya Tambahan"
+                        />
+                      </div>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        onClick={() => removeExtraCost(index)}
+                        aria-label="Hapus Biaya Tambahan"
+                        className="h-9 w-9 rounded-xl hover:bg-red-500/10 hover:text-red-700 text-text-secondary border border-transparent hover:border-red-500/10"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
 
-      <div className="mt-8 flex justify-end">
-        <Button className="w-full sm:w-auto px-8 py-4 text-lg" onClick={handleSave}>
-          <Save className="w-5 h-5 mr-2" />
-          {t('common.save')}
-        </Button>
+        {/* Right Column: Sticky Live Estimator Card */}
+        <div className="space-y-6">
+          <div className="bg-surface border border-border/80 p-5 sm:p-6 rounded-3xl shadow-xs lg:sticky lg:top-6 space-y-5">
+            <h3 className="font-extrabold text-sm text-text-primary uppercase tracking-wider flex items-center gap-2">
+              <Calculator className="w-5 h-5 text-brand-primary" />
+              Live HPP Preview
+            </h3>
+            
+            <div className="space-y-3.5">
+              <div className="bg-surface-cream border border-border-soft rounded-2xl p-4 flex justify-between items-center">
+                <div>
+                  <p className="text-[10px] text-text-secondary font-extrabold uppercase tracking-wider mb-0.5">Biaya Bahan Baku</p>
+                  <p className="text-sm font-black text-text-primary">
+                    {formatCurrency(liveStats.totalIngredientCost, lang, settings.currency)}
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-surface-cream border border-border-soft rounded-2xl p-4 flex justify-between items-center">
+                <div>
+                  <p className="text-[10px] text-text-secondary font-extrabold uppercase tracking-wider mb-0.5">Biaya Tambahan</p>
+                  <p className="text-sm font-black text-text-primary">
+                    {formatCurrency(liveStats.totalExtraCost, lang, settings.currency)}
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-surface-cream border border-border-soft rounded-2xl p-4 flex justify-between items-center">
+                <div>
+                  <p className="text-[10px] text-text-secondary font-extrabold uppercase tracking-wider mb-0.5">Total Modal Resep</p>
+                  <p className="text-sm font-black text-text-primary">
+                    {formatCurrency(liveStats.totalCost, lang, settings.currency)}
+                  </p>
+                </div>
+              </div>
+
+              <div className="relative rounded-2xl overflow-hidden p-5 bg-gradient-to-br from-orange-500 via-orange-400 to-amber-400 shadow-md border border-orange-400/10 text-white text-center">
+                <div className="absolute -top-10 -right-10 w-24 h-24 bg-white/10 rounded-full blur-lg pointer-events-none" />
+                <p className="text-[10px] font-black uppercase tracking-wider text-yellow-100 mb-1">Estimasi HPP per {form.outputUnit}</p>
+                <p className="text-2xl font-black">
+                  {formatCurrency(liveStats.hppPerUnit, lang, settings.currency)}
+                </p>
+                <p className="text-[10px] text-white/80 font-bold mt-2">
+                  Bisa Dijual: {liveStats.sellableQty} {form.outputUnit}
+                </p>
+              </div>
+            </div>
+
+            <Button 
+              className="w-full h-12 text-sm font-black rounded-xl shadow-lg shadow-orange-500/10 transition-all" 
+              onClick={handleSave}
+            >
+              <Save className="w-4.5 h-4.5 mr-2" />
+              {t('common.save')}
+            </Button>
+          </div>
+        </div>
       </div>
     </PageContainer>
   );
 };
+

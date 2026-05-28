@@ -18,9 +18,14 @@ export const fetchCloudRecords = async (uid) => {
 };
 
 export const upsertCloudRecords = async (uid, records) => {
-  if (!isFirebaseConfigured() || !firebaseDb || !uid || !records.length) return { success: false };
+  if (!isFirebaseConfigured() || !firebaseDb || !uid) return { success: false };
   
   try {
+    if (!records.length) {
+      await updateSyncState(uid, { lastPushAt: new Date().toISOString() });
+      return { success: true };
+    }
+
     // Firestore batch limit is 500, we use 400 to be safe
     const CHUNK_SIZE = 400;
     for (let i = 0; i < records.length; i += CHUNK_SIZE) {

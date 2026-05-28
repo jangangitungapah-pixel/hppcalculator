@@ -1,4 +1,7 @@
 {
+  "firestore": {
+    "rules": "docs/firebase-firestore-rules-phase-13.rules"
+  },
   "hosting": {
     "public": "dist",
     "ignore": [

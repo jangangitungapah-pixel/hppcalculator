@@ -1,5 +1,6 @@
 import React from 'react';
 import { Input } from '../ui/Input';
+import { Package } from 'lucide-react';
 
 export const ProductInfoSection = ({ productName, onChange, error, t }) => {
   return (
@@ -10,8 +11,10 @@ export const ProductInfoSection = ({ productName, onChange, error, t }) => {
         value={productName}
         onChange={(e) => onChange('productName', e.target.value)}
         error={error}
-        className="text-lg font-semibold h-12"
+        prefix={<Package className="w-5 h-5 text-text-soft group-focus-within:text-brand-primary transition-colors" />}
+        className="text-[15px] font-semibold h-12"
       />
     </div>
   );
 };
+

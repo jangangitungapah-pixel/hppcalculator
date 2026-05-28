@@ -31,10 +31,13 @@ export const getAvailablePricingSources = ({ calculations = [], recipes = [], pr
 
 export const normalizeSourceToPricingBase = (sourceData) => {
   if (!sourceData) return null;
+  const sourceName = sourceData.name || sourceData.sourceNameSnapshot || 'Manual Input';
+
   return {
     sourceType: sourceData.sourceType || SourceTypes.MANUAL,
     sourceId: sourceData.sourceId || null,
-    sourceNameSnapshot: sourceData.name || 'Manual Input',
+    name: sourceName,
+    sourceNameSnapshot: sourceName,
     hppPerUnit: sourceData.hppPerUnit || 0,
     sellingPrice: sourceData.sellingPrice || 0
   };

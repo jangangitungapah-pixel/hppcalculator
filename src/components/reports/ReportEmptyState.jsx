@@ -10,34 +10,36 @@ export const ReportEmptyState = ({ onLoadDemo }) => {
   const navigate = useNavigate();
 
   return (
-    <Card className="p-8 border-dashed border-2 border-border flex flex-col items-center justify-center text-center bg-surface-muted/30">
-      <div className="w-16 h-16 bg-brand-soft rounded-full flex items-center justify-center text-brand-primary mb-4">
+    <Card className="report-empty-state">
+      <div className="report-empty-icon" aria-hidden="true">
         <BarChart3 className="w-8 h-8" />
       </div>
       
-      <h2 className="text-xl font-bold text-text-primary mb-2">
+      <h2 className="report-empty-title">
         {t('reports.emptyTitle')}
       </h2>
       
-      <p className="text-text-secondary text-sm max-w-sm mb-6">
+      <p className="report-empty-copy">
         {t('reports.emptyBody')}
       </p>
       
-      <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+      <div className="report-empty-actions">
         <Button
+          type="button"
           onClick={() => navigate('/calculator')}
           leftIcon={<Calculator className="w-4 h-4" />}
-          className="w-full sm:w-auto"
+          className="report-empty-action"
         >
           {t('dashboard.startCalculating')}
         </Button>
         
         {onLoadDemo && (
           <Button
+            type="button"
             variant="outline"
             onClick={onLoadDemo}
             leftIcon={<Download className="w-4 h-4" />}
-            className="w-full sm:w-auto"
+            className="report-empty-action"
           >
             {t('dashboard.loadDemoData')}
           </Button>

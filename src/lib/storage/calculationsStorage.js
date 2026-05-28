@@ -142,8 +142,8 @@ export const getCalculationStats = () => {
   let lossCount = 0;
 
   calculations.forEach(calc => {
-    const margin = calc.result.marginPercent || 0;
-    const status = calc.result.profitStatus?.key || 'okay';
+    const margin = calc?.result?.marginPercent || 0;
+    const status = calc?.result?.profitStatus?.key || 'okay';
     
     totalMargin += margin;
     

@@ -4,6 +4,7 @@ import { useChannelPricing } from '../../hooks/useChannelPricing';
 import { formatCurrency } from '../../lib/calculations';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
+import { Input } from '../ui/Input';
 import { Box, FileText, CheckSquare, Edit3, ChevronDown } from 'lucide-react';
 
 export const ProductSourcePicker = ({ value, onChange }) => {
@@ -19,6 +20,7 @@ export const ProductSourcePicker = ({ value, onChange }) => {
         sourceType: 'manual',
         sourceId: null,
         name: '',
+        sourceNameSnapshot: t('pricing.manualSource'),
         hppPerUnit: 0,
         sellingPrice: 0
       });
@@ -33,8 +35,27 @@ export const ProductSourcePicker = ({ value, onChange }) => {
     });
     
     if (selected) {
-      onChange(selected);
+      onChange({
+        ...selected,
+        sourceNameSnapshot: selected.name
+      });
     }
+  };
+
+  const handleManualChange = (field) => (e) => {
+    const rawValue = e.target.value;
+    const nextValue = field === 'name' ? rawValue : Number(rawValue) || 0;
+    const nextName = field === 'name' ? rawValue : value?.name || '';
+
+    onChange({
+      sourceType: 'manual',
+      sourceId: null,
+      name: nextName,
+      sourceNameSnapshot: nextName.trim() || t('pricing.manualSource'),
+      hppPerUnit: value?.hppPerUnit || 0,
+      sellingPrice: value?.sellingPrice || 0,
+      [field]: nextValue
+    });
   };
  
   const getSelectedValue = () => {
@@ -53,12 +74,13 @@ export const ProductSourcePicker = ({ value, onChange }) => {
 
   return (
     <div className="space-y-3">
-      <label className="block text-sm font-semibold text-text-primary">
+      <label htmlFor="pricing-source-picker" className="block text-sm font-semibold text-text-primary">
         {t('pricing.sourcePicker')}
       </label>
       
       <div className="relative">
         <select
+          id="pricing-source-picker"
           value={getSelectedValue()}
           onChange={handleSelect}
           className="w-full px-4 py-3 bg-white border border-border rounded-xl focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-shadow appearance-none pr-10"
@@ -99,6 +121,49 @@ export const ProductSourcePicker = ({ value, onChange }) => {
           <ChevronDown className="w-4 h-4" />
         </div>
       </div>
+
+      {value && value.sourceType === 'manual' && (
+        <Card className="p-4 bg-surface border border-border-soft rounded-xl">
+          <div className="flex items-start justify-between gap-3 mb-3">
+            <div>
+              <h3 className="text-sm font-bold text-text-primary">{t('pricing.manualInputTitle')}</h3>
+              <p className="text-xs text-text-secondary mt-0.5">{t('pricing.manualInputHelp')}</p>
+            </div>
+            {getTypeBadge('manual')}
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <Input
+              label={t('pricing.manualProductName')}
+              value={value.name || ''}
+              onChange={handleManualChange('name')}
+              placeholder={t('pricing.manualProductNamePlaceholder')}
+              containerClassName="sm:col-span-3"
+            />
+            <Input
+              label={t('pricing.hppPerUnit')}
+              type="number"
+              inputMode="decimal"
+              min="0"
+              value={value.hppPerUnit || ''}
+              onChange={handleManualChange('hppPerUnit')}
+              placeholder="0"
+              helperText={t('pricing.hppManualHelp')}
+            />
+            <Input
+              label={t('pricing.currentSellingPrice')}
+              type="number"
+              inputMode="decimal"
+              min="0"
+              value={value.sellingPrice || ''}
+              onChange={handleManualChange('sellingPrice')}
+              placeholder="0"
+              helperText={t('pricing.sellingPriceManualHelp')}
+              containerClassName="sm:col-span-2"
+            />
+          </div>
+        </Card>
+      )}
 
       {value && value.sourceType !== 'manual' && (
         <Card className="p-3.5 bg-surface-muted/50 border border-border-soft rounded-xl">

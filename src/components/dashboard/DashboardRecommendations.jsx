@@ -1,73 +1,60 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLanguage } from '../../hooks/useLanguage';
 import { AlertTriangle, Info, CheckCircle2, ChevronRight } from 'lucide-react';
-import { Button } from '../ui/Button';
 import { StaggerContainer } from '../motion/StaggerContainer';
 import { FadeIn } from '../motion/FadeIn';
 
-export const DashboardRecommendations = ({ recommendations }) => {
-  const { t } = useLanguage();
-  const navigate = useNavigate();
+const SEVERITY_STYLES = {
+  danger:  { border: 'border-red-200 bg-red-50',    icon: 'bg-red-100 text-red-600',     Icon: AlertTriangle },
+  warning: { border: 'border-amber-200 bg-amber-50', icon: 'bg-amber-100 text-amber-600',  Icon: AlertTriangle },
+  success: { border: 'border-emerald-200 bg-emerald-50', icon: 'bg-emerald-100 text-emerald-600', Icon: CheckCircle2 },
+  info:    { border: 'border-blue-200 bg-blue-50',   icon: 'bg-blue-100 text-blue-600',   Icon: Info },
+};
 
+export const DashboardRecommendations = ({ recommendations }) => {
+  const navigate = useNavigate();
   const recs = recommendations || [];
 
   return (
-    <div className="dashboard-recommendations">
-      <div className="dashboard-section-header">
-        <div>
-          <h2 className="dashboard-section-header-title">Rekomendasi Bisnis</h2>
-          <p className="dashboard-section-header-subtitle">Insight otomatis untuk optimasi profit menu Anda</p>
-        </div>
+    <div className="mb-6">
+      <div className="flex items-center gap-2 mb-3">
+        <h2 className="text-sm font-bold text-text-primary uppercase tracking-wide">Rekomendasi</h2>
+        <div className="flex-1 h-px bg-border/40" />
       </div>
 
       {recs.length === 0 ? (
         <FadeIn>
-          <div className="recommendation-preview-card success">
-            <div className="recommendation-severity-icon success">
+          <div className="flex items-center gap-3 bg-emerald-50 border border-emerald-200 rounded-2xl px-5 py-4">
+            <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
               <CheckCircle2 className="w-5 h-5" />
             </div>
-            <div className="recommendation-preview-content">
-              <h4 className="recommendation-preview-title">Keadaan Aman</h4>
-              <p className="recommendation-preview-message">
-                Belum ada rekomendasi penting. Data terlihat aman sejauh ini.
-              </p>
+            <div>
+              <div className="text-sm font-bold text-emerald-800">Keadaan Aman</div>
+              <div className="text-xs text-emerald-600 mt-0.5">Belum ada rekomendasi penting. Bisnis terlihat aman.</div>
             </div>
           </div>
         </FadeIn>
       ) : (
-        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {recs.slice(0, 2).map((rec) => {
-            const severity = rec.severity || 'warning'; // danger, warning, success, info
-            
-            // Map severity to icon
-            let Icon = AlertTriangle;
-            if (severity === 'danger') Icon = AlertTriangle;
-            else if (severity === 'success') Icon = CheckCircle2;
-            else if (severity === 'info') Icon = Info;
-
+        <StaggerContainer className="space-y-2">
+          {recs.slice(0, 3).map((rec) => {
+            const severity = rec.severity || 'warning';
+            const s = SEVERITY_STYLES[severity] || SEVERITY_STYLES.warning;
+            const { Icon } = s;
             return (
               <FadeIn key={rec.id}>
-                <div className={`recommendation-preview-card ${severity}`}>
-                  <div className={`recommendation-severity-icon ${severity}`}>
-                    <Icon className="w-5 h-5" />
+                <div className={`flex items-start gap-3 border rounded-2xl px-4 py-3.5 ${s.border}`}>
+                  <div className={`shrink-0 w-8 h-8 rounded-lg flex items-center justify-center ${s.icon}`}>
+                    <Icon className="w-4 h-4" />
                   </div>
-                  <div className="recommendation-preview-content">
-                    <h4 className="recommendation-preview-title">
-                      {rec.titleId || rec.titleEn}
-                    </h4>
-                    <p className="recommendation-preview-message">
-                      {rec.messageId || rec.messageEn}
-                    </p>
-                    <Button 
-                      variant="link" 
-                      size="sm"
-                      className="mt-2 text-xs font-bold"
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-bold text-text-primary">{rec.titleId || rec.titleEn}</div>
+                    <div className="text-xs text-text-secondary mt-0.5 leading-relaxed">{rec.messageId || rec.messageEn}</div>
+                    <button
+                      className="mt-1.5 text-xs font-bold text-brand-primary hover:underline flex items-center gap-0.5"
                       onClick={() => navigate(rec.actionRoute || '/reports')}
-                      iconRight={<ChevronRight className="w-3.5 h-3.5" />}
                     >
-                      {rec.actionLabelId || 'Lihat Detail'}
-                    </Button>
+                      {rec.actionLabelId || 'Lihat Detail'} <ChevronRight className="w-3 h-3" />
+                    </button>
                   </div>
                 </div>
               </FadeIn>

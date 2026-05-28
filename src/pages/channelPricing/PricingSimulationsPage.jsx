@@ -9,8 +9,21 @@ import { Button } from '../../components/ui/Button';
 import { Toast } from '../../components/ui/Toast';
 import { Card } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
-import { Plus, Calculator, Search, ArrowUpDown, Filter } from 'lucide-react';
+import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
+import { Plus, Calculator, Search, ArrowUpDown, Filter, X } from 'lucide-react';
 import { PageContainer } from '../../components/layout/PageContainer';
+
+const getSimulationHealthStatus = (simulation) => {
+  const profit = simulation.profit !== undefined ? simulation.profit : (simulation.result?.profit || 0);
+  const margin = simulation.isBundle
+    ? (simulation.finalSellingPrice > 0 ? (profit / simulation.finalSellingPrice) * 100 : 0)
+    : (simulation.result?.marginPercent || simulation.marginPercent || 0);
+  const status = simulation.result?.status || simulation.status;
+
+  if (status === 'loss' || profit < 0) return 'loss';
+  if (status === 'low' || margin < 25) return 'low';
+  return 'good';
+};
 
 export const PricingSimulationsPage = () => {
   const { t, lang, settings } = useLanguage();
@@ -28,25 +41,32 @@ export const PricingSimulationsPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all'); // all, good, low, loss
   const [sortBy, setSortBy] = useState('latest'); // latest, margin_desc
+  const [detailSimulation, setDetailSimulation] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
 
   const showToast = (message, type = 'success') => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
   };
 
-  const handleDelete = (id, isBundle) => {
-    if (window.confirm('Hapus simulasi ini?')) {
-      if (isBundle) {
-        deleteBundleSimulation(id);
-      } else {
-        deletePricingSimulation(id);
-      }
-      showToast('Simulasi berhasil dihapus');
+  const handleDelete = (simulation) => {
+    setDeleteTarget(simulation);
+  };
+
+  const confirmDelete = () => {
+    if (!deleteTarget) return;
+
+    if (deleteTarget.isBundle || deleteTarget.type === 'bundle') {
+      deleteBundleSimulation(deleteTarget.id);
+    } else {
+      deletePricingSimulation(deleteTarget.id);
     }
+    setDeleteTarget(null);
+    showToast(t('pricing.simulationDeleted'));
   };
 
   const handleCardClick = (simulation) => {
-    showToast('Mode lihat detail akan segera hadir', 'info');
+    setDetailSimulation(simulation);
   };
 
   const rawSimulations = useMemo(() => {
@@ -73,7 +93,7 @@ export const PricingSimulationsPage = () => {
         ? (sim.finalSellingPrice > 0 ? (profit / sim.finalSellingPrice) * 100 : 0)
         : (sim.result?.marginPercent || 0);
       
-      const status = sim.result?.status || (profit < 0 ? 'loss' : margin < 25 ? 'low' : 'good');
+      const status = getSimulationHealthStatus(sim);
 
       totalMargin += margin;
       validMarginCount++;
@@ -104,12 +124,7 @@ export const PricingSimulationsPage = () => {
         // Status filter
         if (statusFilter === 'all') return true;
 
-        const profit = sim.profit !== undefined ? sim.profit : (sim.result?.profit || 0);
-        const margin = sim.isBundle 
-          ? (sim.finalSellingPrice > 0 ? (profit / sim.finalSellingPrice) * 100 : 0)
-          : (sim.result?.marginPercent || 0);
-        
-        const status = sim.result?.status || (profit < 0 ? 'loss' : margin < 25 ? 'low' : 'good');
+        const status = getSimulationHealthStatus(sim);
         
         return status === statusFilter;
       })
@@ -132,6 +147,42 @@ export const PricingSimulationsPage = () => {
         return 0;
       });
   }, [rawSimulations, searchQuery, statusFilter, sortBy]);
+
+  const detailRows = useMemo(() => {
+    if (!detailSimulation) return [];
+
+    const isBundle = detailSimulation.type === 'bundle';
+    const result = detailSimulation.result || {};
+    const profit = isBundle ? detailSimulation.profit : result.profit;
+    const margin = isBundle
+      ? detailSimulation.marginPercent || (detailSimulation.finalSellingPrice > 0 ? (profit / detailSimulation.finalSellingPrice) * 100 : 0)
+      : result.marginPercent;
+
+    if (isBundle) {
+      return [
+        { label: t('pricing.totalBundleHpp'), value: formatCurrency(detailSimulation.baseTotalHpp || 0, lang, currency) },
+        { label: t('pricing.bundleSellingPrice'), value: formatCurrency(detailSimulation.finalSellingPrice || 0, lang, currency) },
+        { label: t('pricing.profit'), value: formatCurrency(profit || 0, lang, currency) },
+        { label: t('pricing.margin'), value: formatPercent(margin || 0, lang) }
+      ];
+    }
+
+    if (detailSimulation.type === 'reseller') {
+      return [
+        { label: t('pricing.hppPerUnit'), value: formatCurrency(detailSimulation.baseHpp || 0, lang, currency) },
+        { label: t('pricing.wholesalePrice'), value: formatCurrency(result.wholesalePrice || 0, lang, currency) },
+        { label: t('pricing.resellerSuggestedPrice'), value: formatCurrency(result.resellerSuggestedPrice || 0, lang, currency) },
+        { label: t('pricing.ownerProfit'), value: formatCurrency(result.ownerProfitPerUnit || 0, lang, currency) }
+      ];
+    }
+
+    return [
+      { label: t('pricing.hppPerUnit'), value: formatCurrency(detailSimulation.baseHpp || 0, lang, currency) },
+      { label: t('pricing.sellingPrice'), value: formatCurrency(result.finalPrice || detailSimulation.baseSellingPrice || 0, lang, currency) },
+      { label: t('pricing.profit'), value: formatCurrency(profit || 0, lang, currency) },
+      { label: t('pricing.margin'), value: formatPercent(margin || 0, lang) }
+    ];
+  }, [currency, detailSimulation, lang, t]);
 
   return (
     <PageContainer maxWidth="max-w-5xl">
@@ -191,6 +242,7 @@ export const PricingSimulationsPage = () => {
               <div className="max-w-md flex-1 w-full">
                 <Input 
                   type="text"
+                  aria-label="Cari simulasi"
                   placeholder="Cari simulasi atau nama produk..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -204,6 +256,7 @@ export const PricingSimulationsPage = () => {
                   <Filter className="w-4 h-4 text-text-muted hidden sm:inline" />
                   <div className="relative flex items-center group flex-1 sm:flex-none">
                     <select
+                      aria-label="Filter status simulasi"
                       value={statusFilter}
                       onChange={(e) => setStatusFilter(e.target.value)}
                       className="w-full sm:w-auto pl-3 pr-8 py-2 bg-surface border border-border rounded-xl text-sm focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none appearance-none transition-all duration-200"
@@ -226,6 +279,7 @@ export const PricingSimulationsPage = () => {
                   <ArrowUpDown className="w-4 h-4 text-text-muted hidden sm:inline" />
                   <div className="relative flex items-center group flex-1 sm:flex-none">
                     <select
+                      aria-label="Urutkan simulasi"
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value)}
                       className="w-full sm:w-auto pl-3 pr-8 py-2 bg-surface border border-border rounded-xl text-sm focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none appearance-none transition-all duration-200"
@@ -292,6 +346,69 @@ export const PricingSimulationsPage = () => {
           onClose={() => setToast(null)}
         />
       )}
+
+      {detailSimulation && (
+        <div className="dialog-overlay" onClick={() => setDetailSimulation(null)}>
+          <div
+            className="dialog-card max-w-lg"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="simulation-detail-title"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between gap-4 mb-4">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider text-text-muted mb-1">
+                  {t(`pricing.${detailSimulation.type}`)}
+                </p>
+                <h2 id="simulation-detail-title" className="dialog-title mb-1">
+                  {t('pricing.simulationDetailTitle')}
+                </h2>
+                <p className="text-sm font-semibold text-text-primary mb-1">
+                  {detailSimulation.name}
+                </p>
+                {detailSimulation.sourceNameSnapshot && (
+                  <p className="text-sm text-text-secondary">
+                    {detailSimulation.sourceNameSnapshot}
+                  </p>
+                )}
+              </div>
+              <Button variant="ghost" size="icon" onClick={() => setDetailSimulation(null)} aria-label="Tutup detail simulasi">
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+
+            <div className="divide-y divide-border rounded-xl border border-border overflow-hidden">
+              {detailRows.map((row) => (
+                <div key={row.label} className="flex items-center justify-between gap-4 px-4 py-3 bg-surface">
+                  <span className="text-sm text-text-secondary">{row.label}</span>
+                  <span className="text-sm font-bold text-text-primary text-right">{row.value}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="dialog-actions mt-6">
+              <Button variant="outline" onClick={() => setDetailSimulation(null)}>
+                {t('common.close')}
+              </Button>
+              <Button onClick={() => navigate('/channel-pricing')}>
+                {t('pricing.calculate')}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <ConfirmDialog
+        open={!!deleteTarget}
+        title={t('pricing.deleteConfirmTitle')}
+        description={deleteTarget ? `${t('pricing.deleteConfirmBody')} ${deleteTarget.name}` : ''}
+        confirmLabel={t('common.delete')}
+        cancelLabel={t('common.cancel')}
+        variant="danger"
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </PageContainer>
   );
 };

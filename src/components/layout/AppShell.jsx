@@ -27,6 +27,7 @@ export const AppShell = () => {
     if (pathname.startsWith('/settings')) return t('nav.settings') || 'Pengaturan';
     if (pathname.startsWith('/account')) return 'Akun Saya';
     if (pathname.startsWith('/sync')) return 'Sinkronisasi';
+    if (pathname.startsWith('/more')) return lang === 'id' ? 'Lainnya' : 'More';
     if (pathname.startsWith('/offline')) return 'Offline';
     return '';
   };

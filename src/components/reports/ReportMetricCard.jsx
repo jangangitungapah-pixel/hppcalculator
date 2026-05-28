@@ -3,34 +3,33 @@ import { Card } from '../ui/Card';
 
 export const ReportMetricCard = ({ label, value, helper, icon: Icon, tone = 'neutral' }) => {
   const tones = {
-    neutral: 'bg-white text-text-primary',
-    good: 'bg-status-goodBg border-status-good/20 text-status-good',
-    warning: 'bg-status-warningBg border-status-warning/20 text-status-warning',
-    danger: 'bg-status-lossBg border-status-loss/20 text-status-loss',
-    brand: 'bg-brand-soft text-brand-primary'
+    neutral: 'report-metric-card-neutral',
+    good: 'report-metric-card-good',
+    warning: 'report-metric-card-warning',
+    danger: 'report-metric-card-danger',
+    brand: 'report-metric-card-brand'
   };
 
   const bgTone = tones[tone] || tones.neutral;
-  const isNeutral = tone === 'neutral';
 
   return (
-    <Card className={`p-4 flex flex-col justify-between ${bgTone} ${isNeutral ? 'border-border' : ''}`}>
-      <div className="flex justify-between items-start mb-2">
-        <h3 className={`text-xs font-semibold ${isNeutral ? 'text-text-secondary' : 'opacity-80'}`}>
+    <Card className={`report-metric-card ${bgTone}`} aria-label={`${label}: ${value}`}>
+      <div className="report-metric-card-head">
+        <h3 className="report-metric-card-label">
           {label}
         </h3>
         {Icon && (
-          <div className={`${isNeutral ? 'text-brand-primary' : ''}`}>
+          <div className="report-metric-card-icon" aria-hidden="true">
             <Icon className="w-5 h-5" />
           </div>
         )}
       </div>
-      <div>
-        <div className="text-2xl font-bold mb-1 line-clamp-1" title={String(value)}>
+      <div className="min-w-0">
+        <div className="report-metric-card-value" title={String(value)}>
           {value}
         </div>
         {helper && (
-          <div className={`text-[10px] ${isNeutral ? 'text-text-tertiary' : 'opacity-70'}`}>
+          <div className="report-metric-card-helper">
             {helper}
           </div>
         )}

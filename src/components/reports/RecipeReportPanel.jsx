@@ -2,18 +2,28 @@ import React from 'react';
 import { useLanguage } from '../../hooks/useLanguage';
 import { ReportMetricCard } from './ReportMetricCard';
 import { InsightCard } from './InsightCard';
+import { ReportSectionEmptyState } from './ReportSectionEmptyState';
 import { Book, AlertTriangle, AlertCircle } from 'lucide-react';
 import { formatCurrency } from '../../lib/calculations';
 
 export const RecipeReportPanel = ({ items, insights }) => {
   const { t, lang, settings } = useLanguage();
+  const currency = settings?.currency || 'IDR';
   const { costRanking, withoutProduct, highHpp } = insights;
   
-  if (!items || items.length === 0) return null;
+  if (!items || items.length === 0) {
+    return (
+      <ReportSectionEmptyState
+        title={t('reports.emptyRecipesTitle')}
+        description={t('reports.emptyRecipesBody')}
+        actionRoute="/recipes"
+      />
+    );
+  }
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+    <div className="report-panel-stack">
+      <div className="report-metric-grid">
         <ReportMetricCard 
           label={t('reports.recipesCount')} 
           value={items.length} 
@@ -33,38 +43,41 @@ export const RecipeReportPanel = ({ items, insights }) => {
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="report-insight-grid">
         <div>
-          <h3 className="text-sm font-bold text-text-primary mb-3">{t('reports.recipeCostRanking')}</h3>
-          <div className="bg-white rounded-xl shadow-sm border border-border p-4">
-            <div className="flex flex-col gap-3">
+          <h3 className="report-section-title">{t('reports.recipeCostRanking')}</h3>
+          <div className="report-panel-card">
+            <div className="report-ranking-list">
               {costRanking.slice(0, 10).map((recipe, idx) => (
-                <div key={recipe.id} className="flex justify-between items-center border-b border-border/50 pb-2 last:border-0 last:pb-0">
-                  <div className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full bg-surface-muted text-text-tertiary flex items-center justify-center text-xs font-bold">
+                <div key={recipe.id} className="report-ranking-row">
+                  <div className="report-ranking-name-wrap">
+                    <div className="report-ranking-index">
                       {idx + 1}
                     </div>
-                    <span className="text-sm font-medium text-text-secondary">{recipe.name}</span>
+                    <span className="report-ranking-name">{recipe.name}</span>
                   </div>
-                  <span className="text-sm font-bold text-text-primary">
-                    {formatCurrency(recipe.hppPerUnit, lang, settings.currency)}
+                  <span className="report-ranking-value">
+                    {formatCurrency(recipe.hppPerUnit, lang, currency)}
                   </span>
                 </div>
               ))}
+              {costRanking.length === 0 && (
+                <div className="report-muted-message">{t('reports.noData')}</div>
+              )}
             </div>
           </div>
         </div>
 
         {withoutProduct.length > 0 && (
           <div>
-            <h3 className="text-sm font-bold text-text-primary mb-3">{t('reports.recipesWithoutProduct')}</h3>
-            <div className="flex flex-col gap-3">
+            <h3 className="report-section-title">{t('reports.recipesWithoutProduct')}</h3>
+            <div className="report-recommendation-list">
               {withoutProduct.slice(0, 5).map(recipe => (
                 <InsightCard 
                   key={recipe.id}
                   title="Peluang Produk Baru"
                   value={recipe.name}
-                  description={`HPP: ${formatCurrency(recipe.hppPerUnit, lang, settings.currency)}. Buat produk dari resep ini untuk memantau harga jual.`}
+                  description={`HPP: ${formatCurrency(recipe.hppPerUnit, lang, currency)}. Buat produk dari resep ini untuk memantau harga jual.`}
                   tone="warning"
                 />
               ))}

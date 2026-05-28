@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const SimpleBarChart = ({ data, height = "h-4" }) => {
+export const SimpleBarChart = ({ data, height = "h-4", ariaLabel }) => {
   if (!data || data.length === 0) return null;
 
   // Assuming data is an array of { label, value, colorClass }
@@ -9,7 +9,7 @@ export const SimpleBarChart = ({ data, height = "h-4" }) => {
   if (total === 0) return <div className={`w-full bg-surface-muted rounded-full ${height}`} />;
 
   return (
-    <div className="w-full">
+    <div className="w-full" role="img" aria-label={ariaLabel || data.map((item) => `${item.label}: ${item.value}`).join(', ')}>
       <div className={`w-full flex rounded-full overflow-hidden ${height}`}>
         {data.map((item, idx) => {
           if (!item.value) return null;
@@ -20,6 +20,7 @@ export const SimpleBarChart = ({ data, height = "h-4" }) => {
               className={item.colorClass || 'bg-brand-primary'}
               style={{ width: `${widthPercent}%` }}
               title={`${item.label}: ${item.value}`}
+              aria-hidden="true"
             />
           );
         })}

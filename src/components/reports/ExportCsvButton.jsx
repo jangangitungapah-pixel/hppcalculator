@@ -25,14 +25,17 @@ export const ExportCsvButton = ({ onExport, disabled }) => {
 
   return (
     <Button
+      type="button"
       variant="outline"
       size="sm"
       onClick={handleExport}
       disabled={disabled}
       loading={isExporting}
+      aria-label={disabled ? t('reports.exportCsvDisabled') : t('reports.exportCsv')}
       leftIcon={<Download className="w-4 h-4" />}
+      className="report-export-button"
     >
-      {t('reports.exportCsv')}
+      {isExporting ? t('reports.exportingCsv') : t('reports.exportCsv')}
     </Button>
   );
 };

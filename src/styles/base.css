@@ -39,17 +39,8 @@ body {
   flex-direction: column;
 }
 
-/* Reset buttons, inputs */
-button, input, select, textarea {
-  font: inherit;
-  color: inherit;
-}
-
 button {
   cursor: pointer;
-  border: none;
-  background: none;
-  padding: 0;
 }
 
 button:disabled {

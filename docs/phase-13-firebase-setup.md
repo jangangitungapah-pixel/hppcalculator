@@ -29,6 +29,6 @@ Buka **Firebase Console > Firestore Database**:
 4. Build aplikasi:
    `npm run build`
 5. Deploy:
-   `firebase deploy --only hosting`
+   `firebase deploy --only firestore:rules,hosting`
 
 Firebase Hosting secara native akan melayani halaman fallback `index.html` berdasarkan pengaturan `rewrites` di `firebase.json` untuk SPA.

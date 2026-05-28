@@ -24,33 +24,33 @@ export const CalculatorHelpCard = ({ t }) => {
   ];
 
   return (
-    <div className="calculator-help-card">
-      <div className="flex items-center gap-2 mb-3.5 pb-2 border-b border-border/50 text-text-primary">
+    <div className="bg-surface border border-border/80 rounded-3xl p-5 shadow-xs hover:border-orange-500/10 transition-all duration-300">
+      <div className="flex items-center gap-2 mb-3.5 pb-2.5 border-b border-border/60 text-text-primary">
         <HelpCircle className="w-5 h-5 text-brand-primary shrink-0" />
-        <h3 className="font-bold text-sm">Panduan Istilah Keuangan</h3>
+        <h3 className="font-extrabold text-sm">Panduan Istilah Keuangan</h3>
       </div>
       
-      <div className="space-y-1">
+      <div className="divide-y divide-border/60">
         {helpItems.map((item, idx) => {
           const isOpen = openIndex === idx;
           return (
-            <div key={idx} className="calculator-help-item">
+            <div key={idx} className="py-2.5 first:pt-0 last:pb-0">
               <button
                 type="button"
                 onClick={() => toggleItem(idx)}
                 aria-expanded={isOpen}
-                className="w-full flex justify-between items-center text-left py-2 font-bold text-xs text-text-primary hover:text-brand-primary transition-colors focus:outline-none"
+                className="w-full flex justify-between items-center text-left py-2 font-extrabold text-xs text-text-primary hover:text-brand-primary transition-colors focus:outline-none"
               >
                 <span>{item.title}</span>
                 {isOpen ? (
-                  <ChevronUp className="w-3.5 h-3.5 opacity-60" />
+                  <ChevronUp className="w-4 h-4 text-brand-primary shrink-0" />
                 ) : (
-                  <ChevronDown className="w-3.5 h-3.5 opacity-60" />
+                  <ChevronDown className="w-4 h-4 text-text-muted shrink-0" />
                 )}
               </button>
               
               {isOpen && (
-                <p className="calculator-help-text mt-1.5 pl-0 text-text-secondary leading-relaxed font-medium">
+                <p className="text-xs text-text-secondary leading-relaxed font-semibold pt-1.5 pb-2.5 text-justify animate-fade-in">
                   {item.desc}
                 </p>
               )}
@@ -61,3 +61,4 @@ export const CalculatorHelpCard = ({ t }) => {
     </div>
   );
 };
+

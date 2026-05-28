@@ -8,10 +8,10 @@ export const StorageUsageCard = ({ sizeBytes, formattedSize, status }) => {
 
   const getStatusConfig = () => {
     switch (status) {
-      case 'danger': return { bg: 'bg-red-100', text: 'text-red-700', icon: ShieldAlert, border: 'border-red-200' };
-      case 'warning': return { bg: 'bg-yellow-100', text: 'text-yellow-700', icon: AlertTriangle, border: 'border-yellow-200' };
+      case 'danger': return { bg: 'bg-red-500/5', text: 'text-red-700', icon: ShieldAlert, border: 'border-red-500/10' };
+      case 'warning': return { bg: 'bg-amber-500/5', text: 'text-amber-700', icon: AlertTriangle, border: 'border-amber-500/10' };
       case 'healthy':
-      default: return { bg: 'bg-green-100', text: 'text-green-700', icon: CheckCircle, border: 'border-green-200' };
+      default: return { bg: 'bg-emerald-500/5', text: 'text-emerald-700', icon: CheckCircle, border: 'border-emerald-500/10' };
     }
   };
 
@@ -22,30 +22,38 @@ export const StorageUsageCard = ({ sizeBytes, formattedSize, status }) => {
   const percentage = Math.min(100, Math.max(0, (sizeBytes / maxBytes) * 100));
 
   return (
-    <Card className="p-4 flex flex-col h-full">
-      <div className="flex items-center gap-2 mb-3">
-        <Database size={18} className="text-text-tertiary" />
-        <h4 className="font-semibold text-text-primary text-sm">{t('storageSize', 'Ukuran Storage')}</h4>
-      </div>
-      
-      <div className="flex-1">
-        <p className="text-3xl font-bold text-text-primary mb-1">{formattedSize}</p>
-        <p className="text-xs text-text-tertiary mb-4">~5MB LocalStorage Limit</p>
+    <Card className="p-5 border-border/80 rounded-3xl shadow-xs flex flex-col justify-between h-full">
+      <div>
+        <div className="flex items-center gap-2 mb-3">
+          <Database className="w-4 h-4 text-text-secondary" />
+          <h4 className="text-[10px] font-extrabold text-text-secondary uppercase tracking-wider">{t('dataBackup.storageSize', 'Ukuran Storage')}</h4>
+        </div>
         
-        <div className="w-full h-2 bg-ui-border rounded-full overflow-hidden">
-          <div 
-            className={`h-full ${status === 'danger' ? 'bg-red-500' : status === 'warning' ? 'bg-yellow-500' : 'bg-brand-primary'}`} 
-            style={{ width: `${percentage}%` }}
-          />
+        <div className="mb-4">
+          <p className="text-2xl sm:text-3xl font-black text-text-primary mb-0.5 tracking-tight">{formattedSize}</p>
+          <p className="text-xs font-semibold text-text-secondary mb-4">~5MB LocalStorage Limit</p>
+          
+          <div className="w-full h-2.5 bg-surface-cream rounded-full overflow-hidden border border-border-soft">
+            <div 
+              className={`h-full rounded-full transition-all duration-300 ${
+                status === 'danger' 
+                  ? 'bg-red-500' 
+                  : status === 'warning' 
+                    ? 'bg-amber-500' 
+                    : 'bg-gradient-to-r from-orange-500 to-amber-400'
+              }`} 
+              style={{ width: `${percentage}%` }}
+            />
+          </div>
         </div>
       </div>
 
-      <div className={`mt-4 p-2 rounded-lg border flex items-center gap-2 text-sm font-medium ${config.bg} ${config.text} ${config.border}`}>
-        <Icon size={16} />
+      <div className={`mt-2 p-3.5 rounded-2xl border flex items-center gap-2 text-xs sm:text-sm font-bold ${config.bg} ${config.text} ${config.border}`}>
+        <Icon className="w-4.5 h-4.5 shrink-0" />
         <span>
-          {status === 'healthy' && t('healthHealthy', 'Penyimpanan Sehat')}
-          {status === 'warning' && t('healthWarning', 'Peringatan Penyimpanan')}
-          {status === 'danger' && t('healthDanger', 'Penyimpanan Kritis')}
+          {status === 'healthy' && t('dataBackup.healthHealthy', 'Penyimpanan Sehat')}
+          {status === 'warning' && t('dataBackup.healthWarning', 'Peringatan Penyimpanan')}
+          {status === 'danger' && t('dataBackup.healthDanger', 'Penyimpanan Kritis')}
         </span>
       </div>
     </Card>

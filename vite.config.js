@@ -9,9 +9,9 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'prompt',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'icons/icon.svg'],
+      includeAssets: ['icons/icon.svg'],
       manifest: {
-        name: 'Modalin \u2014 Kalkulator HPP F&B',
+        name: 'Modalin - Kalkulator HPP F&B',
         short_name: 'Modalin',
         description: 'Aplikasi kalkulator HPP, costing, dan pricing assistant untuk bisnis F&B UMKM.',
         theme_color: '#FF6A00',
@@ -28,28 +28,6 @@ export default defineConfig({
             sizes: 'any',
             type: 'image/svg+xml',
             purpose: 'any maskable'
-          },
-          {
-            src: '/icons/icon-192.png',
-            sizes: '192x192',
-            type: 'image/png'
-          },
-          {
-            src: '/icons/icon-512.png',
-            sizes: '512x512',
-            type: 'image/png'
-          },
-          {
-            src: '/icons/maskable-192.png',
-            sizes: '192x192',
-            type: 'image/png',
-            purpose: 'maskable'
-          },
-          {
-            src: '/icons/maskable-512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'maskable'
           }
         ]
       },
@@ -95,6 +73,21 @@ export default defineConfig({
   ],
   css: {
     postcss: {},
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return undefined;
+          if (id.includes('firebase')) return 'firebase';
+          if (id.includes('framer-motion')) return 'motion';
+          if (id.includes('lucide-react')) return 'icons';
+          if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) return 'react-vendor';
+          if (id.includes('@radix-ui')) return 'radix-ui';
+          return 'vendor';
+        }
+      }
+    }
   },
   test: {
     globals: true,

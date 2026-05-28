@@ -20,7 +20,7 @@ export const MarginBarList = ({ items, maxDisplayMargin = 100 }) => {
   };
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="report-margin-list">
       {items.map((item, idx) => {
         const margin = item.marginPercent || 0;
         // Clamp for display
@@ -30,20 +30,26 @@ export const MarginBarList = ({ items, maxDisplayMargin = 100 }) => {
         const isNegative = margin < 0;
 
         return (
-          <div key={`${item.id}-${idx}`} className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
-            <div className="w-full sm:w-1/3 text-xs font-semibold text-text-secondary truncate" title={item.name}>
+          <div key={`${item.id}-${idx}`} className="report-margin-row">
+            <div className="report-margin-name" title={item.name}>
               {item.name}
             </div>
             
-            <div className="w-full sm:w-2/3 flex items-center gap-2">
-              <div className="flex-1 h-3 bg-surface-muted rounded-full overflow-hidden flex relative">
-                {/* For negative margin, we could do a center axis, but for simplicity, we just color it red and start from left */}
+            <div className="report-margin-bar-wrap">
+              <div
+                className="report-margin-bar-track"
+                role="meter"
+                aria-label={`${item.name} margin`}
+                aria-valuemin={-100}
+                aria-valuemax={100}
+                aria-valuenow={Math.round(margin)}
+              >
                 <div 
-                  className={`h-full rounded-full transition-all ${getBarColor(margin)}`}
+                  className={`report-margin-bar-fill ${getBarColor(margin)}`}
                   style={{ width: `${displayPercent}%` }}
                 />
               </div>
-              <div className={`w-14 text-right text-xs font-bold ${isNegative ? 'text-status-loss' : 'text-text-primary'}`}>
+              <div className={`report-margin-value ${isNegative ? 'text-status-loss' : 'text-text-primary'}`}>
                 {item.marginPercent !== null ? formatPercent(margin, lang) : '-'}
               </div>
             </div>

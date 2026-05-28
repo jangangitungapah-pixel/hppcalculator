@@ -107,16 +107,14 @@ export const SimulationCard = ({ simulation, onClick, onDelete }) => {
 
   return (
     <Card 
-      variant="clickable"
       className="p-4 flex flex-col h-full group"
-      onClick={() => onClick && onClick(simulation)}
     >
       <div className="flex justify-between items-start mb-4">
-        <div className="flex gap-3 items-center">
+        <div className="flex gap-3 items-center min-w-0">
           <div className="p-2 bg-surface-muted rounded-lg group-hover:bg-brand-soft transition-colors">
             {getIcon(simulation.type)}
           </div>
-          <div>
+          <div className="min-w-0">
             <h3 className="font-bold text-text-primary text-sm line-clamp-1">{simulation.name}</h3>
             <div className="flex gap-2 items-center mt-1">
               <Badge variant={getBadgeVariant(simulation.type)} className="text-[10px]">
@@ -137,10 +135,10 @@ export const SimulationCard = ({ simulation, onClick, onDelete }) => {
             size="icon"
             onClick={(e) => {
               e.stopPropagation();
-              onDelete(simulation.id, isBundle);
+              onDelete(simulation);
             }} 
             className="w-8 h-8 text-text-muted hover:text-status-loss hover:bg-status-lossBg rounded-lg transition-colors group-focus-within:opacity-100 focus:opacity-100"
-            aria-label="Delete"
+            aria-label={`${t('common.delete')} ${simulation.name}`}
           >
             <Trash2 className="w-4 h-4" />
           </Button>
@@ -151,8 +149,17 @@ export const SimulationCard = ({ simulation, onClick, onDelete }) => {
         {renderResultSnippet()}
       </div>
 
-      <div className="mt-3 flex justify-end items-center text-xs font-medium text-brand-primary group-hover:text-brand-hover transition-colors">
-        Lihat Detail <ChevronRight className="w-4 h-4 ml-1" />
+      <div className="mt-3 flex justify-end">
+        <Button
+          type="button"
+          variant="link"
+          size="xs"
+          onClick={() => onClick && onClick(simulation)}
+          rightIcon={<ChevronRight className="w-4 h-4" />}
+          aria-label={`${t('pricing.viewSimulation')} ${simulation.name}`}
+        >
+          {t('pricing.viewSimulation')}
+        </Button>
       </div>
     </Card>
   );

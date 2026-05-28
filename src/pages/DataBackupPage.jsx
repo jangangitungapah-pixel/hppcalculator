@@ -10,7 +10,7 @@ import { ImportPreviewPanel } from '../components/backup/ImportPreviewPanel';
 import { ExportCsvCenter } from '../components/backup/ExportCsvCenter';
 import { DataHealthPanel } from '../components/backup/DataHealthPanel';
 import { ResetDataPanel } from '../components/backup/ResetDataPanel';
-import { Database, Download, Upload, History } from 'lucide-react';
+import { Database, Download, Upload, History, Info } from 'lucide-react';
 
 export const DataBackupPage = () => {
   const { t, lang } = useLanguage();
@@ -65,48 +65,50 @@ export const DataBackupPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-ui-surface pb-20 lg:pb-8">
-      <AppHeader title={t('dataBackup', 'Data & Backup')} />
+    <div className="min-h-screen bg-surface-cream pb-20 lg:pb-8">
+      <AppHeader title={t('nav.dataBackup')} />
       
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-text-primary mb-2">
-            {t('dataBackupTitle', 'Kelola Data & Backup')}
+        <div className="mb-6">
+          <h2 className="text-xl sm:text-2xl font-black text-text-primary mb-1 tracking-tight">
+            {t('dataBackup.dataBackupTitle', 'Kelola Data & Backup')}
           </h2>
-          <p className="text-text-secondary">
-            {t('dataBackupSubtitle', 'Amankan data Anda secara lokal, pindahkan antar perangkat, atau export untuk diolah lebih lanjut.')}
+          <p className="text-xs sm:text-sm font-semibold text-text-secondary">
+            {t('dataBackup.dataBackupSubtitle', 'Amankan data Anda secara lokal, pindahkan antar perangkat, atau export untuk diolah lebih lanjut.')}
           </p>
         </div>
 
-        <div className="mb-6">
-          <div className="p-4 bg-blue-50 text-blue-800 border border-blue-200 rounded-xl text-sm leading-relaxed">
-            <strong>Catatan Sinkronisasi:</strong> Meskipun Anda mengaktifkan Cloud Sync, pencadangan manual dalam format JSON (Local Backup) tetap sangat disarankan sebagai cadangan tambahan yang aman.
+        <div className="mb-6 p-4 bg-sky-500/5 border border-sky-500/10 text-sky-800 rounded-2xl text-xs sm:text-sm leading-relaxed flex gap-3 items-start">
+          <Info className="w-5 h-5 text-sky-600 shrink-0 mt-0.5" />
+          <div>
+            <strong className="font-extrabold text-sky-950 block mb-0.5">Catatan Sinkronisasi</strong>
+            Meskipun Anda mengaktifkan Cloud Sync, pencadangan manual dalam format JSON (Local Backup) tetap sangat disarankan sebagai cadangan tambahan yang aman.
           </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <BackupSummaryCard 
-            title={t('businessRecords', 'Total Data Bisnis')}
+            title={t('dataBackup.businessRecords', 'Total Data Bisnis')}
             value={storageHealth.backupReminder.totalBusinessRecords}
             icon={Database}
           />
           <BackupSummaryCard 
-            title={t('lastBackup', 'Backup Terakhir')}
-            value={formatDate(backupMeta.lastBackupAt) === '-' ? 'Belum Pernah' : formatDate(backupMeta.lastBackupAt).split(',')[0]}
+            title={t('dataBackup.lastBackup', 'Backup Terakhir')}
+            value={formatDate(backupMeta.lastBackupAt) === '-' ? t('dataBackup.neverBackedUp', 'Belum Pernah') : formatDate(backupMeta.lastBackupAt).split(',')[0]}
             helper={formatDate(backupMeta.lastBackupAt) !== '-' ? formatDate(backupMeta.lastBackupAt).split(',')[1] : ''}
             icon={Download}
             tone={!backupMeta.lastBackupAt && storageHealth.backupReminder.totalBusinessRecords > 5 ? 'warning' : 'default'}
           />
           <BackupSummaryCard 
-            title={t('lastImport', 'Import Terakhir')}
-            value={formatDate(backupMeta.lastImportAt) === '-' ? 'Belum Pernah' : formatDate(backupMeta.lastImportAt).split(',')[0]}
+            title={t('dataBackup.lastImport', 'Import Terakhir')}
+            value={formatDate(backupMeta.lastImportAt) === '-' ? t('dataBackup.neverImported', 'Belum Pernah') : formatDate(backupMeta.lastImportAt).split(',')[0]}
             helper={formatDate(backupMeta.lastImportAt) !== '-' ? formatDate(backupMeta.lastImportAt).split(',')[1] : ''}
             icon={Upload}
           />
           <BackupSummaryCard 
-            title={t('localStorageHealth', 'Status Storage')}
-            value={storageHealth.status === 'healthy' ? 'Sehat' : storageHealth.status === 'warning' ? 'Peringatan' : 'Kritis'}
+            title={t('dataBackup.localStorageHealth', 'Status Storage')}
+            value={storageHealth.status === 'healthy' ? t('dataBackup.healthHealthy', 'Sehat') : storageHealth.status === 'warning' ? t('dataBackup.healthWarning', 'Peringatan') : t('dataBackup.healthDanger', 'Kritis')}
             helper={storageHealth.formattedSize}
             icon={History}
             tone={storageHealth.status}

@@ -1,7 +1,11 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { getModuleHealth } from '../lib/dataPortability/storageHealth';
-import { mergeArrayById } from '../lib/dataPortability/backupImporter';
+import { importModalinBackup, mergeArrayById } from '../lib/dataPortability/backupImporter';
+import { resetAllBusinessData } from '../lib/dataPortability/dataReset';
 import { buildCalculationsCsvRows } from '../lib/dataPortability/csvExportCenter';
+import { setActiveStorageScope } from '../lib/storage/storageScope';
+import { getCalculationStats, saveCalculation } from '../lib/storage/calculationsStorage';
+import { saveIngredient } from '../lib/storage/ingredientsStorage';
 
 describe('Data Portability: Health Checks', () => {
   it('correctly counts business records and invalid records', () => {
@@ -32,6 +36,11 @@ describe('Data Portability: Health Checks', () => {
 });
 
 describe('Data Portability: Backup Importer', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    setActiveStorageScope({ type: 'guest', uid: null });
+  });
+
   it('merges arrays by ID correctly, skipping duplicates', () => {
     const current = [
       { id: '1', name: 'Item 1' },
@@ -48,6 +57,55 @@ describe('Data Portability: Backup Importer', () => {
     expect(merged[0].name).toBe('Item 1');
     expect(merged[1].name).toBe('Item 2'); // Original kept
     expect(merged[2].name).toBe('Item 3'); // New added
+  });
+
+  it('imports business modules into the active scoped storage keys', () => {
+    const result = importModalinBackup(
+      {
+        data: {
+          calculations: [{ id: 'calc-import', productName: 'Imported Calculation' }],
+          ingredients: [{ id: 'ing-import', name: 'Gula' }]
+        }
+      },
+      { calculations: [], ingredients: [] },
+      { mode: 'replace', includeSettings: false }
+    );
+
+    expect(result.success).toBe(true);
+    expect(result.replacedCounts.calculations).toBe(1);
+    expect(result.replacedCounts.ingredients).toBe(1);
+    expect(JSON.parse(localStorage.getItem('modalin:v1:guest:calculations'))).toHaveLength(1);
+    expect(JSON.parse(localStorage.getItem('modalin:v1:guest:ingredients'))).toHaveLength(1);
+    expect(localStorage.getItem('modalin:v1:calculations')).toBeNull();
+    expect(localStorage.getItem('modalin:v1:ingredients')).toBeNull();
+  });
+
+  it('resets active scoped business data without leaving existing records behind', () => {
+    saveCalculation(
+      { productName: 'Kopi', costItems: [] },
+      { totalCost: 1000 },
+      { id: 'calc-local' }
+    );
+    saveIngredient({ id: 'ing-local', name: 'Kopi Bubuk' });
+
+    const success = resetAllBusinessData();
+
+    expect(success).toBe(true);
+    expect(JSON.parse(localStorage.getItem('modalin:v1:guest:calculations'))).toEqual([]);
+    expect(JSON.parse(localStorage.getItem('modalin:v1:guest:ingredients'))).toEqual([]);
+    expect(localStorage.getItem('modalin:v1:calculations')).toBeNull();
+    expect(localStorage.getItem('modalin:v1:ingredients')).toBeNull();
+  });
+
+  it('handles legacy calculation records without result snapshots', () => {
+    localStorage.setItem('modalin:v1:guest:calculations', JSON.stringify([{ id: 'legacy-calc' }]));
+
+    const stats = getCalculationStats();
+
+    expect(stats.totalCalculations).toBe(1);
+    expect(stats.averageMargin).toBe(0);
+    expect(stats.healthyCount).toBe(0);
+    expect(stats.lowCount).toBe(1);
   });
 });
 

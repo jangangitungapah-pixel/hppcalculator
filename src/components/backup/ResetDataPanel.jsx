@@ -37,27 +37,27 @@ export const ResetDataPanel = ({ modules, onResetModule, onResetAll, onResetDraf
   return (
     <>
       {hasDemoData() && (
-        <Card className="p-6 border-amber-200 bg-amber-50/10 mb-6">
-          <div className="flex items-start gap-3 mb-4">
-            <div className="p-2 bg-amber-100 text-amber-600 rounded-lg shrink-0">
-              <AlertOctagon size={24} />
+        <Card className="p-5 sm:p-6 border-amber-500/15 bg-amber-500/5 mb-6 rounded-3xl shadow-xs">
+          <div className="flex items-start gap-3.5 mb-4">
+            <div className="p-2 bg-amber-500/15 text-amber-600 rounded-xl shrink-0 flex items-center justify-center">
+              <AlertOctagon className="w-5.5 h-5.5" />
             </div>
             <div>
-              <h3 className="font-bold text-lg text-amber-700">
+              <h3 className="font-extrabold text-base sm:text-lg text-amber-850">
                 {t('settings.clearDemoData')}
               </h3>
-              <p className="text-sm text-text-secondary mt-1">
+              <p className="text-xs font-semibold text-amber-800/80 mt-1 leading-relaxed">
                 {t('settings.clearDemoDataConfirmBody')}
               </p>
             </div>
           </div>
           <div className="flex">
             <Button 
-              variant="outline" 
+              variant="ghost" 
               size="sm"
-              className="border-red-200 text-status-loss hover:bg-status-loss/5"
+              className="h-9 px-4 bg-red-500/10 hover:bg-red-500/15 text-red-750 border border-red-500/10 rounded-xl text-xs font-bold transition-all"
               onClick={() => setDemoConfirmOpen(true)}
-              leftIcon={<Trash2 size={16} />}
+              leftIcon={<Trash2 className="w-3.5 h-3.5 mr-1" />}
             >
               {t('settings.clearDemoData')}
             </Button>
@@ -65,53 +65,53 @@ export const ResetDataPanel = ({ modules, onResetModule, onResetAll, onResetDraf
         </Card>
       )}
 
-      <Card className="p-6 border-red-200">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="p-2 bg-red-100 text-red-600 rounded-lg">
-            <Trash2 size={24} />
+      <Card className="p-5 sm:p-6 border-red-500/15 bg-red-500/[0.01] rounded-3xl shadow-xs">
+        <div className="flex items-center gap-3.5 mb-6 pb-3 border-b border-border-soft">
+          <div className="p-2 bg-red-500/10 text-red-600 rounded-xl shrink-0 flex items-center justify-center">
+            <Trash2 className="w-5.5 h-5.5" />
           </div>
           <div>
-            <h3 className="font-bold text-lg text-red-600">
-              {t('dangerZone', 'Danger Zone')}
+            <h3 className="font-extrabold text-base sm:text-lg text-red-600">
+              {t('dataBackup.dangerZone', 'Danger Zone')}
             </h3>
-            <p className="text-sm text-text-secondary">
-              {t('resetDataDesc', 'Hapus data secara permanen dari perangkat ini.')}
+            <p className="text-xs sm:text-sm font-semibold text-text-secondary mt-0.5 leading-relaxed">
+              {t('dataBackup.resetDataDesc', 'Hapus data secara permanen dari perangkat ini.')}
             </p>
           </div>
         </div>
 
         <div className="space-y-3 mb-8">
           <ResetModuleCard 
-            title={t('resetDraft', 'Hapus Draft Kalkulator')} 
-            description={t('resetDraftDesc', 'Menghapus data sementara di Quick Calculator.')} 
+            title={t('dataBackup.resetDraft', 'Hapus Draft Kalkulator')} 
+            description={t('dataBackup.resetDraftDesc', 'Menghapus data sementara di Quick Calculator.')} 
             onReset={() => confirmResetModule('draft')} 
           />
           <ResetModuleCard 
-            title={t('resetProducts', 'Hapus Semua Produk')} 
-            description={t('resetProductsDesc', 'Menghapus semua produk/menu dan simulasinya.')} 
+            title={t('dataBackup.resetProducts', 'Hapus Semua Produk')} 
+            description={t('dataBackup.resetProductsDesc', 'Menghapus semua produk/menu dan simulasinya.')} 
             onReset={() => confirmResetModule('products')} 
           />
           <ResetModuleCard 
-            title={t('resetRecipes', 'Hapus Semua Resep & Bahan')} 
-            description={t('resetRecipesDesc', 'Menghapus data resep dan daftar bahan baku.')} 
+            title={t('dataBackup.resetRecipes', 'Hapus Semua Resep & Bahan')} 
+            description={t('dataBackup.resetRecipesDesc', 'Menghapus data resep dan daftar bahan baku.')} 
             onReset={() => {
               confirmResetModule('recipes');
             }} 
           />
           <ResetModuleCard 
-            title={t('resetSimulations', 'Hapus Semua Simulasi')} 
-            description={t('resetSimulationsDesc', 'Menghapus simulasi channel, diskon, dan bundle.')} 
+            title={t('dataBackup.resetSimulations', 'Hapus Semua Simulasi')} 
+            description={t('dataBackup.resetSimulationsDesc', 'Menghapus simulasi channel, diskon, dan bundle.')} 
             onReset={() => confirmResetModule('pricingSimulations')} 
           />
         </div>
 
-        <div className="bg-red-50 border border-red-200 rounded-xl p-5">
-          <div className="flex items-start gap-3 mb-4">
-            <AlertOctagon size={24} className="text-red-600 shrink-0" />
+        <div className="bg-red-500/5 border border-red-500/10 rounded-2xl p-4.5">
+          <div className="flex items-start gap-3.5 mb-4">
+            <AlertOctagon className="w-5.5 h-5.5 text-red-600 shrink-0 mt-0.5" />
             <div>
-              <h4 className="font-bold text-red-700">{t('resetAllBusinessData', 'Hapus Semua Data Bisnis')}</h4>
-              <p className="text-sm text-red-600 mt-1">
-                {t('resetAllWarning', 'Tindakan ini akan MENGHAPUS SEMUA data kalkulasi, resep, produk, bahan, dan simulasi dari perangkat ini secara permanen. Pengaturan tidak akan terhapus.')}
+              <h4 className="font-extrabold text-sm text-red-850">{t('dataBackup.resetAllBusinessData', 'Hapus Semua Data Bisnis')}</h4>
+              <p className="text-xs font-semibold text-red-750 mt-1 leading-relaxed">
+                {t('dataBackup.resetAllWarning', 'Tindakan ini akan MENGHAPUS SEMUA data kalkulasi, resep, produk, bahan, dan simulasi dari perangkat ini secara permanen. Pengaturan tidak akan terhapus.')}
               </p>
             </div>
           </div>
@@ -120,17 +120,18 @@ export const ResetDataPanel = ({ modules, onResetModule, onResetAll, onResetDraf
             size="md"
             fullWidth
             onClick={() => setStrongConfirmOpen(true)}
-            leftIcon={<Trash2 size={16} />}
+            className="h-11 text-xs sm:text-sm font-bold rounded-xl shadow-md shadow-red-500/10 transition-all"
+            leftIcon={<Trash2 className="w-4 h-4 mr-1.5" />}
           >
-            {t('resetAllData', 'HAPUS SEMUA DATA')}
+            {t('dataBackup.resetAllData', 'HAPUS SEMUA DATA')}
           </Button>
         </div>
       </Card>
 
       <StrongConfirmDialog 
         open={strongConfirmOpen}
-        title={t('resetAllBusinessData', 'Hapus Semua Data Bisnis')}
-        description={t('resetAllWarning', 'Tindakan ini permanen dan tidak dapat dibatalkan.')}
+        title={t('dataBackup.resetAllBusinessData', 'Hapus Semua Data Bisnis')}
+        description={t('dataBackup.resetAllWarning', 'Tindakan ini permanen dan tidak dapat dibatalkan.')}
         requiredText="HAPUS"
         onConfirm={() => {
           onResetAll();
@@ -141,8 +142,8 @@ export const ResetDataPanel = ({ modules, onResetModule, onResetAll, onResetDraf
 
       <ConfirmDialog 
         open={moduleConfirmOpen}
-        title={t('resetModuleTitle', 'Konfirmasi Hapus Modul')}
-        description={t('resetModuleWarning', 'Apakah Anda yakin ingin menghapus data modul ini? Tindakan ini tidak dapat dibatalkan.')}
+        title={t('dataBackup.resetModuleTitle', 'Konfirmasi Hapus Modul')}
+        description={t('dataBackup.resetModuleWarning', 'Apakah Anda yakin ingin menghapus data modul ini? Tindakan ini tidak dapat dibatalkan.')}
         confirmLabel={t('delete', 'Hapus')}
         cancelLabel={t('cancel', 'Batal')}
         onConfirm={handleModuleConfirm}

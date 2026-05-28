@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../hooks/useLanguage';
 import { useReports } from '../hooks/useReports';
 import { useAppData } from '../hooks/useAppData';
-import { AppHeader } from '../components/layout/AppHeader';
+import { formatPercent } from '../lib/calculations';
+import { AlertTriangle, BarChart3, Database, ShieldCheck } from 'lucide-react';
 
 import { ReportTabs } from '../components/reports/ReportTabs';
 import { ReportPeriodFilter } from '../components/reports/ReportPeriodFilter';
@@ -17,7 +18,7 @@ import { ChannelReportPanel } from '../components/reports/ChannelReportPanel';
 import { SimulationReportPanel } from '../components/reports/SimulationReportPanel';
 
 export const ReportsPage = () => {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const navigate = useNavigate();
   const appData = useAppData();
   
@@ -42,6 +43,9 @@ export const ReportsPage = () => {
     appData.loadDemoData();
     window.location.reload();
   };
+
+  const activePanelId = `report-panel-${activeTab}`;
+  const attentionCount = (summary.lowCount || 0) + (summary.lossCount || 0);
 
   const renderContent = () => {
     if (!hasAnyData) {
@@ -70,21 +74,50 @@ export const ReportsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-20">
-      <AppHeader title={t('reports.title')} onBack={() => navigate('/')} />
+    <div className="reports-page min-h-screen bg-background pb-20">
       
-      <main className="max-w-4xl mx-auto px-4 py-6">
-        <div className="mb-6">
-          <h2 className="text-sm text-text-secondary">{t('reports.subtitle')}</h2>
-          <div className="text-xs text-text-tertiary mt-1 flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-status-good animate-pulse"></span>
-            {t('reports.localOnlyNote')}
+      <main className="reports-main" aria-labelledby="reports-page-title">
+        <section className="reports-hero" aria-describedby="reports-page-subtitle">
+          <div className="reports-hero-copy">
+            <div className="reports-eyebrow">
+              <BarChart3 className="w-4 h-4" aria-hidden="true" />
+              {t('reports.generatedFromLocalData')}
+            </div>
+            <h2 id="reports-page-title" className="reports-title">{t('reports.title')}</h2>
+            <p id="reports-page-subtitle" className="reports-subtitle">{t('reports.subtitle')}</p>
+            <div className="reports-local-note">
+              <span className="reports-local-dot" aria-hidden="true" />
+              {t('reports.localOnlyNote')}
+            </div>
           </div>
-        </div>
+
+          {hasAnyData && (
+            <div className="reports-hero-stats" aria-label={t('reports.quickStatsLabel')}>
+              <div className="reports-hero-stat">
+                <Database className="w-4 h-4" aria-hidden="true" />
+                <span>{t('reports.totalItems')}</span>
+                <strong>{summary.totalItems}</strong>
+              </div>
+              <div className="reports-hero-stat">
+                <ShieldCheck className="w-4 h-4" aria-hidden="true" />
+                <span>{t('reports.averageMargin')}</span>
+                <strong>{formatPercent(summary.averageMargin, lang)}</strong>
+              </div>
+              <div className={`reports-hero-stat ${attentionCount > 0 ? 'is-warning' : 'is-good'}`}>
+                <AlertTriangle className="w-4 h-4" aria-hidden="true" />
+                <span>{t('reports.needsAttention')}</span>
+                <strong>{attentionCount}</strong>
+              </div>
+            </div>
+          )}
+        </section>
 
         {hasAnyData && (
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-            <ReportPeriodFilter period={period} onChange={setPeriod} />
+          <div className="reports-toolbar">
+            <div>
+              <p className="reports-toolbar-label">{t('reports.periodFilterLabel')}</p>
+              <ReportPeriodFilter period={period} onChange={setPeriod} />
+            </div>
             <ExportCsvButton onExport={exportCsv} disabled={summary.totalItems === 0} />
           </div>
         )}
@@ -93,9 +126,15 @@ export const ReportsPage = () => {
           <ReportTabs activeTab={activeTab} onChange={setActiveTab} />
         )}
 
-        <div className="animate-fade-in">
+        <section
+          id={activePanelId}
+          role={hasAnyData ? 'tabpanel' : undefined}
+          aria-labelledby={hasAnyData ? `report-tab-${activeTab}` : undefined}
+          tabIndex={hasAnyData ? 0 : undefined}
+          className="reports-content animate-fade-in"
+        >
           {renderContent()}
-        </div>
+        </section>
       </main>
     </div>
   );

@@ -3,20 +3,27 @@ import { useLanguage } from '../../hooks/useLanguage';
 import { ReportMetricCard } from './ReportMetricCard';
 import { MarginBarList } from './MarginBarList';
 import { ProfitabilityTable } from './ProfitabilityTable';
-import { SimpleBarChart } from './SimpleBarChart';
-import { InsightCard } from './InsightCard';
-import { Package, TrendingUp, AlertTriangle, TrendingDown } from 'lucide-react';
+import { ReportSectionEmptyState } from './ReportSectionEmptyState';
+import { Package, TrendingUp, AlertTriangle } from 'lucide-react';
 
 export const ProductReportPanel = ({ items, insights }) => {
   const { t } = useLanguage();
-  const { bestProducts, worstProducts, promoCandidates, resellerCandidates, marketplaceCandidates, needsReview } = insights;
+  const { bestProducts, worstProducts, resellerCandidates, marketplaceCandidates, needsReview } = insights;
   
-  if (!items || items.length === 0) return null;
+  if (!items || items.length === 0) {
+    return (
+      <ReportSectionEmptyState
+        title={t('reports.emptyProductsTitle')}
+        description={t('reports.emptyProductsBody')}
+        actionRoute="/products"
+      />
+    );
+  }
 
   return (
-    <div className="space-y-6">
+    <div className="report-panel-stack">
       {/* Product Summary Row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="report-metric-grid">
         <ReportMetricCard 
           label={t('reports.productsCount')} 
           value={items.length} 
@@ -42,25 +49,25 @@ export const ProductReportPanel = ({ items, insights }) => {
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="report-insight-grid">
         {/* Best Products */}
         <div>
-          <h3 className="text-sm font-bold text-text-primary mb-3">{t('reports.bestMargin')}</h3>
-          <div className="bg-white rounded-xl p-4 border border-border shadow-sm">
+          <h3 className="report-section-title">{t('reports.bestMargin')}</h3>
+          <div className="report-panel-card">
             <MarginBarList items={bestProducts} />
             {bestProducts.length === 0 && (
-              <div className="text-sm text-text-tertiary text-center py-4">Belum ada data</div>
+              <div className="report-muted-message">{t('reports.noData')}</div>
             )}
           </div>
         </div>
         
         {/* Worst Products */}
         <div>
-          <h3 className="text-sm font-bold text-text-primary mb-3">{t('reports.worstMargin')}</h3>
-          <div className="bg-white rounded-xl p-4 border border-border shadow-sm">
+          <h3 className="report-section-title">{t('reports.worstMargin')}</h3>
+          <div className="report-panel-card">
             <MarginBarList items={worstProducts} />
             {worstProducts.length === 0 && (
-              <div className="text-sm text-text-tertiary text-center py-4">Belum ada data</div>
+              <div className="report-muted-message">{t('reports.noData')}</div>
             )}
           </div>
         </div>
@@ -68,8 +75,8 @@ export const ProductReportPanel = ({ items, insights }) => {
       
       {/* Profitability Table */}
       <div>
-        <h3 className="text-sm font-bold text-text-primary mb-3">{t('reports.profitabilityTable')}</h3>
-        <div className="bg-white rounded-xl shadow-sm border border-border overflow-hidden p-0 sm:p-4">
+        <h3 className="report-section-title">{t('reports.profitabilityTable')}</h3>
+        <div className="report-panel-card report-table-card">
            <ProfitabilityTable items={items} />
         </div>
       </div>

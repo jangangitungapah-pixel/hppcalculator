@@ -1,6 +1,7 @@
-import { BACKUP_MODULES } from './backupTypes';
+import { BACKUP_MODULES, BACKUP_MODULE_STORAGE_KEYS } from './backupTypes';
 import { markBackupImported } from './dataBackupMeta';
 import { STORAGE_KEYS } from '../storage';
+import { getScopedJson, setScopedJson } from '../storage/localStorageClient';
 
 export const mergeArrayById = (currentArray, incomingArray) => {
   if (!Array.isArray(currentArray)) currentArray = [];
@@ -27,19 +28,21 @@ export const applyImportedData = (backupData, mode, includeSettings, currentData
     replacedCounts[module] = 0;
     
     const incomingArray = backupData[module] || [];
-    const storageKey = STORAGE_KEYS[module];
+    const storageKey = BACKUP_MODULE_STORAGE_KEYS[module];
     
     if (!storageKey) return;
     
     if (mode === 'replace') {
-      try {
-        localStorage.setItem(storageKey, JSON.stringify(incomingArray));
+      const success = setScopedJson(storageKey, incomingArray);
+      if (success) {
         replacedCounts[module] = incomingArray.length;
-      } catch (err) {
-        console.error(`Failed to replace ${module}`, err);
+      } else {
+        console.error(`Failed to replace ${module}`);
       }
     } else if (mode === 'merge') {
-      const currentArray = currentData[module] || [];
+      const currentArray = Array.isArray(currentData[module])
+        ? currentData[module]
+        : getScopedJson(storageKey, []);
       const currentIds = new Set(currentArray.map(item => item.id).filter(Boolean));
       
       const newItems = incomingArray.filter(item => item.id && !currentIds.has(item.id));
@@ -47,12 +50,12 @@ export const applyImportedData = (backupData, mode, includeSettings, currentData
       
       if (newItems.length > 0) {
         const merged = [...currentArray, ...newItems];
-        try {
-          localStorage.setItem(storageKey, JSON.stringify(merged));
+        const success = setScopedJson(storageKey, merged);
+        if (success) {
           importedCounts[module] = newItems.length;
           skippedCounts[module] = duplicateCount;
-        } catch (err) {
-          console.error(`Failed to merge ${module}`, err);
+        } else {
+          console.error(`Failed to merge ${module}`);
         }
       } else {
         skippedCounts[module] = duplicateCount;
@@ -65,20 +68,20 @@ export const applyImportedData = (backupData, mode, includeSettings, currentData
     const storageKey = STORAGE_KEYS.settings;
     if (storageKey) {
       if (mode === 'replace') {
-        try {
-          localStorage.setItem(storageKey, JSON.stringify(backupData.settings));
+        const success = setScopedJson(storageKey, backupData.settings);
+        if (success) {
           replacedCounts.settings = 1;
-        } catch (err) {
-           console.error("Failed to replace settings", err);
+        } else {
+           console.error("Failed to replace settings");
         }
       } else if (mode === 'merge') {
         const currentSettings = currentData.settings || {};
         const mergedSettings = { ...currentSettings, ...backupData.settings };
-        try {
-          localStorage.setItem(storageKey, JSON.stringify(mergedSettings));
+        const success = setScopedJson(storageKey, mergedSettings);
+        if (success) {
           importedCounts.settings = 1;
-        } catch (err) {
-           console.error("Failed to merge settings", err);
+        } else {
+           console.error("Failed to merge settings");
         }
       }
     }
