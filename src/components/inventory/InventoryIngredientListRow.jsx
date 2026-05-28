@@ -1,5 +1,5 @@
 import React from 'react';
-import { CalendarClock, History, Minus, Plus, Settings2 } from 'lucide-react';
+import { CalendarClock, History, Minus, Plus, Settings2, ShoppingBag } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { formatStockQuantity } from '../../lib/inventory';
 import { InventoryStatusBadge } from './InventoryStatusBadge';
@@ -15,7 +15,8 @@ export const InventoryIngredientListRow = ({
   onAddStock,
   onReduceStock,
   onHistory,
-  onSettings
+  onSettings,
+  onRecordPurchase
 }) => {
   const isTracked = snapshot?.stockStatus !== 'not_tracked';
 
@@ -42,6 +43,9 @@ export const InventoryIngredientListRow = ({
       <div className="inventory-list-actions">
         <Button size="icon" variant="secondary" onClick={onAddStock} aria-label={`Tambah stok ${ingredient.name}`} title="Tambah stok">
           <Plus className="w-4 h-4" />
+        </Button>
+        <Button size="icon" variant="outline" onClick={onRecordPurchase} aria-label={`Catat pembelian ${ingredient.name}`} title="Catat Pembelian">
+          <ShoppingBag className="w-4 h-4" />
         </Button>
         <Button size="icon" variant="outline" onClick={onReduceStock} aria-label={`Kurangi stok ${ingredient.name}`} title="Kurangi stok">
           <Minus className="w-4 h-4" />

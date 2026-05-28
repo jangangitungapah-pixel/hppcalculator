@@ -37,9 +37,12 @@ const ChannelProfilesPage = React.lazy(() => import('./pages/channelPricing/Chan
 const PricingSimulationsPage = React.lazy(() => import('./pages/channelPricing/PricingSimulationsPage').then(module => ({ default: module.PricingSimulationsPage })));
 const ReportsPage = React.lazy(() => import('./pages/ReportsPage').then(module => ({ default: module.ReportsPage })));
 const DataBackupPage = React.lazy(() => import('./pages/DataBackupPage').then(module => ({ default: module.DataBackupPage })));
+const SuppliersPage = React.lazy(() => import('./pages/SuppliersPage').then(module => ({ default: module.SuppliersPage })));
+const PurchaseLogPage = React.lazy(() => import('./pages/PurchaseLogPage').then(module => ({ default: module.PurchaseLogPage })));
+const PurchaseDetailPage = React.lazy(() => import('./pages/PurchaseDetailPage').then(module => ({ default: module.PurchaseDetailPage })));
 
-const businessStoragePattern = /^modalin:v1:(guest|user:[^:]+):(calculations|ingredients|recipes|products|channelProfiles|pricingSimulations|bundleSimulations|inventorySettings|stockMovements)$/;
-const legacyBusinessStoragePattern = /^modalin:v1:(calculations|ingredients|recipes|products|channelProfiles|pricingSimulations|bundleSimulations|inventorySettings|stockMovements)$/;
+const businessStoragePattern = /^modalin:v1:(guest|user:[^:]+):(calculations|ingredients|recipes|products|channelProfiles|pricingSimulations|bundleSimulations|inventorySettings|stockMovements|suppliers|purchaseLogs|purchaseItems)$/;
+const legacyBusinessStoragePattern = /^modalin:v1:(calculations|ingredients|recipes|products|channelProfiles|pricingSimulations|bundleSimulations|inventorySettings|stockMovements|suppliers|purchaseLogs|purchaseItems)$/;
 
 const hasReturningUserData = () => {
   if (typeof window === 'undefined' || !window.localStorage) return false;
@@ -124,6 +127,9 @@ const router = createBrowserRouter(
         <Route path="/simulations" element={<Suspense fallback={<RouteFallback />}><PricingSimulationsPage /></Suspense>} />
         <Route path="/reports" element={<Suspense fallback={<RouteFallback />}><ReportsPage /></Suspense>} />
         <Route path="/data-backup" element={<Suspense fallback={<RouteFallback />}><DataBackupPage /></Suspense>} />
+        <Route path="/suppliers" element={<Suspense fallback={<RouteFallback />}><SuppliersPage /></Suspense>} />
+        <Route path="/purchases" element={<Suspense fallback={<RouteFallback />}><PurchaseLogPage /></Suspense>} />
+        <Route path="/purchases/:id" element={<Suspense fallback={<RouteFallback />}><PurchaseDetailPage /></Suspense>} />
         <Route path="/account" element={<Suspense fallback={<RouteFallback />}><AccountPage /></Suspense>} />
         <Route path="/sync" element={<Suspense fallback={<RouteFallback />}><SyncCenterPage /></Suspense>} />
         <Route path="/more" element={<Suspense fallback={<RouteFallback />}><MorePage /></Suspense>} />

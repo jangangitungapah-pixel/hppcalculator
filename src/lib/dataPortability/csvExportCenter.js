@@ -140,6 +140,51 @@ export const buildStockMovementsCsvRows = (movements) => {
   }));
 };
 
+export const buildSuppliersCsvRows = (suppliers) => {
+  return suppliers.map(s => ({
+    id: s.id,
+    name: s.name,
+    type: s.type || '',
+    contactName: s.contactName || '',
+    phone: s.phone || '',
+    email: s.email || '',
+    address: s.address || '',
+    notes: s.notes || '',
+    isFavorite: s.isFavorite ? 'Yes' : 'No',
+    createdAt: s.createdAt
+  }));
+};
+
+export const buildPurchaseLogsCsvRows = (logs) => {
+  return logs.map(l => ({
+    id: l.id,
+    supplierId: l.supplierId || '',
+    supplierNameSnapshot: l.supplierNameSnapshot || '',
+    purchaseDate: l.purchaseDate,
+    invoiceNumber: l.invoiceNumber || '',
+    paymentMethod: l.paymentMethod || '',
+    totalAmount: l.totalAmount,
+    notes: l.notes || '',
+    createdAt: l.createdAt
+  }));
+};
+
+export const buildPurchaseItemsCsvRows = (items) => {
+  return items.map(item => ({
+    id: item.id,
+    purchaseLogId: item.purchaseLogId,
+    ingredientId: item.ingredientId,
+    ingredientNameSnapshot: item.ingredientNameSnapshot,
+    quantity: item.quantity,
+    unit: item.unit,
+    totalPrice: item.totalPrice,
+    unitPrice: item.unitPrice,
+    addToStock: item.addToStock ? 'Yes' : 'No',
+    updateIngredientPrice: item.updateIngredientPrice ? 'Yes' : 'No',
+    createdAt: item.createdAt
+  }));
+};
+
 export const exportModuleToCsv = (moduleName, data) => {
   if (!Array.isArray(data) || data.length === 0) return false;
   
@@ -154,6 +199,9 @@ export const exportModuleToCsv = (moduleName, data) => {
     case 'bundleSimulations': rows = buildBundleSimulationsCsvRows(data); break;
     case 'inventorySettings': rows = buildInventorySettingsCsvRows(data); break;
     case 'stockMovements': rows = buildStockMovementsCsvRows(data); break;
+    case 'suppliers': rows = buildSuppliersCsvRows(data); break;
+    case 'purchaseLogs': rows = buildPurchaseLogsCsvRows(data); break;
+    case 'purchaseItems': rows = buildPurchaseItemsCsvRows(data); break;
     default: return false;
   }
   

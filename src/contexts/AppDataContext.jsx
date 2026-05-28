@@ -22,6 +22,9 @@ export const AppDataProvider = ({ children }) => {
   const [inventorySettings, setInventorySettings] = useState([]);
   const [stockMovements, setStockMovements] = useState([]);
   const [inventorySnapshots, setInventorySnapshots] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
+  const [purchaseLogs, setPurchaseLogs] = useState([]);
+  const [purchaseItems, setPurchaseItems] = useState([]);
 
   // Centralized reload function
   const refreshData = useCallback(() => {
@@ -39,6 +42,9 @@ export const AppDataProvider = ({ children }) => {
       setInventorySettings(storage.getInventorySettings());
       setStockMovements(storage.getStockMovements());
       setInventorySnapshots(storage.getInventorySnapshots());
+      setSuppliers(storage.getSuppliers());
+      setPurchaseLogs(storage.getPurchaseLogs());
+      setPurchaseItems(storage.getPurchaseItems());
     } catch (e) {
       console.error("[AppDataContext] Error refreshing data", e);
     }
@@ -319,6 +325,46 @@ export const AppDataProvider = ({ children }) => {
     return storage.getInventorySnapshotByIngredientId(ingredientId);
   }, []);
 
+  // Supplier Actions
+  const saveSupplier = useCallback((input) => {
+    const saved = storage.saveSupplier(input);
+    refreshData();
+    return saved;
+  }, [refreshData]);
+
+  const updateSupplier = useCallback((id, patch) => {
+    const updated = storage.updateSupplier(id, patch);
+    refreshData();
+    return updated;
+  }, [refreshData]);
+
+  const deleteSupplier = useCallback((id) => {
+    storage.deleteSupplier(id);
+    refreshData();
+  }, [refreshData]);
+
+  // Purchase Actions
+  const savePurchaseLog = useCallback((input, items) => {
+    const result = storage.savePurchaseLog(input, items);
+    refreshData();
+    return result;
+  }, [refreshData]);
+
+  const updatePurchaseLog = useCallback((id, patch) => {
+    const updated = storage.updatePurchaseLog(id, patch);
+    refreshData();
+    return updated;
+  }, [refreshData]);
+
+  const deletePurchaseLog = useCallback((id) => {
+    storage.deletePurchaseLog(id);
+    refreshData();
+  }, [refreshData]);
+
+  const getPurchaseDetail = useCallback((id) => {
+    return storage.getPurchaseDetail(id);
+  }, []);
+
   const value = {
     isReady,
     calculations,
@@ -387,6 +433,16 @@ export const AppDataProvider = ({ children }) => {
     updateStockMovement,
     deleteStockMovement,
     getInventorySnapshotByIngredientId,
+    suppliers,
+    purchaseLogs,
+    purchaseItems,
+    saveSupplier,
+    updateSupplier,
+    deleteSupplier,
+    savePurchaseLog,
+    updatePurchaseLog,
+    deletePurchaseLog,
+    getPurchaseDetail,
     refreshData
   };
 

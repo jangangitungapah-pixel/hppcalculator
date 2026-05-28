@@ -1,5 +1,5 @@
 import React from 'react';
-import { CalendarClock, History, Minus, Plus, Settings2 } from 'lucide-react';
+import { CalendarClock, History, Minus, Plus, Settings2, ShoppingBag } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { formatStockQuantity } from '../../lib/inventory';
 import { InventoryStatusBadge } from './InventoryStatusBadge';
@@ -15,7 +15,8 @@ export const InventoryIngredientCard = ({
   onAddStock,
   onReduceStock,
   onHistory,
-  onSettings
+  onSettings,
+  onRecordPurchase
 }) => {
   const isTracked = snapshot?.stockStatus !== 'not_tracked';
 
@@ -41,8 +42,9 @@ export const InventoryIngredientCard = ({
         <span className="inventory-last-movement"><CalendarClock className="w-3.5 h-3.5" />{formatDate(snapshot?.lastMovementAt)}</span>
       </div>
 
-      <div className="inventory-card-actions">
+      <div className="inventory-card-actions flex flex-wrap gap-1">
         <Button size="sm" variant="secondary" onClick={onAddStock} iconLeft={<Plus className="w-4 h-4" />} aria-label={`Tambah stok ${ingredient.name}`}>Tambah</Button>
+        <Button size="sm" variant="outline" onClick={onRecordPurchase} iconLeft={<ShoppingBag className="w-4 h-4" />} aria-label={`Catat pembelian ${ingredient.name}`}>Beli</Button>
         <Button size="sm" variant="outline" onClick={onReduceStock} iconLeft={<Minus className="w-4 h-4" />} aria-label={`Kurangi stok ${ingredient.name}`}>Kurangi</Button>
         <Button size="sm" variant="ghost" onClick={onHistory} iconLeft={<History className="w-4 h-4" />} aria-label={`Lihat riwayat stok ${ingredient.name}`}>Riwayat</Button>
         <Button size="sm" variant="ghost" onClick={onSettings} iconLeft={<Settings2 className="w-4 h-4" />} aria-label={`Atur minimum stok ${ingredient.name}`}>Minimum</Button>

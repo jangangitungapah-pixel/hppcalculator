@@ -14,6 +14,8 @@ import { StockMovementList } from '../components/inventory/StockMovementList';
 import { Button } from '../components/ui/Button';
 import { useIngredients } from '../hooks/useIngredients';
 import { useInventory } from '../hooks/useInventory';
+import { usePurchases } from '../hooks/usePurchases';
+import { PurchaseFormDialog } from '../components/purchases/PurchaseFormDialog';
 import { useToast } from '../hooks/useToast';
 
 const isThisMonth = (value) => {
@@ -47,6 +49,9 @@ export const InventoryPage = () => {
   const [movementDialog, setMovementDialog] = React.useState(null);
   const [settingIngredient, setSettingIngredient] = React.useState(null);
   const [historyIngredient, setHistoryIngredient] = React.useState(null);
+  const [purchaseIngredient, setPurchaseIngredient] = React.useState(null);
+
+  const { savePurchaseLog } = usePurchases();
 
   const snapshotsById = new Map(inventorySnapshots.map((snapshot) => [snapshot.ingredientId, snapshot]));
   const trackedCount = inventorySettings.filter((setting) => setting.stockTrackingEnabled).length;
@@ -94,6 +99,16 @@ export const InventoryPage = () => {
     saveStockMovement(input);
     setMovementDialog(null);
     addToast({ type: 'success', title: 'Movement stok disimpan.' });
+  };
+
+  const handleSavePurchase = (logData, itemsData) => {
+    try {
+      savePurchaseLog(logData, itemsData);
+      setPurchaseIngredient(null);
+      addToast({ type: 'success', title: 'Pembelian berhasil dicatat dan stok diperbarui.' });
+    } catch (err) {
+      addToast({ type: 'error', title: err.message });
+    }
   };
 
   const openMovement = (ingredient, type) => setMovementDialog({ ingredient, type });
@@ -159,6 +174,7 @@ export const InventoryPage = () => {
                       onReduceStock={() => openMovement(ingredient, 'stock_out')}
                       onHistory={() => setHistoryIngredient(ingredient)}
                       onSettings={() => setSettingIngredient(ingredient)}
+                      onRecordPurchase={() => setPurchaseIngredient(ingredient)}
                     />
                   ))}
                 </section>
@@ -173,6 +189,7 @@ export const InventoryPage = () => {
                       onReduceStock={() => openMovement(ingredient, 'stock_out')}
                       onHistory={() => setHistoryIngredient(ingredient)}
                       onSettings={() => setSettingIngredient(ingredient)}
+                      onRecordPurchase={() => setPurchaseIngredient(ingredient)}
                     />
                   ))}
                 </section>
@@ -218,6 +235,13 @@ export const InventoryPage = () => {
           </div>
         </div>
       )}
+
+      <PurchaseFormDialog
+        open={Boolean(purchaseIngredient)}
+        preselectedIngredientId={purchaseIngredient?.id}
+        onSave={handleSavePurchase}
+        onCancel={() => setPurchaseIngredient(null)}
+      />
     </PageContainer>
   );
 };

@@ -13,5 +13,8 @@ export const STORAGE_KEYS = {
   PRICING_SIMULATIONS: "modalin:v1:pricingSimulations",
   BUNDLE_SIMULATIONS: "modalin:v1:bundleSimulations",
   INVENTORY_SETTINGS: "modalin:v1:inventorySettings",
-  STOCK_MOVEMENTS: "modalin:v1:stockMovements"
+  STOCK_MOVEMENTS: "modalin:v1:stockMovements",
+  SUPPLIERS: "modalin:v1:suppliers",
+  PURCHASE_LOGS: "modalin:v1:purchaseLogs",
+  PURCHASE_ITEMS: "modalin:v1:purchaseItems"
 };

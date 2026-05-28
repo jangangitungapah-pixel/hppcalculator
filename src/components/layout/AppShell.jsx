@@ -16,6 +16,8 @@ export const AppShell = () => {
     if (pathname.startsWith('/dashboard')) return t('nav.dashboard') || 'Dashboard';
     if (pathname.startsWith('/calculator')) return t('nav.calculate') || 'Hitung HPP';
     if (pathname.startsWith('/inventory')) return 'Inventory';
+    if (pathname.startsWith('/suppliers')) return 'Supplier';
+    if (pathname.startsWith('/purchases')) return 'Riwayat Pembelian';
     if (pathname.startsWith('/ingredients')) return t('nav.ingredients') || 'Bahan Baku';
     if (pathname.startsWith('/recipes')) return t('nav.recipes') || 'Resep';
     if (pathname.startsWith('/products')) return t('nav.products') || 'Produk/Menu';

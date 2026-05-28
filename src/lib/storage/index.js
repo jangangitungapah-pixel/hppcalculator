@@ -13,3 +13,5 @@ export * from './pricingSimulationsStorage';
 export * from './bundleSimulationsStorage';
 export * from './inventoryStorage';
 export * from './scopeDataInspection';
+export * from './suppliersStorage';
+export * from './purchaseStorage';

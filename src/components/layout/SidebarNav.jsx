@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { useLanguage } from '../../hooks/useLanguage';
 import { useAuth } from '../../hooks/useAuth';
 import { useSync } from '../../hooks/useSync';
-import { LayoutDashboard, Calculator, History, Settings, Sparkles, BookOpen, Package, Apple, TrendingUp, BarChart3, Database, ShieldCheck, Store, ListChecks, UserCircle, Cloud, PackageSearch } from 'lucide-react';
+import { LayoutDashboard, Calculator, History, Settings, Sparkles, BookOpen, Package, Apple, TrendingUp, BarChart3, Database, ShieldCheck, Store, ListChecks, UserCircle, Cloud, PackageSearch, ShoppingBag, Users } from 'lucide-react';
 import { cn } from '../../lib/ui/cn';
 import { motion } from 'framer-motion';
 
@@ -27,6 +27,8 @@ export const SidebarNav = () => {
         { to: '/recipes', icon: <BookOpen className="w-5 h-5" />, label: t('nav.recipes') },
         { to: '/products', icon: <Package className="w-5 h-5" />, label: t('nav.products') },
         { to: '/inventory', icon: <PackageSearch className="w-5 h-5" />, label: lang === 'id' ? 'Inventory' : 'Inventory' },
+        { to: '/purchases', icon: <ShoppingBag className="w-5 h-5" />, label: lang === 'id' ? 'Pembelian' : 'Purchases' },
+        { to: '/suppliers', icon: <Users className="w-5 h-5" />, label: lang === 'id' ? 'Supplier' : 'Suppliers' },
       ]
     },
     {

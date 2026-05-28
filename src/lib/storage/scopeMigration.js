@@ -99,7 +99,12 @@ export const importGuestDataToActiveUser = () => {
       { key: STORAGE_KEYS.PRODUCTS, name: 'products' },
       { key: STORAGE_KEYS.CHANNEL_PROFILES, name: 'channelProfiles' },
       { key: STORAGE_KEYS.PRICING_SIMULATIONS, name: 'pricingSimulations' },
-      { key: STORAGE_KEYS.BUNDLE_SIMULATIONS, name: 'bundleSimulations' }
+      { key: STORAGE_KEYS.BUNDLE_SIMULATIONS, name: 'bundleSimulations' },
+      { key: STORAGE_KEYS.INVENTORY_SETTINGS, name: 'inventorySettings' },
+      { key: STORAGE_KEYS.STOCK_MOVEMENTS, name: 'stockMovements' },
+      { key: STORAGE_KEYS.SUPPLIERS, name: 'suppliers' },
+      { key: STORAGE_KEYS.PURCHASE_LOGS, name: 'purchaseLogs' },
+      { key: STORAGE_KEYS.PURCHASE_ITEMS, name: 'purchaseItems' }
     ];
 
     arrayModules.forEach(({ key, name }) => {

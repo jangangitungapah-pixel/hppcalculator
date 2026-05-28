@@ -8,7 +8,10 @@ export const SYNC_RECORD_TYPES = {
   BUNDLE_SIMULATION: 'bundleSimulation',
   INVENTORY_SETTING: 'inventorySetting',
   STOCK_MOVEMENT: 'stockMovement',
-  SETTINGS: 'settings'
+  SETTINGS: 'settings',
+  SUPPLIER: 'supplier',
+  PURCHASE_LOG: 'purchaseLog',
+  PURCHASE_ITEM: 'purchaseItem'
 };
 
 export const LOCAL_MODULE_MAP = {
@@ -21,7 +24,10 @@ export const LOCAL_MODULE_MAP = {
   bundleSimulations: SYNC_RECORD_TYPES.BUNDLE_SIMULATION,
   inventorySettings: SYNC_RECORD_TYPES.INVENTORY_SETTING,
   stockMovements: SYNC_RECORD_TYPES.STOCK_MOVEMENT,
-  settings: SYNC_RECORD_TYPES.SETTINGS
+  settings: SYNC_RECORD_TYPES.SETTINGS,
+  suppliers: SYNC_RECORD_TYPES.SUPPLIER,
+  purchaseLogs: SYNC_RECORD_TYPES.PURCHASE_LOG,
+  purchaseItems: SYNC_RECORD_TYPES.PURCHASE_ITEM
 };
 
 export const SYNC_RECORD_TYPES_TO_MODULE = Object.entries(LOCAL_MODULE_MAP).reduce((acc, [key, value]) => {

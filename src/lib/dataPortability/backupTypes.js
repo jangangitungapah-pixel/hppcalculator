@@ -11,7 +11,10 @@ export const BACKUP_MODULES = [
   'pricingSimulations',
   'bundleSimulations',
   'inventorySettings',
-  'stockMovements'
+  'stockMovements',
+  'suppliers',
+  'purchaseLogs',
+  'purchaseItems'
 ];
 
 export const BACKUP_MODULE_STORAGE_KEYS = {
@@ -23,5 +26,8 @@ export const BACKUP_MODULE_STORAGE_KEYS = {
   pricingSimulations: 'modalin:v1:pricingSimulations',
   bundleSimulations: 'modalin:v1:bundleSimulations',
   inventorySettings: 'modalin:v1:inventorySettings',
-  stockMovements: 'modalin:v1:stockMovements'
+  stockMovements: 'modalin:v1:stockMovements',
+  suppliers: 'modalin:v1:suppliers',
+  purchaseLogs: 'modalin:v1:purchaseLogs',
+  purchaseItems: 'modalin:v1:purchaseItems'
 };

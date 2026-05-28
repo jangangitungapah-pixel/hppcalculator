@@ -5,6 +5,8 @@ import { demoProducts } from '../../data/demoProducts';
 import { demoChannelProfiles } from '../../data/demoChannelProfiles';
 import { demoPricingSimulations } from '../../data/demoPricingSimulations';
 import { demoInventorySettings, demoStockMovements } from '../../data/demoInventory';
+import { demoSuppliers } from '../../data/demoSuppliers';
+import { demoPurchaseLogs, demoPurchaseItems } from '../../data/demoPurchases';
 
 import {
   getSavedCalculations,
@@ -48,6 +50,17 @@ import {
   clearDemoInventorySettings,
   clearDemoStockMovements
 } from '../storage/inventoryStorage';
+import {
+  getSuppliers,
+  loadDemoSuppliers,
+  clearDemoSuppliers
+} from '../storage/suppliersStorage';
+import {
+  getPurchaseLogs,
+  getPurchaseItems,
+  loadDemoPurchases,
+  clearDemoPurchases
+} from '../storage/purchaseStorage';
 
 /**
  * 1. Load mockCalculations only to saved calculations
@@ -65,7 +78,9 @@ export const loadDemoBusinessLibrary = () => {
   const products = loadDemoProducts(demoProducts);
   const inventorySettings = loadDemoInventorySettings(demoInventorySettings);
   const stockMovements = loadDemoStockMovements(demoStockMovements);
-  return { ingredients, recipes, products, inventorySettings, stockMovements };
+  const suppliers = loadDemoSuppliers(demoSuppliers);
+  const purchases = loadDemoPurchases(demoPurchaseLogs, demoPurchaseItems);
+  return { ingredients, recipes, products, inventorySettings, stockMovements, suppliers, purchases };
 };
 
 /**
@@ -98,6 +113,8 @@ export const clearDemoDataOnly = () => {
   clearDemoBundleSimulations();
   clearDemoInventorySettings();
   clearDemoStockMovements();
+  clearDemoSuppliers();
+  clearDemoPurchases();
   return true;
 };
 
@@ -114,6 +131,9 @@ export const hasDemoData = () => {
   const bundleSimulations = getBundleSimulations();
   const inventorySettings = getInventorySettings();
   const stockMovements = getStockMovements();
+  const suppliers = getSuppliers();
+  const purchaseLogs = getPurchaseLogs();
+  const purchaseItems = getPurchaseItems();
 
   return (
     calculations.some(c => c.source === 'demo') ||
@@ -124,7 +144,10 @@ export const hasDemoData = () => {
     pricingSimulations.some(s => s.source === 'demo') ||
     bundleSimulations.some(s => s.source === 'demo') ||
     inventorySettings.some(s => s.source === 'demo') ||
-    stockMovements.some(s => s.source === 'demo')
+    stockMovements.some(s => s.source === 'demo') ||
+    suppliers.some(s => s.source === 'demo') ||
+    purchaseLogs.some(l => l.source === 'demo') ||
+    purchaseItems.some(i => i.source === 'demo')
   );
 };
 
@@ -141,6 +164,11 @@ export const getDemoDataSummary = () => {
   const bundleSimulations = getBundleSimulations().filter(s => s.source === 'demo').length;
   const inventorySettings = getInventorySettings().filter(s => s.source === 'demo').length;
   const stockMovements = getStockMovements().filter(s => s.source === 'demo').length;
+  const suppliers = getSuppliers().filter(s => s.source === 'demo').length;
+  const purchaseLogs = getPurchaseLogs().filter(l => l.source === 'demo').length;
+  const purchaseItems = getPurchaseItems().filter(i => i.source === 'demo').length;
+
+  const total = calculations + ingredients + recipes + products + channelProfiles + pricingSimulations + bundleSimulations + inventorySettings + stockMovements + suppliers + purchaseLogs + purchaseItems;
 
   return {
     calculations,
@@ -152,6 +180,9 @@ export const getDemoDataSummary = () => {
     bundleSimulations,
     inventorySettings,
     stockMovements,
-    total: calculations + ingredients + recipes + products + channelProfiles + pricingSimulations + bundleSimulations + inventorySettings + stockMovements
+    suppliers,
+    purchaseLogs,
+    purchaseItems,
+    total
   };
 };

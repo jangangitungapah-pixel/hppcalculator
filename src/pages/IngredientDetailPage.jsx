@@ -14,6 +14,8 @@ import { InventorySettingDialog } from '../components/inventory/InventorySetting
 import { StockMovementDialog } from '../components/inventory/StockMovementDialog';
 import { StockMovementList } from '../components/inventory/StockMovementList';
 import { useInventory } from '../hooks/useInventory';
+import { usePurchases } from '../hooks/usePurchases';
+import { PurchaseFormDialog } from '../components/purchases/PurchaseFormDialog';
 import { formatStockQuantity } from '../lib/inventory';
 import { 
   formatIngredientPurchasePrice, 
@@ -41,7 +43,9 @@ export const IngredientDetailPage = () => {
   const [showSettingDialog, setShowSettingDialog] = React.useState(false);
   const [movementType, setMovementType] = React.useState(null);
   const [showHistory, setShowHistory] = React.useState(false);
+  const [purchaseDialogOpen, setPurchaseDialogOpen] = React.useState(false);
 
+  const { purchaseItems, purchaseLogs, savePurchaseLog } = usePurchases();
   const ingredient = getIngredientById(id);
   const inventorySetting = settingsByIngredientId.get(id);
   const inventorySnapshot = getSnapshotByIngredientId(id);
@@ -83,6 +87,36 @@ export const IngredientDetailPage = () => {
     setMovementType(null);
     addToast({ type: 'success', title: 'Movement stok disimpan.' });
   };
+
+  const handleSavePurchase = (logData, itemsData) => {
+    try {
+      savePurchaseLog(logData, itemsData);
+      setPurchaseDialogOpen(false);
+      addToast({
+        title: t('purchases.savedTitle', 'Pembelian Dicatat'),
+        message: t('purchases.savedMessage', 'Pembelian berhasil dicatat dan stok/harga diperbarui.'),
+        type: 'success'
+      });
+    } catch (err) {
+      addToast({
+        title: 'Error',
+        message: err.message,
+        type: 'error'
+      });
+    }
+  };
+
+  const ingredientItems = purchaseItems.filter(item => item.ingredientId === id);
+  const logMap = new Map(purchaseLogs.map(l => [l.id, l]));
+  const purchaseHistory = ingredientItems.map(item => {
+    const log = logMap.get(item.purchaseLogId);
+    return {
+      ...item,
+      supplierName: log ? log.supplierNameSnapshot : 'Tanpa Supplier',
+      purchaseDate: log ? log.purchaseDate : '',
+      dateFormatted: log ? new Date(log.purchaseDate).toLocaleDateString(lang === 'id' ? 'id-ID' : 'en-US', { day: 'numeric', month: 'short', year: 'numeric' }) : '',
+    };
+  }).sort((a, b) => b.purchaseDate.localeCompare(a.purchaseDate) || b.createdAt.localeCompare(a.createdAt));
 
   return (
     <PageContainer maxWidth="max-w-2xl" className="py-4 sm:py-5">
@@ -245,6 +279,55 @@ export const IngredientDetailPage = () => {
         </div>
       </div>
 
+      {/* Riwayat Pembelian Section */}
+      <section className="bg-surface border border-border/80 rounded-3xl shadow-xs overflow-hidden mb-6 p-6 sm:p-8">
+        <div className="flex justify-between items-center mb-4 pb-2 border-b border-border">
+          <h3 className="text-base font-bold text-text-primary">Riwayat Pembelian</h3>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => setPurchaseDialogOpen(true)}
+            className="text-xs text-brand-primary font-bold p-0 h-auto"
+          >
+            Catat Pembelian Baru
+          </Button>
+        </div>
+
+        {purchaseHistory.length === 0 ? (
+          <div className="text-center py-6">
+            <p className="text-xs text-text-secondary mb-3">Belum ada riwayat pembelian untuk bahan ini.</p>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setPurchaseDialogOpen(true)}
+            >
+              Catat Pembelian Pertama
+            </Button>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {purchaseHistory.map(item => (
+              <div 
+                key={item.id} 
+                className="p-3 bg-background border border-border rounded-xl flex justify-between items-center text-xs cursor-pointer hover:border-brand-soft transition-colors"
+                onClick={() => navigate(`/purchases/${item.purchaseLogId}`)}
+              >
+                <div>
+                  <p className="font-bold text-text-primary">{item.supplierName || 'Tanpa Supplier'}</p>
+                  <p className="text-[10px] text-text-secondary mt-0.5">
+                    {item.quantity} {item.unit} @ Rp {item.unitPrice.toLocaleString(lang === 'id' ? 'id-ID' : 'en-US', { maximumFractionDigits: 2 })}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="font-extrabold text-brand-primary">Rp {item.totalPrice.toLocaleString(lang === 'id' ? 'id-ID' : 'en-US')}</p>
+                  <p className="text-[9px] text-text-soft mt-0.5">{item.dateFormatted}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
       <ConfirmDialog
         open={showDeleteConfirm}
         onCancel={() => setShowDeleteConfirm(false)}
@@ -271,6 +354,13 @@ export const IngredientDetailPage = () => {
         initialType={movementType || 'stock_in'}
         onClose={() => setMovementType(null)}
         onSubmit={handleSaveStockMovement}
+      />
+
+      <PurchaseFormDialog 
+        open={purchaseDialogOpen}
+        preselectedIngredientId={id}
+        onSave={handleSavePurchase}
+        onCancel={() => setPurchaseDialogOpen(false)}
       />
     </PageContainer>
   );

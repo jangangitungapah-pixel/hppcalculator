@@ -1,0 +1,29 @@
+.purchases-shell {
+  animation: fadeIn var(--animate-duration-normal) var(--ease-premium);
+}
+
+.purchase-card {
+  transition: all var(--animate-duration-normal) var(--ease-premium);
+}
+
+.purchase-card:hover {
+  transform: translateY(-1px);
+  border-color: var(--color-brand-primary, #ff6b35);
+  box-shadow: var(--shadow-md, 0 4px 6px -1px rgba(0,0,0,0.1));
+}
+
+.purchase-item-row {
+  transition: border-color var(--animate-duration-fast) var(--ease-out);
+}
+
+.purchase-total-summary {
+  backdrop-blur: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  border-top: 1px solid var(--color-border);
+}
+
+@media (max-width: 640px) {
+  .purchase-item-row {
+    padding: 1rem 0.75rem;
+  }
+}

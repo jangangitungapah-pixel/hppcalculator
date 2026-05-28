@@ -1,0 +1,26 @@
+.suppliers-shell {
+  animation: fadeIn var(--animate-duration-normal) var(--ease-premium);
+}
+
+.supplier-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl, 1rem);
+  box-shadow: var(--shadow-sm, 0 1px 2px 0 rgba(0,0,0,0.05));
+  transition: all var(--animate-duration-normal) var(--ease-premium);
+}
+
+.supplier-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-brand-primary, #ff6b35);
+  box-shadow: var(--shadow-md, 0 4px 6px -1px rgba(0,0,0,0.1));
+}
+
+.supplier-form-dialog {
+  border-radius: var(--radius-3xl, 1.5rem);
+  box-shadow: var(--shadow-xl, 0 20px 25px -5px rgba(0,0,0,0.1));
+}
+
+.supplier-empty-state {
+  border-radius: var(--radius-3xl, 1.5rem);
+}
