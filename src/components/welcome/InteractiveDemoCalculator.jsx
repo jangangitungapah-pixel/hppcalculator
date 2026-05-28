@@ -19,7 +19,7 @@ export const InteractiveDemoCalculator = () => {
   const [sellingPrice, setSellingPrice] = useState(15000);
 
   // Reference to keep track of previous profitability status to trigger confetti only when transitioning into good status
-  const prevStatusRef = useRef('neutral');
+  const prevStatusRef = useRef(null);
 
   // Derived calculation values
   const totalHpp = Number(ingredientCost || 0) + Number(packagingCost || 0) + Number(operationalCost || 0);
@@ -57,7 +57,7 @@ export const InteractiveDemoCalculator = () => {
 
   // Trigger celebration confetti when profit margin transitions into healthy state (> 25%)
   useEffect(() => {
-    if (status === 'good' && prevStatusRef.current !== 'good') {
+    if (prevStatusRef.current && status === 'good' && prevStatusRef.current !== 'good') {
       confetti({
         particleCount: 80,
         spread: 60,
